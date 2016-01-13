@@ -12,5 +12,5 @@ git add -A
 git commit || exit 1
 
 # Push source and build repos.
-git push origin master
-git subtree push --prefix=public https://github.com/speps/speps.github.io.git gh-pages
+git push origin sources
+git subtree push --prefix=public origin master
