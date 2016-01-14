@@ -1,0 +1,27 @@
+.vspace { margin-bottom: 0.5em; }
+.large { font-size: 115%; }
+.small { font-size: 80%; }
+.highlight { background-color: yellow; padding: 0px 3px 0px 3px; }
+.marks { font-size: 80%; color: red; }
+.uppercase { text-transform: uppercase; }
+.lowercase { text-transform: lowercase; }
+.capitalize { text-transform: capitalize; }
+.small-caps { font-variant: small-caps; }
+#citations { font-size: 75%; border-top: solid #777 1px; padding-top: 12px; }
+img.left { float: left; margin-right: 10px; }
+img.right { float: right; margin-left: 10px; }
+table.stripe { margin-left: 0px; }
+table.stripe th, table.stripe td {padding: 5px;}
+tr.striperow { background-color: #ccc; padding: 7px; }
+table.fmt, table.fmt th, table.fmt td { width: auto; border-collapse: collapse; margin: 0px; padding: 0px; }
+.light tbody tr:hover { background-color: #ccc; }
+.box { background-color: #f0f0f0; padding: 7px; border: 1px solid #006699; margin-bottom: 3px; }
+.box li { margin: 5px 5px 5px 5px;}
+.box ul { margin: 0px 0px 0px 20px;}
+.code, pre { font-family: "Courier New", Courier, monospace; background-color: #f0f0f0; padding: 7px; border: 1px solid #006699; margin-bottom: 3px; }
+.code ul { margin: 0px 0px 0px 20px;}
+.message { background-color: #f0f0f0; padding: 7px; margin: 0px 0px 7px 0px; border: 1px solid #006699; font-style: italic; color: #006699; }
+.messageid { font-style: italic; color: #006699; }
+.diff { color: #006699; font-size:75%; background-color: #ccc; padding: 2px 5px 2px 5px; line-height: 2.5em;}
+.preview { border: 1px dotted #006699; padding:.5em; margin: 1em 0; }
+hr { height: 1px; width: 80%; color: #ccc; background-color: #ccc; }
