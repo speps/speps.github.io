@@ -15,6 +15,6 @@ My passion for programming began some time ago and I spent most of education lea
 
 This is awesome for a 6 year-old boy and when you discover the power of `IF`/`THEN`/`ELSE` and `GOTO` you can achieve pretty much anything, right?
 
-From this first introduction to programming languages to nowadays, I studied computer science and learned my share of advanced programming languages like Go, C/C++ or C# and other related things. If you need more information, please take a look at [my resume](/resume).
+From this first introduction to programming languages to nowadays, I studied computer science and learned my share of advanced programming languages like Go, C/C++ or C# and other related things. If you need more information, please take a look at [my resume]({{< relref "resume.md" >}}).
 
 Apart from programming, I do other things such as biking (well, when the weather is good enough), singing (well, in video games actually, I'm not sure it counts) and I like travelling.

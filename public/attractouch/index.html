@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>speps.fr - Rémi Gillig - About Me</title>
+    <title>speps.fr - Rémi Gillig - AttracTouch</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" type="text/css" href="/css/main.css"/>
     <link rel='shortcut icon' href='/favicon.ico' />
@@ -32,21 +32,27 @@
 <div id="content">
     <div id="page">
 
-<h1 id="about-me:e6001a249cf5befaf09e28d15df6b465">About Me</h1>
+<h1 id="attractouch:2bbc18e2f3202b293f5ba60dcabc8445">AttracTouch</h1>
 
-<p>My name is Rémi Gillig, I was born in France and I studied video games programming at <a href="http://www.enjmin.fr">ENJMIN</a>.</p>
+<p><img src="/media/at-ss.jpg" alt="AttracTouch" style="float:right;padding-left:20px;"/><strong>Update :</strong> This project has won the &ldquo;Best Use of Technology&rdquo; prize at <a href="/emagiciens2009/">e-magiciens 2009</a>.</p>
 
-<p>My passion for programming began some time ago and I spent most of education learning programming. At first, I had the chance to have access at home to early computers and wrote some basic programs using <code>GW-BASIC</code>. For the record, it looks like this :</p>
+<p>AttracTouch is a project made during my first year at <a href="http://www.enjmin.fr">ENJMIN</a>. It involved a team of 6 persons during 3 months. I personally invested time and money for building myself a <strong>multitouch screen</strong> (see image on the side) using resources at <a href="http://nuigroup.com">NUI Group</a>.</p>
 
-<pre><code>10 INPUT &quot;WHAT IS YOUR NAME&quot;;N$
-20 PRINT &quot;HELLO &quot;N$&quot; :)&quot;
-</code></pre>
+<p>The principle of the game is to use your fingers to lead particles from the launcher to the receiver. The fingers act as attraction points and make the particles change direction when they enter the radius of influence.</p>
 
-<p>This is awesome for a 6 year-old boy and when you discover the power of <code>IF</code>/<code>THEN</code>/<code>ELSE</code> and <code>GOTO</code> you can achieve pretty much anything, right?</p>
+<p>To make it easier for the player to make the particles go where they want, we decided to use a simple system of 45/90/135 degrees and 3 circles to give more control but still have some challenge.</p>
 
-<p>From this first introduction to programming languages to nowadays, I studied computer science and learned my share of advanced programming languages like Go, C/C++ or C# and other related things. If you need more information, please take a look at <a href="/resume/">my resume</a>.</p>
+<p>It was developed in <strong>C++</strong> using the <a href="http://www.sfml-dev.org/">SFML library</a> (and some <strong>OpenGL</strong>) for windowing and graphics. The <a href="http://www.tuio.org/">TUIO protocol</a> was used for managing the multitouch interface and <a href="http://opensoundcontrol.org/">OSC</a> was used in combination with <a href="http://puredata.info/">PureData</a> for the sound.</p>
 
-<p>Apart from programming, I do other things such as biking (well, when the weather is good enough), singing (well, in video games actually, I&rsquo;m not sure it counts) and I like travelling.</p>
+<p>The challenging part was to make a realistic smoke effect for the background which would react to the actions of the player. To achieve that, I took inspiration from <a href="http://www.multires.caltech.edu/teaching/demos/java/stablefluids.htm">Jos Stam&rsquo;s Stable Fluids</a>. In fact, without using proper <strong>fluid simulation</strong>, the particles did not behave correctly for a beliavable smoke.</p>
+
+<h2 id="video:2bbc18e2f3202b293f5ba60dcabc8445">Video</h2>
+
+
+<div style="position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden;">
+  <iframe src="//player.vimeo.com/video/6270765" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+ </div>
+
 </div>
 </div>
             <div id="footer"><p>2016-01-14 20:27:22 &#43;0000 - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>

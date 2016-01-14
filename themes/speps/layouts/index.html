@@ -1,3 +1,7 @@
 {{ partial "header.html" . }}
-
-{{ partial "footer.html" }}
+{{ range .Site.Taxonomies.tags.home.Pages }}
+<div id="content">
+    <div id="page">{{ .Content }}</div>
+</div>
+{{ end }}
+{{ partial "footer.html" . }}
