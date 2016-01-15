@@ -1,7 +1,14 @@
 {{ partial "header.html" . }}
-{{ range .Site.Taxonomies.tags.home.Pages }}
 <div id="content">
-    <div id="page">{{ .Content }}</div>
+	<div id="page">
+		<div id="sideinfo">
+		{{ range .Site.Taxonomies.tags.profile.Pages }}
+			{{ .Content }}
+		{{ end }}
+		</div>
+	{{ range .Site.Taxonomies.tags.home.Pages }}
+		{{ .Content }}
+	{{ end }}
+	</div>
 </div>
-{{ end }}
 {{ partial "footer.html" . }}
