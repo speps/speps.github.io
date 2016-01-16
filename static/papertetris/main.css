@@ -1,0 +1,22 @@
+body{
+	margin:0px;
+	padding:0px;
+	background:#c0c0c0;
+}
+img{
+	border:none;
+}
+body,input,textarea,select{
+	font-family:"Lucida Sans Unicode", sans-serif;
+	font-size:11px;
+	color:#000;
+}
+
+#tetris{
+	position:absolute;
+	left:50%;
+	margin:10px 0px 0px -362px;
+}
+#links{
+	text-align:center;
+}

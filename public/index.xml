@@ -268,13 +268,14 @@
 &lt;h1 id=&#34;projects:3c42bb4157bf51d85ae7ffc4e1685909&#34;&gt;Projects&lt;/h1&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://speps.fr/puddle/&#34;&gt;Puddle&lt;/a&gt;, video game with a fluid&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://speps.fr/attractouch/&#34;&gt;AttracTouch&lt;/a&gt;, multitouch puzzle game&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://speps.fr/paperplane/&#34;&gt;PaperPlane&lt;/a&gt;, paper airplane video game&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://speps.fr/awesomiumdotnet/&#34;&gt;Awesomium.NET&lt;/a&gt;, useful for GUIs&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/speps/XInputDotNet&#34;&gt;XInput.NET&lt;/a&gt;, plugin for Unity&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://speps.fr/ati-overscan-fix/&#34;&gt;ATI Overscan Fix&lt;/a&gt;, fixes overscan issues on ATI/AMD graphics card in the registry&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/speps/LibTessDotNet&#34;&gt;LibTessDotNet&lt;/a&gt;, C# port (compatible with all .NET environments) of the GLU tessellator (for triangulation and polygon decomposition)&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://speps.fr/puddle/&#34;&gt;Puddle&lt;/a&gt; (2009), video game with a fluid&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://speps.fr/attractouch/&#34;&gt;AttracTouch&lt;/a&gt; (2009), multitouch puzzle game&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://speps.fr/paperplane/&#34;&gt;PaperPlane&lt;/a&gt; (2010), paper airplane video game&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://speps.fr/awesomiumdotnet/&#34;&gt;Awesomium.NET&lt;/a&gt; (2010), useful for GUIs&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/speps/XInputDotNet&#34;&gt;XInput.NET&lt;/a&gt; (up-to-date), plugin for Unity&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://speps.fr/ati-overscan-fix/&#34;&gt;ATI Overscan Fix&lt;/a&gt;, (2012), fixes overscan issues on ATI/AMD drivers in the registry&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/speps/LibTessDotNet&#34;&gt;LibTessDotNet&lt;/a&gt; (up-to-date), C# port of the GLU tessellator&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://speps.fr/papertetris&#34;&gt;Paper Tetris&lt;/a&gt; (2007), small electronic of a game I played at university&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h1 id=&#34;events:3c42bb4157bf51d85ae7ffc4e1685909&#34;&gt;Events&lt;/h1&gt;
