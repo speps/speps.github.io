@@ -6,4 +6,6 @@ title = "resume"
 
 # Resume
 
-For my most up-to-date stuff checkout my LinkedIn : <http://www.linkedin.com/in/remigillig>
+For my most up-to-date stuff checkout my [LinkedIn](https://www.linkedin.com/in/remigillig).
+
+{{< linkedin "https://www.linkedin.com/in/remigillig" >}}

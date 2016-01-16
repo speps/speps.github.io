@@ -250,7 +250,10 @@
 
 &lt;h1 id=&#34;resume:c59a67a3c7bc5faa453847420267045e&#34;&gt;Resume&lt;/h1&gt;
 
-&lt;p&gt;For my most up-to-date stuff checkout my LinkedIn : &lt;a href=&#34;http://www.linkedin.com/in/remigillig&#34;&gt;http://www.linkedin.com/in/remigillig&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;For my most up-to-date stuff checkout my &lt;a href=&#34;https://www.linkedin.com/in/remigillig&#34;&gt;LinkedIn&lt;/a&gt;.&lt;/p&gt;
+
+&lt;script src=&#34;//platform.linkedin.com/in.js&#34; type=&#34;text/javascript&#34;&gt;&lt;/script&gt;
+&lt;script type=&#34;IN/MemberProfile&#34; data-id=&#34;https://www.linkedin.com/in/remigillig&#34; data-format=&#34;inline&#34; data-related=&#34;false&#34;&gt;&lt;/script&gt;
 </description>
     </item>
     
