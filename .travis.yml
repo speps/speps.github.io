@@ -2,6 +2,9 @@ env:
   global:
   - GH_REF: github.com/speps/speps.github.io.git
   - secure: "P2TqpEebu/9M73wmOW2raxXuerAEnMA1JSqJJe78caX00QcNanPMwXQ0Nl1UJUGP1UFrw5lv7e5JhgEiBVCRcaCg+eT+iAmCjkV1rpptVt//uZXQgqJ3nIuNixL69lYZszao+N1bVXWfrTcyHZRUEulkd4rTC2NZ8GhFoat3ViLIKBtgn9aEzUOUQs5u8nIazHsxeNvD7yTJ3gdaWcDCDNKCAq8XTm0db8VhbkakVEj+7l0QVpe6T9ftROdUMBTB/cbRy8suflWGeAflHLE47398iYAbUptMA0aTgINno0zfpoCVOFogArldi/QQJue/G/B7Wpiad4eWdZfL/ZnXwYrDg0tPbdwzUOOlblB0c/r/qJzoMbjrIoUGYS2U7cZvXuLmifTJ4w7HreLoVjIHtG/xUOrt0jQEZggs2eJ3z4xVSmZWbGDe4MweNafzmgwQOjOa8lYW1XA68uFRjzAA2IPHL4FZIBCJWHxdG3sy8Amyb1JL0o3DDDBl030STbBOAccQZ1DbGW9r0XjeXJUqVYgtA4QQdVaMtfNscu0jXztnbQH1R7qPG4qI/WzTZBW6dzj9IYVMqa13QY3WAjFfOKIa+ni1hRMV6ra+rIn9zsheDOyWzUMGkXXnF1b9GI9bbPwmBfuF4Ny/TyrexFdca/TdM9d9Y7L5jMkIdSEhObg="
+branches:
+  only:
+    - sources
 
 language: go
 go:
