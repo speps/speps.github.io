@@ -15,5 +15,5 @@ install:
   - mkdir public
   - export GOPATH=$HOME/go
   - go get -v github.com/spf13/hugo
-script: hugo
+script: $GOPATH/bin/hugo
 #after_success: bash travis.sh
