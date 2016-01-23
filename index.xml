@@ -373,7 +373,7 @@
 
 &lt;p&gt;My name is Rémi Gillig, I was born in France and I studied video games programming at &lt;a href=&#34;http://www.enjmin.fr&#34;&gt;ENJMIN&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;My passion for programming began some time ago and I spent most of education learning programming. At first, I had the chance to have access at home to early computers and wrote some basic programs using &lt;code&gt;GW-BASIC&lt;/code&gt;. For the record, it looks like this :&lt;/p&gt;
+&lt;p&gt;My passion for programming began some time ago and I spent most of my education learning programming. At first, I had the chance to have access at home to early computers and wrote some basic programs using &lt;code&gt;GW-BASIC&lt;/code&gt;. For the record, it looks like this :&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;10 INPUT &amp;quot;WHAT IS YOUR NAME&amp;quot;;N$
 20 PRINT &amp;quot;HELLO &amp;quot;N$&amp;quot; :)&amp;quot;
