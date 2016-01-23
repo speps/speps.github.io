@@ -20,4 +20,6 @@ install:
   - go get -v github.com/spf13/hugo
 script:
   - $GOPATH/bin/hugo
-after_success: bash deploy.sh
+after_success:
+  - cp .travis.yml public
+  - bash deploy.sh
