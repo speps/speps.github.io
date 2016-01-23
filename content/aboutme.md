@@ -8,7 +8,7 @@ title = "About Me"
 
 My name is Rémi Gillig, I was born in France and I studied video games programming at [ENJMIN](http://www.enjmin.fr).
 
-My passion for programming began some time ago and I spent most of education learning programming. At first, I had the chance to have access at home to early computers and wrote some basic programs using `GW-BASIC`. For the record, it looks like this :
+My passion for programming began some time ago and I spent most of my education learning programming. At first, I had the chance to have access at home to early computers and wrote some basic programs using `GW-BASIC`. For the record, it looks like this :
 
     10 INPUT "WHAT IS YOUR NAME";N$
     20 PRINT "HELLO "N$" :)"
