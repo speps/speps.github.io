@@ -1,0 +1,254 @@
+@import url(reset.css);
+@import url(boltwire.css);
+
+body
+{
+    background: #fff url(../images/bg-io.gif) fixed;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 10pt;
+    color: #000;
+}
+
+body, html
+{
+    height: 100%;
+}
+
+#bg-container
+{
+    z-index: 0;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 0px;
+}
+
+#bg
+{
+    background: #fff url(../images/bg-interface-left.gif) repeat-y;
+    height: 100%;
+    margin: 0px 30px;
+}
+
+#bg-right
+{
+    background: url(../images/bg-interface-right.gif);
+    position: fixed;
+    width: 3px;
+    height: 100%;
+    right: 30px;
+    top: 0px;
+}
+
+#main-container
+{
+    z-index: 1;
+    position: relative;
+    margin: 0px 30px;
+    padding: 0px 30px;
+}
+
+#header
+{
+    padding: 40px 20px;
+}
+
+#header h1
+{
+    background: url(../images/logo.gif) no-repeat;
+    float: left;
+}
+
+#header h1 a
+{
+    display: block;
+    width: 162px;
+    height: 42px;
+    text-indent: -9999px;
+}
+
+#header ul
+{
+    float: left;
+    margin: 0px 0px 0px 0px;
+    padding: 6px 60px 0px 50px;
+    background: url(../images/menu-bg-line.gif) 0px 30px repeat-x;
+}
+
+#header ul li
+{
+    float: left;
+}
+
+#header ul li a
+{
+    color: #006699;
+    font-size: 1.2em;
+    text-decoration: none;
+    display: block;
+    height: 28px;
+    padding: 0px 0px 0px 0px;
+}
+
+#header ul li a:hover .mid
+{
+    background-position: -48px -40px;
+}
+
+#header ul li a:hover .left
+{
+    background-position: 0px -40px;
+}
+
+#header ul li a:hover .right
+{
+    background-position: -15px -40px;
+}
+
+#header ul li a .mid
+{
+    float: left;
+    background: url(../images/menu-bg.gif) -48px 0px repeat-x;
+    height: 29px;
+    padding: 11px 6px 0px 6px;
+    cursor: pointer;
+}
+
+#header ul li a .left, #header ul li a .right
+{
+    float: left;
+    display: block;
+    width: 15px;
+    height: 40px;
+}
+
+#header ul li a .left
+{
+    background: url(../images/menu-bg.gif) 0px 0px no-repeat;
+}
+
+#header ul li a .right
+{
+    background: url(../images/menu-bg.gif) -15px 0px no-repeat;
+}
+
+#social
+{
+    float: left;
+    position: relative;
+    left: -42px;
+    top: 22px;
+}
+
+#content
+{
+    clear: both;
+    padding: 0px 40px;
+    color: #000;
+}
+
+#content a
+{
+    color: #003366;
+    text-decoration: none;
+    border-bottom: 1px dotted #006699;
+}
+
+#content a:hover
+{
+    color: #006699;
+    border-bottom: 1px solid #006699;
+}
+
+#content h1
+{
+    font-size: 1.2em;
+    padding-left: 20px;
+    background: url(../images/bullet-orange.gif) 0px 16px no-repeat;
+}
+
+#content h2
+{
+    font-size: 1em;
+    padding-left: 20px;
+    background: url(../images/bullet-grey.gif) 0px 15px no-repeat;
+}
+
+#content h3
+{
+    font-size: 0.8em;
+    font-weight: normal;
+    padding-left: 20px;
+    background: url(../images/bullet-grey.gif) 0px 15px no-repeat;
+}
+
+#content p
+{
+    margin: 0.5em 0px;
+}
+
+#content ul
+{
+    margin-left: 2em;
+    list-style-type: square;
+}
+
+#actions ul
+{
+    margin: 0px;
+    list-style-type: none;
+}
+
+#sideinfo
+{
+    font-size: 0.7em;
+    line-height: 1.2em;
+    float: right;
+    width: 300px;
+    border-left: 1px solid #bbb;
+    margin: 0px 0px 0px 20px;
+    padding: 0px 0px 20px 20px;
+}
+
+#sideinfo p
+{
+    margin: 0px 0px 0.5em 0px;
+}
+
+#actions
+{
+    padding-bottom: 2em;
+}
+
+#actions ul li
+{
+    float: left;
+    margin-right: 1em;
+}
+
+#messages, #page-header, #footer
+{
+    clear: both;
+}
+
+#page
+{
+    font-size: 1.5em;
+    line-height: 2em;
+    text-align: left;
+}
+
+#footer
+{
+    border-top: 1px solid #bbb;
+    margin: 20px;
+    padding: 0.5em 0px 0px 0px;
+    text-align: right;
+    color: #bbb;
+}
+
+#footer a
+{
+    color: #bbb;
+}

@@ -16,4 +16,4 @@ install:
   - export GOPATH=$HOME/go
   - go get -v github.com/spf13/hugo
 script: hugo
-#after_success: bash ./travis.sh
+#after_success: bash travis.sh
