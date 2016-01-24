@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>speps.fr - Rémi Gillig - Debugging a DirectX memory leak</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="/css/main.css"/>
+    <link rel="stylesheet" href="/highlight/zenburn.css">
+    <link rel='shortcut icon' href='/favicon.ico' />
+    <link rel='icon' href='/favicon.gif' type='image/gif'/>
+    <link rel="openid2.provider" href="https://www.google.com/accounts/o8/ud?source=profiles" />
+    <link rel="openid2.local_id" href="https://profiles.google.com/remigillig" />
+</head>
+<body>
+    <div id="bg-container">
+        <div id="bg">
+            <div id="bg-right"></div>
+        </div>
+    </div>
+    <div id="main-container">
+        <div id="main">
+            <div id="header">
+                <h1><a href="/" title="Return to the first page">speps.fr</a></h1>
+                <ul>
+                    <li><a href="/aboutme" title="Some information about myself"><span class="left"></span><span class="mid">About Me</span><span class="right"></span></a></li>
+                    <li><a href="/projects" title="My work, my projects, my hobbies"><span class="left"></span><span class="mid">Projects</span><span class="right"></span></a></li>
+                    <li><a href="/articles" title="Some articles I wrote"><span class="left"></span><span class="mid">Articles</span><span class="right"></span></a></li>
+                    <li><a href="/resume" title="My resume for your recruiting needs"><span class="left"></span><span class="mid">Resume</span><span class="right"></span></a></li>
+                    <li><a href="/links" title="What I spend my time with on the web"><span class="left"></span><span class="mid">Links</span><span class="right"></span></a></li>
+                </ul>
+                <div id="social"><a href="http://www.linkedin.com/in/remigillig"><img src="/images/linkedin.png"/></a></div>
+                <div id="social">&nbsp;</div>
+                <div id="social"><a href="http://twitter.com/remigillig"><img src="/images/twitter.png"/></a></div>
+            </div>
+<div id="content">
+	<div id="page">
+		<div id="sideinfo">
+			
+		</div>
+		<h1>Debugging a DirectX memory leak</h1>
+		<p>A short tale (with pictures and code) of a recent debugging session.</p>
+
+<p>DirectX uses reference counting to handle the destruction of its resources. When creating a resource, the handle returned by DirectX already has a reference counter of 1. When this resource is not needed anymore, you call Release, each call decrements the reference counter by 1. However, the memory allocated by DirectX for this resource will only be released when the reference counter reaches 0.</p>
+
+<p>Knowing this, it becomes easy to create your own objects to manage DirectX resources like a VertexBuffer.</p>
+
+<script src="//gist.github.com/speps/82c86de7540e965b7ef3.js"></script>
+
+<p>This is quite simple in most cases, but you&rsquo;ll have to read through the documentation to know which functions add or hold a reference or not.</p>
+
+<p>For example looking at ID3D11DeviceContext::IASetVertexBuffers, it says &ldquo;The method will hold a reference to the interfaces passed in&rdquo;. That means while the vertex buffer is bound onto the device, the reference counter for this vertex buffer will be at least one. In other words, this method will call AddRef when a new vertex buffer is bound and Release on the previous one (if there was one). You usually don&rsquo;t have to worry about methods like this one because they behave as expected, a quick MSDN search can find them all.</p>
+
+<p>Now looking at ID3D11DeviceContext::IAGetVertexBuffers you will notice the documentation says &ldquo;Any returned interfaces will have their reference count incremented by one&rdquo;. This is a clue ! Again, a search can help you find these ones. However, these methods, because they query the current state of the device, should not be used too often. The calls to set the vertex buffers should be cached locally with your own device context wrapper so you don&rsquo;t have to ask the driver what the current state is. These &ldquo;Get&rdquo; methods are expensive, and it&rsquo;s easy to mess up with the reference counting.</p>
+
+<p>Now onto the memory leak problem. Sometimes you have some complex rendering code, and don&rsquo;t know where the references to your resources are being held. It helps to print the return value of AddRef and Release (which is the reference counter) but it would be great to know when the reference counter is incremented or decremented outside of your own code.</p>
+
+<p><img src="/media/articles/directx1.png" alt="" /></p>
+
+<p>The first intuition that came to me is to check the memory around the pointer to the vertex buffer and check what changes around the calls to AddRef/Release. This somehow works but is not robust enough, you can get an offset and dereference the memory but depending on some parameters (that I didn&rsquo;t have the time to figure out) it wasn&rsquo;t the same offset every time and for every vertex buffer.</p>
+
+<p>The best solution is to check what the assembler code does. Looking at the assembler code and the different calls and jumps you can figure out how to get to the right value.</p>
+
+<p>After breaking into dummy calls to AddRef/Release, right click on the code and select &ldquo;Go To Disassembly&rdquo; (that&rsquo;s in Visual Studio 2010).</p>
+
+<p><img src="/media/articles/directx2.png" alt="" /></p>
+
+<p>Next, you need to do step-by-step of each instruction and check the registers. Here is a rundown of the flattened sequence to the final increment of the reference counter. Activating the register window in the Debug&gt;Windows&gt;Registers menu is very helpful. This is disassembly from a x64 version of the code above as it&rsquo;s easier to follow than x86 in my opinion, but the same steps can be applied.</p>
+
+<script src="//gist.github.com/speps/3e2ba0d88c3894f9bdee.js"></script>
+
+<p>At the end of the first &ldquo;call&rdquo; instruction, rcx contains the this pointer. Then the address in &ldquo;rcx + 0x18&rdquo; is dereferenced and put back into rcx. After the &ldquo;jmp&rdquo; instruction, the xadd instruction adds one to the value at address &ldquo;rcx + 8&rdquo;.</p>
+
+<p>Let&rsquo;s construct a helper macro to get the current reference count of our vertex buffer. This is mostly for debug purposes as the reference counter is very likely atomic (as noted by the &ldquo;lock xadd&rdquo; instruction which is an atomic exchange and add).</p>
+
+<p>In C and C++, to be able to add bytes to an existing pointer, you need it to be char<em>. Doing pointer arithmetic with void</em> is a compile error and adding to other types shifts by the size of the type so you have to be careful. For example pInt+1 if pInt is int* will actually point to pInt+8 if sizeof(int) is 8.</p>
+
+<script src="//gist.github.com/speps/cd3139aab7ad2f713963.js"></script>
+
+<p>Modifying the previous code to debug the reference counter gives us the right value.</p>
+
+<script src="//gist.github.com/speps/50cfb074e0c9e524e17b.js"></script>
+
+<p>Printing the address of the reference counter is very useful for setting a data breakpoint.</p>
+
+<p><img src="/media/articles/directx3.png" alt="" /></p>
+
+<p>Next time the reference counter is changed internally by a DirectX call, you&rsquo;ll see that the breakpoint is hit.</p>
+
+<p><img src="/media/articles/directx4.png" alt="" /></p>
+
+<p>And you can see the callstack, in Tutorial02 from the DirectX samples, I hit the breakpoint during CleanupDevice which calls Release.</p>
+
+<p><img src="/media/articles/directx5.png" alt="" /></p>
+
+<p>I hope this will help in debugging a few memory leaks which may result from some misplaced or missing AddRef/Release calls.</p>
+
+	</div>
+</div>
+            <div id="footer"><p>2016-01-24 21:52:56 &#43;0000 - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
+        </div>
+    </div>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-12141305-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+<script src="/highlight/highlight.pack.js"></script>
+<script>
+hljs.initHighlighting();
+</script>
+</body>
+</html>
