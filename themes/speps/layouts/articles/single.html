@@ -1,9 +1,11 @@
 {{ partial "header.html" . }}
 <div id="content">
 	<div id="page">
+		{{ if .TableOfContents }}
 		<div id="sideinfo">
 			{{ .TableOfContents }}
 		</div>
+		{{ end }}
 		<h1>{{ .Title }}</h1>
 		{{ .Content }}
 	</div>
