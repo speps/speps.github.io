@@ -9,17 +9,10 @@ branches:
   only:
     - sources
 
-language: go
-go:
-  - tip
-
 install:
   - rm -rf public || exit 0
-  - mkdir public
-  - export GOPATH=$HOME/go
-  - go get -v github.com/spf13/hugo
 script:
-  - $GOPATH/bin/hugo
+  - binaries/hugo
 after_success:
   - cp .travis.yml public
   - bash deploy.sh
