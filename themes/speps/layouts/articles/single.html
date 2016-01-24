@@ -1,0 +1,11 @@
+{{ partial "header.html" . }}
+<div id="content">
+	<div id="page">
+		<div id="sideinfo">
+			{{ .TableOfContents }}
+		</div>
+		<h1>{{ .Title }}</h1>
+		{{ .Content }}
+	</div>
+</div>
+{{ partial "footer.html" . }}

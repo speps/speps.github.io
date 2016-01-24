@@ -1,0 +1,14 @@
+{{ partial "header.html" . }}
+<div id="content">
+	<div id="page">
+		<h1>Articles</h1>
+		<ul>
+			{{ range .Data.Pages }}
+			<li>
+				<a href="{{ .Permalink }}">{{ .Title }}</a><div class="date">{{ .Date.Format "2006-01-02 15:04:05 -0700" }}</div>
+			</li>
+			{{ end }}
+		</ul>
+	</div>
+</div>
+{{ partial "footer.html" . }}
