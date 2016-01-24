@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Articles on speps.fr - Rémi Gillig</title>
+    <link>http://speps.fr/articles/</link>
+    <description>Recent content in Articles on speps.fr - Rémi Gillig</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 24 Jan 2016 11:26:57 +0000</lastBuildDate>
+    <atom:link href="http://speps.fr/articles/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Setup Hugo with Travis CI and GitHub Pages</title>
+      <link>http://speps.fr/articles/hugo-setup/</link>
+      <pubDate>Sun, 24 Jan 2016 11:26:57 +0000</pubDate>
+      
+      <guid>http://speps.fr/articles/hugo-setup/</guid>
+      <description>
+
+&lt;p&gt;This article aims to introduce and show how to generate your &lt;a href=&#34;http://gohugo.io&#34;&gt;Hugo&lt;/a&gt; site on &lt;a href=&#34;http://travis-ci.org&#34;&gt;Travis CI&lt;/a&gt; and then deploy it automatically to &lt;a href=&#34;https://pages.github.com&#34;&gt;GitHub Pages&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;have-your-hugo-website-ready:64a00e54bc112d22b252689389accbce&#34;&gt;Have your Hugo website ready&lt;/h2&gt;
+
+&lt;p&gt;The first step is to have your Hugo website working locally at least. It should build without errors. The default output folder is &lt;code&gt;public&lt;/code&gt;. NOTE: if you changed that using &lt;code&gt;publishdir&lt;/code&gt; in your config file please change it in the following steps.&lt;/p&gt;
+
+&lt;p&gt;For more information, please refer to &lt;a href=&#34;https://gohugo.io/overview/quickstart/&#34;&gt;Hugo&amp;rsquo;s documentation&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;github-pages-setup:64a00e54bc112d22b252689389accbce&#34;&gt;GitHub Pages setup&lt;/h2&gt;
+
+&lt;p&gt;For GitHub Pages, there are a few options available. You can have User/Organization Pages or Project Pages. The steps presented here should work for both but the different branch names might differ depending on how you want to organize your repository.&lt;/p&gt;
+
+&lt;p&gt;Usually you have a branch with the website sources and another one with the website generated files. In my case, I have a &lt;code&gt;sources&lt;/code&gt; branch and a &lt;code&gt;master&lt;/code&gt; branch because I&amp;rsquo;m using User Pages (same applies to Organization Pages). For Project Pages, you&amp;rsquo;d probably have the sources in the &lt;code&gt;master&lt;/code&gt; branch (in a sub-folder for example) and then the generated files in the &lt;code&gt;gh-pages&lt;/code&gt; branch (as required by GitHub).&lt;/p&gt;
+
+&lt;p&gt;The important thing is to have your sources in the right branch in the first place. For User/Organization pages, it should be any branch other than &lt;code&gt;master&lt;/code&gt;. For Project Pages, it should be any branch other than &lt;code&gt;gh-pages&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;There are plenty of tutorials on how to create a new branch in Git and submit it to your GitHub account. For more information, please refer to &lt;a href=&#34;https://help.github.com/articles/user-organization-and-project-pages/&#34;&gt;User, Organization, and Project Pages&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;travis-ci-setup:64a00e54bc112d22b252689389accbce&#34;&gt;Travis CI setup&lt;/h2&gt;
+
+&lt;p&gt;On Travis CI, you can build and deploy your website automatically.&lt;/p&gt;
+
+&lt;h3 id=&#34;obtain-the-deploy-sh-script:64a00e54bc112d22b252689389accbce&#34;&gt;Obtain the deploy.sh script&lt;/h3&gt;
+
+&lt;p&gt;You need this script in your root folder :&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/X1011/git-directory-deploy/blob/master/deploy.sh&#34;&gt;https://github.com/X1011/git-directory-deploy/blob/master/deploy.sh&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;generate-an-access-token-for-github:64a00e54bc112d22b252689389accbce&#34;&gt;Generate an access token for GitHub&lt;/h3&gt;
+
+&lt;p&gt;You need to generate a new &amp;ldquo;Personal Access Token&amp;rdquo; from this GitHub page : &lt;a href=&#34;https://github.com/settings/tokens&#34;&gt;https://github.com/settings/tokens&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Click on &amp;ldquo;Generate new token&amp;rdquo; and follow the instructions. You need to select the &lt;code&gt;public_repo&lt;/code&gt; or &lt;code&gt;repo&lt;/code&gt; scopes. Once the token is generated, you need to copy it.&lt;/p&gt;
+
+&lt;p&gt;Then you need to encrypt it so you can use on Travis CI, &lt;a href=&#34;https://docs.travis-ci.com/user/encryption-keys/&#34;&gt;follow those instructions&lt;/a&gt; and then run this command :&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;travis encrypt GIT_DEPLOY_REPO=https://GENERATED_TOKEN@github.com/username/reponame.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Replace &lt;code&gt;GENERATED_TOKEN&lt;/code&gt; with the generated token earlier and &lt;code&gt;username&lt;/code&gt; by your GitHub username and &lt;code&gt;reponame&lt;/code&gt; by the repository name.&lt;/p&gt;
+
+&lt;h3 id=&#34;setup-travis-yml:64a00e54bc112d22b252689389accbce&#34;&gt;Setup .travis.yml&lt;/h3&gt;
+
+&lt;p&gt;In your &lt;code&gt;sources&lt;/code&gt; branch, you have to create a .travis.yml file which will be picked up by Travis CI and be used to configure your build process.&lt;/p&gt;
+
+&lt;p&gt;The contents of .travis.yml should be as follows, &lt;strong&gt;note instructions inlined&lt;/strong&gt; :&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-yaml&#34;&gt;env:
+  global:
+    - secure: &amp;quot;...&amp;quot; # replace by the output from travis encrypt done earlier
+    - GIT_DEPLOY_DIR=public # this is the default output dir of Hugo
+    - GIT_DEPLOY_BRANCH=master # this is the target branch, replace by gh-pages for Project Pages
+    - GIT_DEPLOY_USERNAME=&amp;quot;Travis CI&amp;quot; # dummy name
+    - GIT_DEPLOY_EMAIL=user@example.com # replace by your email
+branches:
+  only:
+    - sources # replace by master for Project Pages
+
+install:
+  - rm -rf public || exit 0 # cleanup previous run
+script:
+  - binaries/hugo # generate!
+after_success:
+  - cp .travis.yml public # all branches need this file
+  - bash deploy.sh # run the deploy script
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;NOTE the &lt;a href=&#34;https://github.com/speps/speps.github.io/blob/sources/.travis.yml&#34;&gt;latest version of &lt;code&gt;.travis.yml&lt;/code&gt; will always be at my &lt;code&gt;sources&lt;/code&gt; branch&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;cross-compiling-hugo:64a00e54bc112d22b252689389accbce&#34;&gt;Cross compiling Hugo&lt;/h3&gt;
+
+&lt;p&gt;You could setup your Travis CI to install a Go version, but it will be faster to cross compile the &lt;code&gt;hugo&lt;/code&gt; binary yourself and then deploy it in your &lt;code&gt;sources&lt;/code&gt; branch.&lt;/p&gt;
+
+&lt;p&gt;Run from your root folder those following commands, line by line :&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-sh&#34;&gt;mkdir binaries
+cd binaries
+env GOPATH=&amp;quot;`pwd`&amp;quot; go get -v github.com/spf13/hugo
+env GOPATH=&amp;quot;`pwd`&amp;quot; GOOS=linux GOARCH=amd64 go build -v github.com/spf13/hugo
+git add hugo
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will add the &lt;code&gt;hugo&lt;/code&gt; binary compiled for a Travis VM to Git&amp;rsquo;s index. Don&amp;rsquo;t forget to commit it.&lt;/p&gt;
+
+&lt;h2 id=&#34;wrapping-up:64a00e54bc112d22b252689389accbce&#34;&gt;Wrapping up&lt;/h2&gt;
+
+&lt;p&gt;By the end of these steps, you should now have something like this in your root folder :&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;[root folder]
+
+&lt;ul&gt;
+&lt;li&gt;[archetypes]&lt;/li&gt;
+&lt;li&gt;[binaries]&lt;/li&gt;
+&lt;li&gt;hugo&lt;/li&gt;
+&lt;li&gt;[content]&lt;/li&gt;
+&lt;li&gt;[data]&lt;/li&gt;
+&lt;li&gt;[layouts]&lt;/li&gt;
+&lt;li&gt;[static]&lt;/li&gt;
+&lt;li&gt;[themes]&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;.travis.yml&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;config.toml&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;deploy.sh&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Most of those are Hugo&amp;rsquo;s default folders when you create a new site. The important files are &lt;code&gt;.travis.yml&lt;/code&gt; and &lt;code&gt;deploy.sh&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Once you push everything to GitHub, don&amp;rsquo;t forget to activate your project on Travis CI so it will start builds.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

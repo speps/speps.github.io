@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>speps.fr - Rémi Gillig - Setup Hugo with Travis CI and GitHub Pages</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="/css/main.css"/>
+    <link rel="stylesheet" href="/highlight/zenburn.css">
+    <link rel='shortcut icon' href='/favicon.ico' />
+    <link rel='icon' href='/favicon.gif' type='image/gif'/>
+    <link rel="openid2.provider" href="https://www.google.com/accounts/o8/ud?source=profiles" />
+    <link rel="openid2.local_id" href="https://profiles.google.com/remigillig" />
+</head>
+<body>
+    <div id="bg-container">
+        <div id="bg">
+            <div id="bg-right"></div>
+        </div>
+    </div>
+    <div id="main-container">
+        <div id="main">
+            <div id="header">
+                <h1><a href="/" title="Return to the first page">speps.fr</a></h1>
+                <ul>
+                    <li><a href="/aboutme" title="Some information about myself"><span class="left"></span><span class="mid">About Me</span><span class="right"></span></a></li>
+                    <li><a href="/projects" title="My work, my projects, my hobbies"><span class="left"></span><span class="mid">Projects</span><span class="right"></span></a></li>
+                    <li><a href="/articles" title="Some articles I wrote"><span class="left"></span><span class="mid">Articles</span><span class="right"></span></a></li>
+                    <li><a href="/resume" title="My resume for your recruiting needs"><span class="left"></span><span class="mid">Resume</span><span class="right"></span></a></li>
+                    <li><a href="/links" title="What I spend my time with on the web"><span class="left"></span><span class="mid">Links</span><span class="right"></span></a></li>
+                </ul>
+                <div id="social"><a href="http://www.linkedin.com/in/remigillig"><img src="/images/linkedin.png"/></a></div>
+                <div id="social">&nbsp;</div>
+                <div id="social"><a href="http://twitter.com/remigillig"><img src="/images/twitter.png"/></a></div>
+            </div>
+<div id="content">
+	<div id="page">
+		<div id="sideinfo">
+			<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#have-your-hugo-website-ready:64a00e54bc112d22b252689389accbce">Have your Hugo website ready</a></li>
+<li><a href="#github-pages-setup:64a00e54bc112d22b252689389accbce">GitHub Pages setup</a></li>
+<li><a href="#travis-ci-setup:64a00e54bc112d22b252689389accbce">Travis CI setup</a>
+<ul>
+<li><a href="#obtain-the-deploy-sh-script:64a00e54bc112d22b252689389accbce">Obtain the deploy.sh script</a></li>
+<li><a href="#generate-an-access-token-for-github:64a00e54bc112d22b252689389accbce">Generate an access token for GitHub</a></li>
+<li><a href="#setup-travis-yml:64a00e54bc112d22b252689389accbce">Setup .travis.yml</a></li>
+<li><a href="#cross-compiling-hugo:64a00e54bc112d22b252689389accbce">Cross compiling Hugo</a></li>
+</ul></li>
+<li><a href="#wrapping-up:64a00e54bc112d22b252689389accbce">Wrapping up</a></li>
+</ul></li>
+</ul>
+</nav>
+		</div>
+		<h1>Setup Hugo with Travis CI and GitHub Pages</h1>
+		
+
+<p>This article aims to introduce and show how to generate your <a href="http://gohugo.io">Hugo</a> site on <a href="http://travis-ci.org">Travis CI</a> and then deploy it automatically to <a href="https://pages.github.com">GitHub Pages</a>.</p>
+
+<h2 id="have-your-hugo-website-ready:64a00e54bc112d22b252689389accbce">Have your Hugo website ready</h2>
+
+<p>The first step is to have your Hugo website working locally at least. It should build without errors. The default output folder is <code>public</code>. NOTE: if you changed that using <code>publishdir</code> in your config file please change it in the following steps.</p>
+
+<p>For more information, please refer to <a href="https://gohugo.io/overview/quickstart/">Hugo&rsquo;s documentation</a>.</p>
+
+<h2 id="github-pages-setup:64a00e54bc112d22b252689389accbce">GitHub Pages setup</h2>
+
+<p>For GitHub Pages, there are a few options available. You can have User/Organization Pages or Project Pages. The steps presented here should work for both but the different branch names might differ depending on how you want to organize your repository.</p>
+
+<p>Usually you have a branch with the website sources and another one with the website generated files. In my case, I have a <code>sources</code> branch and a <code>master</code> branch because I&rsquo;m using User Pages (same applies to Organization Pages). For Project Pages, you&rsquo;d probably have the sources in the <code>master</code> branch (in a sub-folder for example) and then the generated files in the <code>gh-pages</code> branch (as required by GitHub).</p>
+
+<p>The important thing is to have your sources in the right branch in the first place. For User/Organization pages, it should be any branch other than <code>master</code>. For Project Pages, it should be any branch other than <code>gh-pages</code>.</p>
+
+<p>There are plenty of tutorials on how to create a new branch in Git and submit it to your GitHub account. For more information, please refer to <a href="https://help.github.com/articles/user-organization-and-project-pages/">User, Organization, and Project Pages</a>.</p>
+
+<h2 id="travis-ci-setup:64a00e54bc112d22b252689389accbce">Travis CI setup</h2>
+
+<p>On Travis CI, you can build and deploy your website automatically.</p>
+
+<h3 id="obtain-the-deploy-sh-script:64a00e54bc112d22b252689389accbce">Obtain the deploy.sh script</h3>
+
+<p>You need this script in your root folder :</p>
+
+<p><a href="https://github.com/X1011/git-directory-deploy/blob/master/deploy.sh">https://github.com/X1011/git-directory-deploy/blob/master/deploy.sh</a></p>
+
+<h3 id="generate-an-access-token-for-github:64a00e54bc112d22b252689389accbce">Generate an access token for GitHub</h3>
+
+<p>You need to generate a new &ldquo;Personal Access Token&rdquo; from this GitHub page : <a href="https://github.com/settings/tokens">https://github.com/settings/tokens</a></p>
+
+<p>Click on &ldquo;Generate new token&rdquo; and follow the instructions. You need to select the <code>public_repo</code> or <code>repo</code> scopes. Once the token is generated, you need to copy it.</p>
+
+<p>Then you need to encrypt it so you can use on Travis CI, <a href="https://docs.travis-ci.com/user/encryption-keys/">follow those instructions</a> and then run this command :</p>
+
+<pre><code class="language-bash">travis encrypt GIT_DEPLOY_REPO=https://GENERATED_TOKEN@github.com/username/reponame.git
+</code></pre>
+
+<p>Replace <code>GENERATED_TOKEN</code> with the generated token earlier and <code>username</code> by your GitHub username and <code>reponame</code> by the repository name.</p>
+
+<h3 id="setup-travis-yml:64a00e54bc112d22b252689389accbce">Setup .travis.yml</h3>
+
+<p>In your <code>sources</code> branch, you have to create a .travis.yml file which will be picked up by Travis CI and be used to configure your build process.</p>
+
+<p>The contents of .travis.yml should be as follows, <strong>note instructions inlined</strong> :</p>
+
+<pre><code class="language-yaml">env:
+  global:
+    - secure: &quot;...&quot; # replace by the output from travis encrypt done earlier
+    - GIT_DEPLOY_DIR=public # this is the default output dir of Hugo
+    - GIT_DEPLOY_BRANCH=master # this is the target branch, replace by gh-pages for Project Pages
+    - GIT_DEPLOY_USERNAME=&quot;Travis CI&quot; # dummy name
+    - GIT_DEPLOY_EMAIL=user@example.com # replace by your email
+branches:
+  only:
+    - sources # replace by master for Project Pages
+
+install:
+  - rm -rf public || exit 0 # cleanup previous run
+script:
+  - binaries/hugo # generate!
+after_success:
+  - cp .travis.yml public # all branches need this file
+  - bash deploy.sh # run the deploy script
+</code></pre>
+
+<p>NOTE the <a href="https://github.com/speps/speps.github.io/blob/sources/.travis.yml">latest version of <code>.travis.yml</code> will always be at my <code>sources</code> branch</a>.</p>
+
+<h3 id="cross-compiling-hugo:64a00e54bc112d22b252689389accbce">Cross compiling Hugo</h3>
+
+<p>You could setup your Travis CI to install a Go version, but it will be faster to cross compile the <code>hugo</code> binary yourself and then deploy it in your <code>sources</code> branch.</p>
+
+<p>Run from your root folder those following commands, line by line :</p>
+
+<pre><code class="language-sh">mkdir binaries
+cd binaries
+env GOPATH=&quot;`pwd`&quot; go get -v github.com/spf13/hugo
+env GOPATH=&quot;`pwd`&quot; GOOS=linux GOARCH=amd64 go build -v github.com/spf13/hugo
+git add hugo
+</code></pre>
+
+<p>This will add the <code>hugo</code> binary compiled for a Travis VM to Git&rsquo;s index. Don&rsquo;t forget to commit it.</p>
+
+<h2 id="wrapping-up:64a00e54bc112d22b252689389accbce">Wrapping up</h2>
+
+<p>By the end of these steps, you should now have something like this in your root folder :</p>
+
+<ul>
+<li>[root folder]
+
+<ul>
+<li>[archetypes]</li>
+<li>[binaries]</li>
+<li>hugo</li>
+<li>[content]</li>
+<li>[data]</li>
+<li>[layouts]</li>
+<li>[static]</li>
+<li>[themes]</li>
+<li><strong>.travis.yml</strong></li>
+<li>config.toml</li>
+<li><strong>deploy.sh</strong></li>
+</ul></li>
+</ul>
+
+<p>Most of those are Hugo&rsquo;s default folders when you create a new site. The important files are <code>.travis.yml</code> and <code>deploy.sh</code>.</p>
+
+<p>Once you push everything to GitHub, don&rsquo;t forget to activate your project on Travis CI so it will start builds.</p>
+
+	</div>
+</div>
+            <div id="footer"><p>2016-01-24 20:35:53 &#43;0000 - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
+        </div>
+    </div>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-12141305-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+<script src="/highlight/highlight.pack.js"></script>
+<script>
+hljs.initHighlighting();
+</script>
+</body>
+</html>
