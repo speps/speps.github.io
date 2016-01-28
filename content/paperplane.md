@@ -5,7 +5,7 @@ title = "PaperPlane"
 
 # PaperPlane
 
-<img src="/media/pp-ss.jpg" alt="Puddle" style="float:right;padding-left:20px;"/>**Update :** This project has won the student prize prize at [Milthon Awards 2010](http://www.milthon.fr) ex-aequo with Gerridae.
+<img src="/media/pp-ss.jpg" alt="PaperPlane" style="float:right;padding-left:20px;"/>**Update :** This project has won the student prize prize at [Milthon Awards 2010](http://www.milthon.fr) ex-aequo with Gerridae.
 
 PaperPlane is a project made during my second year at [ENJMIN](http://www.enjmin.fr). It involved a team of 9 persons during 6 months. It was an incredible experience.
 
