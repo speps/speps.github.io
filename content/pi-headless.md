@@ -21,3 +21,15 @@ Follow this guide for this step : https://www.raspberrypi.org/documentation/inst
 ## Editing WiFi configuration
 
 * Open Paragon ExtFS for Windows
+
+## Add Samba share
+
+    [global]
+        wins support = yes
+    [pi]
+       path = /home/pi
+       writeable = yes
+       browseable = yes
+       only guest = no
+       read only = no
+       public = yes
