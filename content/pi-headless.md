@@ -24,6 +24,8 @@ Follow this guide for this step : https://www.raspberrypi.org/documentation/inst
 
 ## Add Samba share
 
+* Edit `/etc/samba/smb.conf` and replace contents with :
+
     [global]
         wins support = yes
     [pi]
@@ -33,3 +35,7 @@ Follow this guide for this step : https://www.raspberrypi.org/documentation/inst
        only guest = no
        read only = no
        public = yes
+
+* Then run :
+
+    sudo smbpasswd -a pi
