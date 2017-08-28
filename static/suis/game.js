@@ -9333,128 +9333,6 @@ var _elm_lang$svg$Svg_Events$onMouseOut = _elm_lang$svg$Svg_Events$simpleOn('mou
 var _elm_lang$svg$Svg_Events$onMouseOver = _elm_lang$svg$Svg_Events$simpleOn('mouseover');
 var _elm_lang$svg$Svg_Events$onMouseUp = _elm_lang$svg$Svg_Events$simpleOn('mouseup');
 
-var _elm_lang$window$Native_Window = function()
-{
-
-var size = _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)	{
-	callback(_elm_lang$core$Native_Scheduler.succeed({
-		width: window.innerWidth,
-		height: window.innerHeight
-	}));
-});
-
-return {
-	size: size
-};
-
-}();
-var _elm_lang$window$Window_ops = _elm_lang$window$Window_ops || {};
-_elm_lang$window$Window_ops['&>'] = F2(
-	function (task1, task2) {
-		return A2(
-			_elm_lang$core$Task$andThen,
-			function (_p0) {
-				return task2;
-			},
-			task1);
-	});
-var _elm_lang$window$Window$onSelfMsg = F3(
-	function (router, dimensions, state) {
-		var _p1 = state;
-		if (_p1.ctor === 'Nothing') {
-			return _elm_lang$core$Task$succeed(state);
-		} else {
-			var send = function (_p2) {
-				var _p3 = _p2;
-				return A2(
-					_elm_lang$core$Platform$sendToApp,
-					router,
-					_p3._0(dimensions));
-			};
-			return A2(
-				_elm_lang$window$Window_ops['&>'],
-				_elm_lang$core$Task$sequence(
-					A2(_elm_lang$core$List$map, send, _p1._0.subs)),
-				_elm_lang$core$Task$succeed(state));
-		}
-	});
-var _elm_lang$window$Window$init = _elm_lang$core$Task$succeed(_elm_lang$core$Maybe$Nothing);
-var _elm_lang$window$Window$size = _elm_lang$window$Native_Window.size;
-var _elm_lang$window$Window$width = A2(
-	_elm_lang$core$Task$map,
-	function (_) {
-		return _.width;
-	},
-	_elm_lang$window$Window$size);
-var _elm_lang$window$Window$height = A2(
-	_elm_lang$core$Task$map,
-	function (_) {
-		return _.height;
-	},
-	_elm_lang$window$Window$size);
-var _elm_lang$window$Window$onEffects = F3(
-	function (router, newSubs, oldState) {
-		var _p4 = {ctor: '_Tuple2', _0: oldState, _1: newSubs};
-		if (_p4._0.ctor === 'Nothing') {
-			if (_p4._1.ctor === '[]') {
-				return _elm_lang$core$Task$succeed(_elm_lang$core$Maybe$Nothing);
-			} else {
-				return A2(
-					_elm_lang$core$Task$andThen,
-					function (pid) {
-						return _elm_lang$core$Task$succeed(
-							_elm_lang$core$Maybe$Just(
-								{subs: newSubs, pid: pid}));
-					},
-					_elm_lang$core$Process$spawn(
-						A3(
-							_elm_lang$dom$Dom_LowLevel$onWindow,
-							'resize',
-							_elm_lang$core$Json_Decode$succeed(
-								{ctor: '_Tuple0'}),
-							function (_p5) {
-								return A2(
-									_elm_lang$core$Task$andThen,
-									_elm_lang$core$Platform$sendToSelf(router),
-									_elm_lang$window$Window$size);
-							})));
-			}
-		} else {
-			if (_p4._1.ctor === '[]') {
-				return A2(
-					_elm_lang$window$Window_ops['&>'],
-					_elm_lang$core$Process$kill(_p4._0._0.pid),
-					_elm_lang$core$Task$succeed(_elm_lang$core$Maybe$Nothing));
-			} else {
-				return _elm_lang$core$Task$succeed(
-					_elm_lang$core$Maybe$Just(
-						{subs: newSubs, pid: _p4._0._0.pid}));
-			}
-		}
-	});
-var _elm_lang$window$Window$subscription = _elm_lang$core$Native_Platform.leaf('Window');
-var _elm_lang$window$Window$Size = F2(
-	function (a, b) {
-		return {width: a, height: b};
-	});
-var _elm_lang$window$Window$MySub = function (a) {
-	return {ctor: 'MySub', _0: a};
-};
-var _elm_lang$window$Window$resizes = function (tagger) {
-	return _elm_lang$window$Window$subscription(
-		_elm_lang$window$Window$MySub(tagger));
-};
-var _elm_lang$window$Window$subMap = F2(
-	function (func, _p6) {
-		var _p7 = _p6;
-		return _elm_lang$window$Window$MySub(
-			function (_p8) {
-				return func(
-					_p7._0(_p8));
-			});
-	});
-_elm_lang$core$Native_Platform.effectManagers['Window'] = {pkg: 'elm-lang/window', init: _elm_lang$window$Window$init, onEffects: _elm_lang$window$Window$onEffects, onSelfMsg: _elm_lang$window$Window$onSelfMsg, tag: 'sub', subMap: _elm_lang$window$Window$subMap};
-
 var _user$project$Utils$svgRect = F3(
 	function (pos, size, extra) {
 		return A2(
@@ -9724,9 +9602,6 @@ var _user$project$Msg$CellClicked = function (a) {
 var _user$project$Msg$PageHidden = function (a) {
 	return {ctor: 'PageHidden', _0: a};
 };
-var _user$project$Msg$WindowSize = function (a) {
-	return {ctor: 'WindowSize', _0: a};
-};
 var _user$project$Msg$NewLocation = function (a) {
 	return {ctor: 'NewLocation', _0: a};
 };
@@ -9805,8 +9680,8 @@ var _user$project$Game$cellRadius = F2(
 	function (world, cell) {
 		return A3(
 			_user$project$Utils$lerp,
-			10,
-			60,
+			30,
+			90,
 			A2(_user$project$Game$cellRatio, world, cell));
 	});
 var _user$project$Game$cellDivideAngle = F2(
@@ -10321,15 +10196,15 @@ var _user$project$Main$Model = F6(
 var _user$project$Main$Ended = {ctor: 'Ended'};
 var _user$project$Main$Paused = {ctor: 'Paused'};
 var _user$project$Main$Playing = {ctor: 'Playing'};
+var _user$project$Main$Starting = {ctor: 'Starting'};
 var _user$project$Main$initialModel = {
 	flags: {},
 	hash: {ctor: '[]'},
 	windowSize: A2(_user$project$Utils$FPoint, 1920, 1080),
 	currentTime: 0,
-	state: _user$project$Main$Playing,
+	state: _user$project$Main$Starting,
 	world: _user$project$Game$initialWorld
 };
-var _user$project$Main$Starting = {ctor: 'Starting'};
 var _user$project$Main$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
@@ -10343,20 +10218,6 @@ var _user$project$Main$update = F2(
 						model,
 						{
 							hash: _user$project$Utils$splitHash(_p2.hash)
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'WindowSize':
-				var _p3 = _p0._0;
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							windowSize: A2(
-								_user$project$Utils$FPoint,
-								_elm_lang$core$Basics$toFloat(_p3.width),
-								_elm_lang$core$Basics$toFloat(_p3.height))
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
@@ -10382,7 +10243,15 @@ var _user$project$Main$update = F2(
 				};
 			default:
 				var dtSecs = _elm_lang$core$Time$inSeconds(_p0._0);
-				return _elm_lang$core$Native_Utils.eq(model.state, _user$project$Main$Paused) ? {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none} : (_elm_lang$core$Native_Utils.eq(model.state, _user$project$Main$Playing) ? {
+				return _elm_lang$core$Native_Utils.eq(model.state, _user$project$Main$Paused) ? {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none} : (_elm_lang$core$Native_Utils.eq(model.state, _user$project$Main$Playing) ? (_elm_lang$core$Native_Utils.eq(
+					_elm_lang$core$Array$length(model.world.cells),
+					0) ? {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{state: _user$project$Main$Ended, currentTime: model.currentTime + dtSecs}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				} : {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
@@ -10391,13 +10260,13 @@ var _user$project$Main$update = F2(
 							world: A2(_user$project$Game$worldUpdate, model.world, dtSecs)
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
-				} : {
+				}) : (_elm_lang$core$Native_Utils.eq(model.state, _user$project$Main$Ended) ? {ctor: '_Tuple2', _0: _user$project$Main$initialModel, _1: _elm_lang$core$Platform_Cmd$none} : {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{currentTime: model.currentTime + dtSecs}),
 					_1: _elm_lang$core$Platform_Cmd$none
-				});
+				}));
 		}
 	});
 var _user$project$Main$init = F2(
