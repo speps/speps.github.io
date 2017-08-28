@@ -7,6 +7,8 @@
 		<style>
 			html,head,body { padding:0; margin:0;width:100%;height:100%;overflow:hidden; }
 			body { font-family: calibri, helvetica, arial, sans-serif; }
+			.cellL { fill: #00ffe5; }
+			.cellR { fill: #ffff00; }
 		</style>
 		<script type="text/javascript" src="game.js"></script>
 	</head>
@@ -42,6 +44,11 @@
 			document.addEventListener("touchmove", touchHandler, true);
 			document.addEventListener("touchend", touchHandler, true);
 			document.addEventListener("touchcancel", touchHandler, true);
+
+			function handleVisibilityChange() {
+				app.ports.pageHidden.send(document.hidden);
+			}
+			document.addEventListener("visibilitychange", handleVisibilityChange, false);
 		</script>
 	</body>
 </html>
