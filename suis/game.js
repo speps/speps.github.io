@@ -9438,6 +9438,32 @@ var _user$project$Utils$removeIndices = F2(
 			}
 		}
 	});
+var _user$project$Utils$halton = F2(
+	function (index, base) {
+		var sub = F3(
+			function (i, f, r) {
+				sub:
+				while (true) {
+					var _p4 = i;
+					if (_p4 === 0) {
+						return r;
+					} else {
+						var f_ = f / _elm_lang$core$Basics$toFloat(base);
+						var d_ = A2(_elm_lang$core$Basics_ops['%'], i, base);
+						var i_ = ((i - d_) / base) | 0;
+						var r_ = r + (_elm_lang$core$Basics$toFloat(d_) * f_);
+						var _v6 = i_,
+							_v7 = f_,
+							_v8 = r_;
+						i = _v6;
+						f = _v7;
+						r = _v8;
+						continue sub;
+					}
+				}
+			});
+		return A3(sub, index, 1, 0);
+	});
 var _user$project$Utils$angleDiff = F2(
 	function (a, b) {
 		return 180 - _elm_lang$core$Basics$abs(
@@ -9453,13 +9479,13 @@ var _user$project$Utils$unitAngle = function (v) {
 	unitAngle:
 	while (true) {
 		if (_elm_lang$core$Native_Utils.cmp(v, 360) > 0) {
-			var _v5 = v - 360;
-			v = _v5;
+			var _v9 = v - 360;
+			v = _v9;
 			continue unitAngle;
 		} else {
 			if (_elm_lang$core$Native_Utils.cmp(v, -360) < 0) {
-				var _v6 = v + 360;
-				v = _v6;
+				var _v10 = v + 360;
+				v = _v10;
 				continue unitAngle;
 			} else {
 				return v;
@@ -9479,24 +9505,24 @@ var _user$project$Utils$trs = function (ops) {
 			A2(
 				_elm_lang$core$List$map,
 				function (op) {
-					var _p4 = op;
-					switch (_p4.ctor) {
+					var _p5 = op;
+					switch (_p5.ctor) {
 						case 'T':
-							var _p5 = _p4._0;
+							var _p6 = _p5._0;
 							return A2(
 								_elm_lang$core$Basics_ops['++'],
 								'translate(',
 								A2(
 									_elm_lang$core$Basics_ops['++'],
 									_elm_lang$core$Basics$toString(
-										_user$project$Utils$unitRound(_p5.x)),
+										_user$project$Utils$unitRound(_p6.x)),
 									A2(
 										_elm_lang$core$Basics_ops['++'],
 										',',
 										A2(
 											_elm_lang$core$Basics_ops['++'],
 											_elm_lang$core$Basics$toString(
-												_user$project$Utils$unitRound(_p5.y)),
+												_user$project$Utils$unitRound(_p6.y)),
 											')'))));
 						case 'R':
 							return A2(
@@ -9506,24 +9532,24 @@ var _user$project$Utils$trs = function (ops) {
 									_elm_lang$core$Basics_ops['++'],
 									_elm_lang$core$Basics$toString(
 										_user$project$Utils$unitAngle(
-											_user$project$Utils$unitRound(_p4._0))),
+											_user$project$Utils$unitRound(_p5._0))),
 									',0,0)'));
 						default:
-							var _p6 = _p4._0;
+							var _p7 = _p5._0;
 							return A2(
 								_elm_lang$core$Basics_ops['++'],
 								'scale(',
 								A2(
 									_elm_lang$core$Basics_ops['++'],
 									_elm_lang$core$Basics$toString(
-										_user$project$Utils$unitRound(_p6)),
+										_user$project$Utils$unitRound(_p7)),
 									A2(
 										_elm_lang$core$Basics_ops['++'],
 										',',
 										A2(
 											_elm_lang$core$Basics_ops['++'],
 											_elm_lang$core$Basics$toString(
-												_user$project$Utils$unitRound(_p6)),
+												_user$project$Utils$unitRound(_p7)),
 											')'))));
 					}
 				},
@@ -9537,6 +9563,25 @@ var _user$project$Utils$FPoint = F2(
 	function (a, b) {
 		return {x: a, y: b};
 	});
+var _user$project$Utils$haltonPoints = function (num) {
+	return A2(
+		_elm_lang$core$List$indexedMap,
+		F2(
+			function (i, p) {
+				return {
+					ctor: '_Tuple2',
+					_0: A2(
+						_user$project$Utils$FPoint,
+						A2(_user$project$Utils$halton, i, 2),
+						A2(_user$project$Utils$halton, i, 3)),
+					_1: A2(_user$project$Utils$halton, i, 5)
+				};
+			}),
+		A2(
+			_elm_lang$core$List$repeat,
+			num,
+			A2(_user$project$Utils$FPoint, 0, 0)));
+};
 var _user$project$Utils_ops = _user$project$Utils_ops || {};
 _user$project$Utils_ops['~+'] = F2(
 	function (lhs, rhs) {
@@ -9598,13 +9643,13 @@ var _user$project$Utils$normal = function (v) {
 var _user$project$Utils$rotate = F2(
 	function (v, a) {
 		var r = _user$project$Utils$angleToRad(a);
-		var _p7 = {
+		var _p8 = {
 			ctor: '_Tuple2',
 			_0: _elm_lang$core$Basics$sin(r),
 			_1: _elm_lang$core$Basics$cos(r)
 		};
-		var s = _p7._0;
-		var c = _p7._1;
+		var s = _p8._0;
+		var c = _p8._1;
 		return A2(_user$project$Utils$FPoint, (c * v.x) - (s * v.y), (s * v.x) + (c * v.y));
 	});
 var _user$project$Utils$toF = function (ip) {
@@ -9916,6 +9961,78 @@ var _user$project$Game$cellDraw = F3(
 			});
 	});
 var _user$project$Game$worldDraw = function (world) {
+	var shift = _elm_lang$core$Basics$toFloat(
+		_elm_lang$core$Basics$ceiling(world.camera.y / world.size.y));
+	var pts = A2(
+		_elm_lang$core$List$map,
+		function (c) {
+			var _p1 = c;
+			var p = _p1._0;
+			var r_ = _p1._1;
+			var col = A2(
+				_elm_lang$core$Basics_ops['++'],
+				'hsl(0,0%,',
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					_elm_lang$core$Basics$toString(
+						_elm_lang$core$Basics$round(r_ * 100)),
+					'%)'));
+			return A2(
+				_elm_lang$svg$Svg$circle,
+				{
+					ctor: '::',
+					_0: _elm_lang$svg$Svg_Attributes$cx(
+						_elm_lang$core$Basics$toString(p.x * world.size.x)),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$svg$Svg_Attributes$cy(
+							_elm_lang$core$Basics$toString(p.y * world.size.y)),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$svg$Svg_Attributes$r(
+								_elm_lang$core$Basics$toString(1 + (r_ * 4))),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$fill(col),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				},
+				{ctor: '[]'});
+		},
+		world.points);
+	var field = A2(
+		_elm_lang$svg$Svg$g,
+		{
+			ctor: '::',
+			_0: _user$project$Utils$trs(
+				{
+					ctor: '::',
+					_0: _user$project$Utils$T(
+						A2(_user$project$Utils$FPoint, (0 - world.size.x) / 2, ((0 - world.size.y) / 2) + (world.size.y * shift))),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$svg$Svg$g,
+				{
+					ctor: '::',
+					_0: _user$project$Utils$trs(
+						{
+							ctor: '::',
+							_0: _user$project$Utils$T(
+								A2(_user$project$Utils$FPoint, 0, 0 - world.size.y)),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				},
+				pts),
+			_1: pts
+		});
 	return A2(
 		_elm_lang$svg$Svg$g,
 		{ctor: '[]'},
@@ -9944,11 +10061,15 @@ var _user$project$Game$worldDraw = function (world) {
 						{ctor: '[]'}),
 					_1: {ctor: '[]'}
 				}),
-			_1: _elm_lang$core$Array$toList(
-				A2(
-					_elm_lang$core$Array$indexedMap,
-					_user$project$Game$cellDraw(world),
-					world.cells))
+			_1: {
+				ctor: '::',
+				_0: field,
+				_1: _elm_lang$core$Array$toList(
+					A2(
+						_elm_lang$core$Array$indexedMap,
+						_user$project$Game$cellDraw(world),
+						world.cells))
+			}
 		});
 };
 var _user$project$Game$cellIsDead = F2(
@@ -9991,8 +10112,8 @@ var _user$project$Game$worldStep = function (world) {
 		0,
 		world.cells);
 	var newY = world.camera.y + ((minY - world.camera.y) * cameraStiffness);
-	var _p1 = cellIndicesToRemove;
-	if (_p1.ctor === '[]') {
+	var _p2 = cellIndicesToRemove;
+	if (_p2.ctor === '[]') {
 		return _elm_lang$core$Native_Utils.update(
 			world,
 			{
@@ -10004,7 +10125,7 @@ var _user$project$Game$worldStep = function (world) {
 			world,
 			{
 				camera: A2(_user$project$Utils$FPoint, 0, newY),
-				cells: A2(_user$project$Utils$removeIndices, _p1, reflectedCells)
+				cells: A2(_user$project$Utils$removeIndices, _p2, reflectedCells)
 			});
 	}
 };
@@ -10041,6 +10162,7 @@ var _user$project$Game$initialWorld = function () {
 		accumulator: 0,
 		cells: _elm_lang$core$Array$fromList(
 			{ctor: '[]'}),
+		points: _user$project$Utils$haltonPoints(200),
 		camera: A2(_user$project$Utils$FPoint, 0, 0)
 	};
 	return _elm_lang$core$Native_Utils.update(
@@ -10100,9 +10222,9 @@ var _user$project$Game$Cell = F3(
 	function (a, b, c) {
 		return {birthTime: a, birthPos: b, direction: c};
 	});
-var _user$project$Game$World = F5(
-	function (a, b, c, d, e) {
-		return {size: a, time: b, accumulator: c, cells: d, camera: e};
+var _user$project$Game$World = F6(
+	function (a, b, c, d, e, f) {
+		return {size: a, time: b, accumulator: c, cells: d, points: e, camera: f};
 	});
 
 var _user$project$Main$lookAt = function (model) {
@@ -10342,8 +10464,18 @@ var _user$project$Main$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				} : {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			case 'CellClicked':
-				var newState = _elm_lang$core$Native_Utils.eq(model.state, _user$project$Main$Starting) ? _user$project$Main$Playing : model.state;
-				return _elm_lang$core$Native_Utils.eq(newState, _user$project$Main$Paused) ? {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none} : {
+				var newState = function () {
+					var _p3 = model.state;
+					switch (_p3.ctor) {
+						case 'Starting':
+							return _user$project$Main$Playing;
+						case 'Paused':
+							return _user$project$Main$Playing;
+						default:
+							return model.state;
+					}
+				}();
+				return _elm_lang$core$Native_Utils.eq(newState, _user$project$Main$Paused) ? {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none} : (_elm_lang$core$Native_Utils.eq(model.state, _user$project$Main$Playing) ? {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
@@ -10352,7 +10484,13 @@ var _user$project$Main$update = F2(
 							world: A2(_user$project$Game$cellDivide, model.world, _p0._0)
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
-				};
+				} : {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{state: newState}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				});
 			default:
 				var dtSecs = _elm_lang$core$Time$inSeconds(_p0._0);
 				return _elm_lang$core$Native_Utils.eq(model.state, _user$project$Main$Paused) ? {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none} : (_elm_lang$core$Native_Utils.eq(model.state, _user$project$Main$Playing) ? (_elm_lang$core$Native_Utils.eq(
