@@ -9821,8 +9821,7 @@ var _user$project$Game$cellOpacity = F2(
 	});
 var _user$project$Game$cellDraw = F3(
 	function (world, index, cell) {
-		var radius = _elm_lang$core$Basics$toString(
-			A2(_user$project$Game$cellRadius, world, cell));
+		var radius = A2(_user$project$Game$cellRadius, world, cell);
 		var pos = A2(_user$project$Game$cellPos, world, cell);
 		var divAngle = A2(_user$project$Game$cellDivideAngle, world, cell);
 		var angle = _user$project$Game$cellAngle(cell);
@@ -9889,11 +9888,11 @@ var _user$project$Game$cellDraw = F3(
 									}),
 								_1: {
 									ctor: '::',
-									_0: _elm_lang$svg$Svg_Attributes$filter('url(#cellBlur)'),
+									_0: _elm_lang$svg$Svg_Events$onClick(
+										_user$project$Msg$CellClicked(index)),
 									_1: {
 										ctor: '::',
-										_0: _elm_lang$svg$Svg_Events$onClick(
-											_user$project$Msg$CellClicked(index)),
+										_0: _elm_lang$svg$Svg_Attributes$opacity('1'),
 										_1: {ctor: '[]'}
 									}
 								}
@@ -9901,23 +9900,26 @@ var _user$project$Game$cellDraw = F3(
 							{
 								ctor: '::',
 								_0: A2(
-									_elm_lang$svg$Svg$circle,
+									_elm_lang$svg$Svg$image,
 									{
 										ctor: '::',
-										_0: _elm_lang$svg$Svg_Attributes$cx('0'),
+										_0: _elm_lang$svg$Svg_Attributes$x(
+											_elm_lang$core$Basics$toString((0 - radius) / 2)),
 										_1: {
 											ctor: '::',
-											_0: _elm_lang$svg$Svg_Attributes$cy(
-												_elm_lang$core$Basics$toString(offset)),
+											_0: _elm_lang$svg$Svg_Attributes$y(
+												_elm_lang$core$Basics$toString((0 - radius) / 2)),
 											_1: {
 												ctor: '::',
-												_0: _elm_lang$svg$Svg_Attributes$r(radius),
+												_0: _elm_lang$svg$Svg_Attributes$width(
+													_elm_lang$core$Basics$toString(radius)),
 												_1: {
 													ctor: '::',
-													_0: _elm_lang$svg$Svg_Attributes$fill('#00ffe5'),
+													_0: _elm_lang$svg$Svg_Attributes$height(
+														_elm_lang$core$Basics$toString(radius)),
 													_1: {
 														ctor: '::',
-														_0: _elm_lang$svg$Svg_Attributes$opacity('0.75'),
+														_0: _elm_lang$svg$Svg_Attributes$xlinkHref('cell2.svg'),
 														_1: {ctor: '[]'}
 													}
 												}
@@ -9925,35 +9927,7 @@ var _user$project$Game$cellDraw = F3(
 										}
 									},
 									{ctor: '[]'}),
-								_1: {
-									ctor: '::',
-									_0: A2(
-										_elm_lang$svg$Svg$circle,
-										{
-											ctor: '::',
-											_0: _elm_lang$svg$Svg_Attributes$cx('0'),
-											_1: {
-												ctor: '::',
-												_0: _elm_lang$svg$Svg_Attributes$cy(
-													_elm_lang$core$Basics$toString(0 - offset)),
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$svg$Svg_Attributes$r(radius),
-													_1: {
-														ctor: '::',
-														_0: _elm_lang$svg$Svg_Attributes$fill('#ffff00'),
-														_1: {
-															ctor: '::',
-															_0: _elm_lang$svg$Svg_Attributes$opacity('0.75'),
-															_1: {ctor: '[]'}
-														}
-													}
-												}
-											}
-										},
-										{ctor: '[]'}),
-									_1: {ctor: '[]'}
-								}
+								_1: {ctor: '[]'}
 							}),
 						_1: {ctor: '[]'}
 					}
@@ -9961,6 +9935,184 @@ var _user$project$Game$cellDraw = F3(
 			});
 	});
 var _user$project$Game$worldDraw = function (world) {
+	var d = A2(
+		_elm_lang$svg$Svg$defs,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$svg$Svg$filter,
+				{
+					ctor: '::',
+					_0: _elm_lang$svg$Svg_Attributes$id('cellBlur'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$svg$Svg$feGaussianBlur,
+						{
+							ctor: '::',
+							_0: _elm_lang$svg$Svg_Attributes$in_('SourceGraphic'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$stdDeviation('2'),
+								_1: {ctor: '[]'}
+							}
+						},
+						{ctor: '[]'}),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$svg$Svg$radialGradient,
+					{
+						ctor: '::',
+						_0: _elm_lang$svg$Svg_Attributes$id('cellCenterGradient'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$svg$Svg_Attributes$fx('0.3'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$fy('0.3'),
+								_1: {ctor: '[]'}
+							}
+						}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$svg$Svg$stop,
+							{
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$offset('0%'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$svg$Svg_Attributes$stopColor('#8B8895'),
+									_1: {ctor: '[]'}
+								}
+							},
+							{ctor: '[]'}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$svg$Svg$stop,
+								{
+									ctor: '::',
+									_0: _elm_lang$svg$Svg_Attributes$offset('80%'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$svg$Svg_Attributes$stopColor('#514B50'),
+										_1: {ctor: '[]'}
+									}
+								},
+								{ctor: '[]'}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$svg$Svg$stop,
+									{
+										ctor: '::',
+										_0: _elm_lang$svg$Svg_Attributes$offset('100%'),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$svg$Svg_Attributes$stopColor('#514B50'),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$svg$Svg_Attributes$stopOpacity('0'),
+												_1: {ctor: '[]'}
+											}
+										}
+									},
+									{ctor: '[]'}),
+								_1: {ctor: '[]'}
+							}
+						}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$svg$Svg$radialGradient,
+						{
+							ctor: '::',
+							_0: _elm_lang$svg$Svg_Attributes$id('fieldGradient'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$fx('0.55'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$svg$Svg_Attributes$fy('0.45'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$svg$Svg_Attributes$r('30%'),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$svg$Svg$stop,
+								{
+									ctor: '::',
+									_0: _elm_lang$svg$Svg_Attributes$offset('0%'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$svg$Svg_Attributes$stopColor('#ffffff'),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$svg$Svg_Attributes$stopOpacity('0.4'),
+											_1: {ctor: '[]'}
+										}
+									}
+								},
+								{ctor: '[]'}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$svg$Svg$stop,
+									{
+										ctor: '::',
+										_0: _elm_lang$svg$Svg_Attributes$offset('70%'),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$svg$Svg_Attributes$stopColor('#ffffff'),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$svg$Svg_Attributes$stopOpacity('0.1'),
+												_1: {ctor: '[]'}
+											}
+										}
+									},
+									{ctor: '[]'}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$svg$Svg$stop,
+										{
+											ctor: '::',
+											_0: _elm_lang$svg$Svg_Attributes$offset('100%'),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$svg$Svg_Attributes$stopColor('#ffffff'),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$svg$Svg_Attributes$stopOpacity('0'),
+													_1: {ctor: '[]'}
+												}
+											}
+										},
+										{ctor: '[]'}),
+									_1: {ctor: '[]'}
+								}
+							}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
 	var shift = _elm_lang$core$Basics$toFloat(
 		_elm_lang$core$Basics$ceiling(world.camera.y / world.size.y));
 	var pts = A2(
@@ -9969,14 +10121,6 @@ var _user$project$Game$worldDraw = function (world) {
 			var _p1 = c;
 			var p = _p1._0;
 			var r_ = _p1._1;
-			var col = A2(
-				_elm_lang$core$Basics_ops['++'],
-				'hsl(0,0%,',
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					_elm_lang$core$Basics$toString(
-						_elm_lang$core$Basics$round(r_ * 100)),
-					'%)'));
 			return A2(
 				_elm_lang$svg$Svg$circle,
 				{
@@ -9990,10 +10134,10 @@ var _user$project$Game$worldDraw = function (world) {
 						_1: {
 							ctor: '::',
 							_0: _elm_lang$svg$Svg_Attributes$r(
-								_elm_lang$core$Basics$toString(1 + (r_ * 4))),
+								_elm_lang$core$Basics$toString(10 + (r_ * 20))),
 							_1: {
 								ctor: '::',
-								_0: _elm_lang$svg$Svg_Attributes$fill(col),
+								_0: _elm_lang$svg$Svg_Attributes$fill('url(#fieldGradient)'),
 								_1: {ctor: '[]'}
 							}
 						}
@@ -10038,29 +10182,7 @@ var _user$project$Game$worldDraw = function (world) {
 		{ctor: '[]'},
 		{
 			ctor: '::',
-			_0: A2(
-				_elm_lang$svg$Svg$filter,
-				{
-					ctor: '::',
-					_0: _elm_lang$svg$Svg_Attributes$id('cellBlur'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$svg$Svg$feGaussianBlur,
-						{
-							ctor: '::',
-							_0: _elm_lang$svg$Svg_Attributes$in_('SourceGraphic'),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$svg$Svg_Attributes$stdDeviation('2'),
-								_1: {ctor: '[]'}
-							}
-						},
-						{ctor: '[]'}),
-					_1: {ctor: '[]'}
-				}),
+			_0: d,
 			_1: {
 				ctor: '::',
 				_0: field,
@@ -10162,7 +10284,7 @@ var _user$project$Game$initialWorld = function () {
 		accumulator: 0,
 		cells: _elm_lang$core$Array$fromList(
 			{ctor: '[]'}),
-		points: _user$project$Utils$haltonPoints(200),
+		points: _user$project$Utils$haltonPoints(20),
 		camera: A2(_user$project$Utils$FPoint, 0, 0)
 	};
 	return _elm_lang$core$Native_Utils.update(
@@ -10283,39 +10405,99 @@ var _user$project$Main$view = function (model) {
 				{
 					ctor: '::',
 					_0: A2(
-						_elm_lang$svg$Svg$clipPath,
+						_elm_lang$svg$Svg$radialGradient,
 						{
 							ctor: '::',
-							_0: _elm_lang$svg$Svg_Attributes$id('viewportMask'),
-							_1: {ctor: '[]'}
+							_0: _elm_lang$svg$Svg_Attributes$id('backFill'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$r('70%'),
+								_1: {ctor: '[]'}
+							}
 						},
 						{
 							ctor: '::',
 							_0: A2(
-								_elm_lang$svg$Svg$rect,
+								_elm_lang$svg$Svg$stop,
 								{
 									ctor: '::',
-									_0: _elm_lang$svg$Svg_Attributes$x('0'),
+									_0: _elm_lang$svg$Svg_Attributes$offset('0%'),
 									_1: {
 										ctor: '::',
-										_0: _elm_lang$svg$Svg_Attributes$y('0'),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$svg$Svg_Attributes$width(
-												_elm_lang$core$Basics$toString(size.x)),
-											_1: {
-												ctor: '::',
-												_0: _elm_lang$svg$Svg_Attributes$height(
-													_elm_lang$core$Basics$toString(size.y)),
-												_1: {ctor: '[]'}
-											}
-										}
+										_0: _elm_lang$svg$Svg_Attributes$stopColor('#F7EBF2'),
+										_1: {ctor: '[]'}
 									}
 								},
 								{ctor: '[]'}),
-							_1: {ctor: '[]'}
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$svg$Svg$stop,
+									{
+										ctor: '::',
+										_0: _elm_lang$svg$Svg_Attributes$offset('60%'),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$svg$Svg_Attributes$stopColor('#F7EBF2'),
+											_1: {ctor: '[]'}
+										}
+									},
+									{ctor: '[]'}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$svg$Svg$stop,
+										{
+											ctor: '::',
+											_0: _elm_lang$svg$Svg_Attributes$offset('100%'),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$svg$Svg_Attributes$stopColor('#F7EBF2'),
+												_1: {ctor: '[]'}
+											}
+										},
+										{ctor: '[]'}),
+									_1: {ctor: '[]'}
+								}
+							}
 						}),
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$svg$Svg$clipPath,
+							{
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$id('viewportMask'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$svg$Svg$rect,
+									{
+										ctor: '::',
+										_0: _elm_lang$svg$Svg_Attributes$x('0'),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$svg$Svg_Attributes$y('0'),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$svg$Svg_Attributes$width(
+													_elm_lang$core$Basics$toString(size.x)),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$svg$Svg_Attributes$height(
+														_elm_lang$core$Basics$toString(size.y)),
+													_1: {ctor: '[]'}
+												}
+											}
+										}
+									},
+									{ctor: '[]'}),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
 				}),
 			_1: {
 				ctor: '::',
@@ -10346,7 +10528,7 @@ var _user$project$Main$view = function (model) {
 												_elm_lang$core$Basics$toString(size.y)),
 											_1: {
 												ctor: '::',
-												_0: _elm_lang$svg$Svg_Attributes$fill('#000000'),
+												_0: _elm_lang$svg$Svg_Attributes$fill('url(#backFill)'),
 												_1: {ctor: '[]'}
 											}
 										}
@@ -10475,7 +10657,7 @@ var _user$project$Main$update = F2(
 							return model.state;
 					}
 				}();
-				return _elm_lang$core$Native_Utils.eq(newState, _user$project$Main$Paused) ? {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none} : (_elm_lang$core$Native_Utils.eq(model.state, _user$project$Main$Playing) ? {
+				return _elm_lang$core$Native_Utils.eq(model.state, _user$project$Main$Paused) ? {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none} : ((_elm_lang$core$Native_Utils.eq(model.state, _user$project$Main$Playing) || _elm_lang$core$Native_Utils.eq(model.state, _user$project$Main$Starting)) ? {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
