@@ -19,6 +19,7 @@ title = "Links"
 * [Coding Horror](http://www.codinghorror.com/blog/), insightful blog
 * [AIGameDev](http://aigamedev.com/), AI in video games
 * [Smashing Magazine](http://www.smashingmagazine.com/), web design and web programming
+* [Programming for Video Gamers](http://ithare.com/programming-guide-for-video-gamers/), thanks to Dylan for this one!
 
 ## Comics
 * [xkcd](http://xkcd.com/)
