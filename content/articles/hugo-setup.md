@@ -1,6 +1,7 @@
 +++
 date = "2016-01-24T11:26:57Z"
 title = "Setup Hugo with Travis CI and GitHub Pages"
+toc = true
 +++
 
 This article aims to introduce and show how to generate your [Hugo](http://gohugo.io) site on [Travis CI](http://travis-ci.org) and then deploy it automatically to [GitHub Pages](https://pages.github.com).
