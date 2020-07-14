@@ -4,7 +4,9 @@ branches:
 install:
   - rm -rf public || exit 0
 script:
+  - binaries/hugo version
   - binaries/hugo
+  - binaries/hugo gen chromastyles --style=github > public/css/syntax.css
 deploy:
   provider: pages
   skip_cleanup: true

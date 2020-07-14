@@ -2,6 +2,7 @@ baseurl = "http://speps.fr/"
 languageCode = "en-us"
 title = "speps.fr - Rémi Gillig"
 theme = "speps"
+pygmentsUseClasses = true
 
 [taxonomies]
 tag = "tags"
