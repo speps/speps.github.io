@@ -6,8 +6,497 @@
     <description>Recent content in Articles on speps.fr - Rémi Gillig</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 24 Jan 2016 11:26:57 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 12 Jul 2020 19:46:57 +0000</lastBuildDate>
     <atom:link href="http://speps.fr/articles/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Torus Trooper - Rebooting a 15 year-old game written in D - Part 1 Compiling</title>
+      <link>http://speps.fr/articles/torus-trooper-part1/</link>
+      <pubDate>Sun, 12 Jul 2020 19:46:57 +0000</pubDate>
+      
+      <guid>http://speps.fr/articles/torus-trooper-part1/</guid>
+      <description>
+
+&lt;p&gt;While exploring D recently, I remembered a game I played while at university 15 years ago. For a long time, I couldn&amp;rsquo;t remember the name at all, only that it was from a Japanese developer. After some search wrangling, I finally managed to find the name of the game: Torus Trooper!&lt;/p&gt;
+
+&lt;p&gt;You can find it there: &lt;a href=&#34;http://www.asahi-net.or.jp/~cs8k-cyu/windows/tt_e.html&#34;&gt;http://www.asahi-net.or.jp/~cs8k-cyu/windows/tt_e.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://speps.fr/media/articles/tt1.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Here is a copy of the tt0_22.zip file archived: &lt;a href=&#34;https://github.com/speps/tt/archive/legacy.zip&#34;&gt;https://github.com/speps/tt/archive/legacy.zip&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;What made me remember this game is that :&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;It came with &lt;a href=&#34;https://github.com/speps/tt/tree/legacy/src&#34;&gt;source code&lt;/a&gt;, quite unusual at the time for me&lt;/li&gt;
+&lt;li&gt;Written in D, a language I didn&amp;rsquo;t know at all while I was busy studying C++&lt;/li&gt;
+&lt;li&gt;It&amp;rsquo;s awfully addictive!&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;What better project than try to compile a D v0.110 project in a modern version of D! So here we are&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;Part 1 - Compiling a new executable
+Part 2 - Running the game for the first time
+Part 3 - Making it cross platform&lt;/p&gt;
+
+&lt;h2 id=&#34;switching-from-ant-to-dub:95834070c7040d18a199c0907f30b458&#34;&gt;Switching from Ant to DUB&lt;/h2&gt;
+
+&lt;p&gt;The game used Ant and its &lt;code&gt;build.xml&lt;/code&gt; file to generate the executable, resources, etc. Since then, D added DUB as a build system / package manager so let&amp;rsquo;s use that!&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-json&#34;&gt;{
+	&amp;quot;authors&amp;quot;: [
+		&amp;quot;Kenta Cho&amp;quot;,
+		&amp;quot;Remi Gillig&amp;quot;
+	],
+	&amp;quot;copyright&amp;quot;: &amp;quot;Copyright © 2004 - Kenta Cho, 2020 - Remi Gillig&amp;quot;,
+	&amp;quot;description&amp;quot;: &amp;quot;Torus Trooper (Reboot)&amp;quot;,
+	&amp;quot;license&amp;quot;: &amp;quot;BSD 2-clause&amp;quot;,
+	&amp;quot;name&amp;quot;: &amp;quot;tt&amp;quot;,
+	&amp;quot;targetType&amp;quot;: &amp;quot;executable&amp;quot;,
+	&amp;quot;sourcePaths&amp;quot;: [
+		&amp;quot;src&amp;quot;
+	]
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With this initial &lt;code&gt;dub.json&lt;/code&gt; file, I was set to run the &lt;code&gt;dub&lt;/code&gt; command&amp;hellip;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Performing &amp;quot;debug&amp;quot; build using C:\D\dmd2\windows\bin64\dmd.exe for x86.
+tt ~master: building configuration &amp;quot;application&amp;quot;...
+src\abagames\tt\barrage.d(95,33): Error: instead of C-style syntax, use D-style BulletMLParserTinyXML*[char[]][char[]] parser
+src\abagames\tt\barrage.d(122,28): Error: instead of C-style syntax, use D-style BulletMLParserTinyXML*[] pl
+src\abagames\tt\barrage.d(130,14): Error: instead of C-style syntax, use D-style BulletMLParserTinyXML*[char[]] pa
+src\abagames\tt\boot.d(51,12): Error: instead of C-style syntax, use D-style char[4096] exe
+src\abagames\tt\tunnel.d(300,14): Error: template argument expected following !
+src\abagames\tt\tunnel.d(322,14): Error: template argument expected following !
+src\abagames\util\rand.d(115,6): Error: instead of C-style syntax, use D-style uint[N] state
+src\abagames\util\rand.d(140,20): Error: instead of C-style syntax, use D-style uint[] init_key
+src\abagames\util\sdl\luminous.d(21,10): Error: instead of C-style syntax, use D-style GLuint[LUMINOUS_TEXTURE_WIDTH_MAX * LUMINOUS_TEXTURE_HEIGHT_MAX * 4 * (uint).sizeof] td
+src\abagames\util\sdl\luminous.d(83,17): Error: instead of C-style syntax, use D-style float[2][2] lmOfs
+C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Alright let&amp;rsquo;s start and get this to compile!&lt;/p&gt;
+
+&lt;h2 id=&#34;compiling:95834070c7040d18a199c0907f30b458&#34;&gt;Compiling&lt;/h2&gt;
+
+&lt;h2 id=&#34;c-style-syntax-errors:95834070c7040d18a199c0907f30b458&#34;&gt;C-style syntax errors&lt;/h2&gt;
+
+&lt;p&gt;This is one is easy to fix, the suggestion from the compiler works, I just replaced every instance of this error with the suggestion.&lt;/p&gt;
+
+&lt;p&gt;Here is an example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-diff&#34;&gt;--- a/import/SDL_audio.d
++++ b/import/SDL_audio.d
+@@ -42,7 +43,7 @@ struct SDL_AudioSpec {
+     Once the callback returns, the buffer will no longer be valid.
+     Stereo samples are stored in a LRLRLR ordering.
+  */
+- void (*callback)(void *userdata, Uint8 *stream, int len);
++ void function(void *userdata, Uint8 *stream, int len) callback;
+  void  *userdata;
+ }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;error-template-argument-expected-following:95834070c7040d18a199c0907f30b458&#34;&gt;Error: template argument expected following !&lt;/h2&gt;
+
+&lt;p&gt;This is an interesting one, here is one of the files where this error triggers:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-d&#34;&gt;  private void calcIndex(in float z, out int idx, out float ofs) {
+    idx = slice.length + 99999;
+    for (int i = 1; i &amp;lt; slice.length; i++) {
+      if (z &amp;lt; slice[i].depth) {
+        idx = i - 1;
+        ofs = (z - slice[idx].depth) / (slice[idx + 1].depth - slice[idx].depth);
+        break;
+      }
+    }
+    if (idx &amp;lt; 0) {
+      idx = 0;
+      ofs = 0;
+    } else if (idx &amp;gt;= slice.length - 1) {
+      idx = slice.length - 2;
+      ofs = 0.99;
+    }
+    if (ofs !&amp;gt;= 0) // ERROR HERE
+      ofs = 0;
+    else if (ofs &amp;gt;= 1)
+      ofs = 0.99;
+  }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I did try a few searches without success so I asked on the D community forums and a few people guessed right, it&amp;rsquo;s of course a &lt;code&gt;not &amp;gt;=&lt;/code&gt;, equivalent to &lt;code&gt;&amp;lt;&lt;/code&gt;. However, &lt;a href=&#34;https://forum.dlang.org/post/rec3d1$toc$1@digitalmars.com&#34;&gt;thanks to Walter Bright&lt;/a&gt;, I got a link to the &lt;a href=&#34;https://www.digitalmars.com/ctg/ctgNumerics.html#comparisons&#34;&gt;original documentation from Digital Mars&lt;/a&gt;. The subtle difference with &lt;code&gt;!&amp;gt;=&lt;/code&gt; is that it will also return &lt;code&gt;true&lt;/code&gt; if any operands are &lt;code&gt;NaN&lt;/code&gt;. Suggested fix seems to have worked:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-d&#34;&gt;    if (std.math.isNaN(ofs) || ofs &amp;lt; 0)
+      ofs = 0;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;replacing-char-with-string:95834070c7040d18a199c0907f30b458&#34;&gt;Replacing &lt;code&gt;char[]&lt;/code&gt; with &lt;code&gt;string&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;D1 used to have &lt;code&gt;char[]&lt;/code&gt; as the string type, and functions in &lt;code&gt;std.string&lt;/code&gt; in Phobos to manipulate this type. D2 added a dedidcated &lt;code&gt;string&lt;/code&gt; type instead of an alias. As a result, a lot of the code needs updating to deal with this. That includes the code in the custom bindings.&lt;/p&gt;
+
+&lt;p&gt;Most of the changes here are similar to this&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-diff&#34;&gt;--- a/src/abagames/tt/barrage.d
++++ b/src/abagames/tt/barrage.d
+@@ -92,24 +91,24 @@ public class Barrage {
+  */
+ public class BarrageManager {
+  private:
+-  static BulletMLParserTinyXML *parser[char[]][char[]];
+-  static const char[] BARRAGE_DIR_NAME = &amp;quot;barrage&amp;quot;;
++  static BulletMLParserTinyXML*[string][string] parser;
++  static const string BARRAGE_DIR_NAME = &amp;quot;barrage&amp;quot;;
+ 
+   public static void load() {
+-    char[][] dirs = listdir(BARRAGE_DIR_NAME);
+-    foreach (char[] dirName; dirs) {
+-      char[][] files = listdir(BARRAGE_DIR_NAME ~ &amp;quot;/&amp;quot; ~ dirName);
+-      foreach (char[] fileName; files) {
+-        if (getExt(fileName) != &amp;quot;xml&amp;quot;)
++    string[] dirs = listdir(BARRAGE_DIR_NAME);
++    foreach (string dirName; dirs) {
++      string[] files = listdir(BARRAGE_DIR_NAME ~ &amp;quot;/&amp;quot; ~ dirName);
++      foreach (string fileName; files) {
++        if (fileName.extension != &amp;quot;.xml&amp;quot;)
+           continue;
+         parser[dirName][fileName] = getInstance(dirName, fileName);
+       }
+     }
+   }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;converting-value-to-string:95834070c7040d18a199c0907f30b458&#34;&gt;Converting value to string&lt;/h2&gt;
+
+&lt;p&gt;D1 used to have &lt;code&gt;std.string.toString&lt;/code&gt; to convert a value to a &lt;code&gt;char[]&lt;/code&gt; value. This functionality was replaced by &lt;code&gt;std.conv.to!string&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-diff&#34;&gt;--- a/src/abagames/tt/shot.d
++++ b/src/abagames/tt/shot.d
+@@ -5,6 +5,7 @@
+  */
+ module abagames.tt.shot;
+ 
++private import std.conv;
+ private import std.math;
+ private import std.string;
+ private import opengl;
+@@ -179,7 +180,7 @@ public class Shot: Actor {
+       else if (sc &amp;gt;= 2000)
+         size = 0.7;
+       size *= (1 + multiplier * 0.01f);
+-      fl.set(&amp;quot;X&amp;quot; ~ std.string.toString(multiplier), pos, size * pos.y,
++      fl.set(&amp;quot;X&amp;quot; ~ to!string(multiplier), pos, size * pos.y,
+              cast(int) (30 + multiplier * 0.3f));
+     }
+     if (chargeShot) {
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;passing-strings-to-c:95834070c7040d18a199c0907f30b458&#34;&gt;Passing strings to C&lt;/h2&gt;
+
+&lt;p&gt;The usual way to achieve seems to have been to just to use &lt;code&gt;std.string.toStringz&lt;/code&gt;. However, back in D1 it used to return char* :&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;char* toStringz(char[] s);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This worked well for the C bindings but with D2, it now returns:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;immutable(char)* toStringz(scope return string s) pure nothrow @trusted;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Again, the fix is quite straightforward. For example, the bindings weren&amp;rsquo;t written with this in mind so they need fixing:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-diff&#34;&gt;--- a/import/SDL_rwops.d
++++ b/import/SDL_rwops.d
+@@ -81,7 +81,7 @@ struct SDL_RWops {
+ 
+ /* Functions to create SDL_RWops structures from various data sources */
+ 
+-SDL_RWops * SDL_RWFromFile(char *file, char *mode);
++SDL_RWops * SDL_RWFromFile(const char *file, const char *mode);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;simple-substitution:95834070c7040d18a199c0907f30b458&#34;&gt;Simple substitution&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;typedef&lt;/code&gt; → &lt;code&gt;alias&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-diff&#34;&gt;--- a/import/SDL_rwops.d
++++ b/import/SDL_rwops.d
+@@ -28,10 +28,10 @@ import SDL_types;
+ 
+ extern(C):
+ 
+-typedef int (*_seek_func_t)(SDL_RWops *context, int offset, int whence);
+-typedef int (*_read_func_t)(SDL_RWops *context, void *ptr, int size, int maxnum);
+-typedef int (*_write_func_t)(SDL_RWops *context, void *ptr, int size, int num);
+-typedef int (*_close_func_t)(SDL_RWops *context);
++alias int function(SDL_RWops *context, int offset, int whence) _seek_func_t;
++alias int function(SDL_RWops *context, void *ptr, int size, int maxnum) _read_func_t;
++alias int function(SDL_RWops *context, void *ptr, int size, int num) _write_func_t;
++alias int function(SDL_RWops *context) _close_func_t;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;inout&lt;/code&gt; → &lt;code&gt;ref&lt;/code&gt;: this made sense for all instances where &lt;code&gt;inout&lt;/code&gt; was used&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-diff&#34;&gt;--- a/src/abagames/tt/prefmanager.d
++++ b/src/abagames/tt/prefmanager.d
+@@ -59,7 +59,7 @@ public class PrefData {
+ 
+   public this() {
+     gradeData = new GradeData[Ship.GRADE_NUM];
+-    foreach (inout GradeData gd; gradeData)
++    foreach (ref GradeData gd; gradeData)
+       gd = new GradeData;
+   }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;auto T&lt;/code&gt; → &lt;code&gt;auto&lt;/code&gt;: it seems the original author specified auto along with the type which isn&amp;rsquo;t allowed anymore&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-diff&#34;&gt;--- a/src/abagames/tt/shape.d
++++ b/src/abagames/tt/shape.d
+@@ -631,9 +631,9 @@ public class BulletShape: Drawable {
+   }
+ 
+   private void createSquareShape(bool wireShape) {
+-    auto Vector3 cp = new Vector3;
+-    auto Vector3[] p = new Vector3[4];
+-    auto Vector3[] np = new Vector3[4];
++    auto cp = new Vector3;
++    auto p = new Vector3[4];
++    auto np = new Vector3[4];
+     static const float[][][] POINT_DAT = [
+       [[-1, -1, 1], [1, -1, 1], [1, 1, 1], [-1, 1, 1], ],
+       [[-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1], ],
+@@ -642,9 +642,9 @@ public class BulletShape: Drawable {
+       [[1, -1, -1], [1, -1, 1], [1, 1, 1], [1, 1, -1], ],
+       [[-1, -1, -1], [-1, -1, 1], [-1, 1, 1], [-1, 1, -1], ],
+     ];
+-    foreach (inout Vector3 ip; p)
++    foreach (ref Vector3 ip; p)
+       ip = new Vector3;
+-    foreach (inout Vector3 inp; np)
++    foreach (ref Vector3 inp; np)
+       inp = new Vector3;
+     for (int i = 0; i &amp;lt; 6; i++) {
+       cp.x = cp.y = cp.z = 0;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;getExt&lt;/code&gt; → &lt;code&gt;.extension&lt;/code&gt;: behaviour is different but it&amp;rsquo;s easy enough to fix, it now includes the dot&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-diff&#34;&gt;--- a/src/abagames/tt/soundmanager.d
++++ b/src/abagames/tt/soundmanager.d
+@@ -44,10 +45,10 @@ public class SoundManager: abagames.util.sdl.sound.SoundManager {
+ 
+   private static Music[] loadMusics() {
+     Music[] musics;
+-    char[][] files = listdir(Music.dir);
+-    foreach (char[] fileName; files) {
+-      char[] ext = getExt(fileName);
+-      if (ext != &amp;quot;ogg&amp;quot; &amp;amp;&amp;amp; ext != &amp;quot;wav&amp;quot;)
++    string[] files = listdir(Music.dir);
++    foreach (string fileName; files) {
++      string ext = fileName.extension;
++      if (ext != &amp;quot;.ogg&amp;quot; &amp;amp;&amp;amp; ext != &amp;quot;.wav&amp;quot;)
+         continue;
+       Music music = new Music();
+       music.load(fileName);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;catch(Object)&lt;/code&gt; → &lt;code&gt;catch(Throwable)&lt;/code&gt;: you could throw any &lt;code&gt;Object&lt;/code&gt; before, you have to use Throwable now&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-diff&#34;&gt;--- a/src/abagames/tt/boot.d
++++ b/src/abagames/tt/boot.d
+@@ -83,20 +84,20 @@ public int boot(char[][] args) {
+   }
+   try {
+     mainLoop.loop();
+-  } catch (Object o) {
++  } catch (Throwable t) {
+     try {
+       gameManager.saveErrorReplay();
+-    } catch (Object o1) {}
+-    throw o;
++    } catch (Throwable) {}
++    throw t;
+   }
+   return EXIT_SUCCESS;
+ }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;bit&lt;/code&gt; → &lt;code&gt;SDL_bool&lt;/code&gt;: the bit was used back in D1, it behaved like a &lt;code&gt;bool&lt;/code&gt; but used one bit instead so you could make bitfields easily, it was mostly used in the SDL bindings so I replaced it with &lt;code&gt;SDL_bool&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-diff&#34;&gt;--- a/import/SDL_video.d
++++ b/import/SDL_video.d
+@@ -132,7 +133,7 @@ const uint SDL_SRCALPHA	= 0x00010000;	/* Blit uses source alpha blending */
+ const uint SDL_PREALLOC	= 0x01000000;	/* Surface uses preallocated memory */
+ 
+ /* Evaluates to true if the surface needs to be locked before access */
+-bit SDL_MUSTLOCK(SDL_Surface *surface)
++SDL_bool SDL_MUSTLOCK(SDL_Surface *surface)
+ {
+ 	return surface.offset || ((surface.flags &amp;amp;
+ 		(SDL_HWSURFACE | SDL_ASYNCBLIT | SDL_RLEACCEL)) != 0);
+@@ -184,13 +185,7 @@ struct SDL_Overlay {
+ 	void /*private_yuvhwdata*/ *hwdata;
+ 
+ 	/* Special flags */
+-	union
+-	{
+-		bit hw_overlay;
+-		Uint32 _dummy;
+-	}
+-//		Uint32 hw_overlay :1;	/* Flag: This overlay hardware accelerated? */
+-//		Uint32 UnusedBits :31;
++	Uint32 flags;
+ }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;phobos:95834070c7040d18a199c0907f30b458&#34;&gt;Phobos&lt;/h2&gt;
+
+&lt;p&gt;The old code did use &lt;code&gt;std.stream&lt;/code&gt;, from what I read this was deprecated in favor of splitting it into a more modular design. However, to transition old code someone rescued the deprecated code and made it into a DUB package called &lt;a href=&#34;https://code.dlang.org/packages/undead&#34;&gt;&lt;code&gt;undead&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;This was very useful at the start to get the code to compile. However, I wanted to get rid of this dependency as it didn&amp;rsquo;t feel right to keep old code instead of relying on the modern D equivalent. In D1, &lt;code&gt;std.stream.File.read&lt;/code&gt; could read binary data into values. I&amp;rsquo;ve changed it to use &lt;code&gt;std.file.read&lt;/code&gt; and &lt;code&gt;std.bitmanip.read&lt;/code&gt;. It&amp;rsquo;s also important to make sure you specify the endian, the D1 code was implementation-specific regarding the format of types other than byte sized ones so I followed what convention it was on Windows which is little-endian. That means replays and highscores saves should be compatible!&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-diff&#34;&gt;--- a/src/abagames/tt/replay.d
++++ b/src/abagames/tt/replay.d
+@@ -5,7 +5,10 @@
+  */
+ module abagames.tt.replay;
+ 
+-private import undead.stream;
++import std.file;
++import std.array;
++import std.bitmanip;
++
+ private import abagames.util.sdl.recordablepad;
+ 
+ /**
+@@ -22,28 +25,24 @@ public class ReplayData {
+  private:
+ 
+   public void save(string fileName) {
+-    auto fd = new File;
+-    fd.create(dir ~ &amp;quot;/&amp;quot; ~ fileName);
+-    fd.write(VERSION_NUM);
+-    fd.write(level);
+-    fd.write(grade);
+-    fd.write(seed);
+-    padRecord.save(fd);
+-    fd.close();
++    auto buffer = appender!(ubyte[]);
++    buffer.append!(int, Endian.littleEndian)(VERSION_NUM);
++    buffer.append!(float, Endian.littleEndian)(level);
++    buffer.append!(int, Endian.littleEndian)(grade);
++    buffer.append!(long, Endian.littleEndian)(seed);
++    padRecord.save(buffer);
++    std.file.write(dir ~ &amp;quot;/&amp;quot; ~ fileName, buffer[]);
+   }
+ 
+   public void load(string fileName) {
+-    auto fd = new File;
+-    fd.open(dir ~ &amp;quot;/&amp;quot; ~ fileName);
+-    int ver;
+-    fd.read(ver);
++    auto buffer = cast(ubyte[])std.file.read(dir ~ &amp;quot;/&amp;quot; ~ fileName);
++    int ver = buffer.read!(int, Endian.littleEndian);
+     if (ver != VERSION_NUM)
+       throw new Error(&amp;quot;Wrong version num&amp;quot;);
+-    fd.read(level);
+-    fd.read(grade);
+-    fd.read(seed);
++    level = buffer.read!(float, Endian.littleEndian);
++    grade = buffer.read!(int, Endian.littleEndian);
++    seed = buffer.read!(long, Endian.littleEndian);
+     padRecord = new PadRecord;
+-    padRecord.load(fd);
+-    fd.close();
++    padRecord.load(buffer);
+   }
+ }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;operator-overloading:95834070c7040d18a199c0907f30b458&#34;&gt;Operator overloading&lt;/h2&gt;
+
+&lt;p&gt;There is a &lt;code&gt;Vector&lt;/code&gt; type in the codebase and naturally it used operator overloading. The syntax for this has changed though.&lt;/p&gt;
+
+&lt;p&gt;Before:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-d&#34;&gt;  public void opAddAssign(Vector v) {
+    x += v.x;
+    y += v.y;
+  }
+
+  public void opSubAssign(Vector v) {
+    x -= v.x;
+    y -= v.y;
+  }
+
+  public void opMulAssign(float a) {
+    x *= a;
+    y *= a;
+  }
+
+  public void opDivAssign(float a) {
+    x /= a;
+    y /= a;
+  }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-d&#34;&gt;  public void opOpAssign(string op)(Vector v) if (op == &amp;quot;+&amp;quot; || op == &amp;quot;-&amp;quot;) {
+    mixin(&amp;quot;x&amp;quot; ~ op ~ &amp;quot;=v.x;&amp;quot;);
+    mixin(&amp;quot;y&amp;quot; ~ op ~ &amp;quot;=v.y;&amp;quot;);
+  }
+
+  public void opOpAssign(string op)(float a) if (op == &amp;quot;*&amp;quot; || op == &amp;quot;/&amp;quot;) {
+    mixin(&amp;quot;x&amp;quot; ~ op ~ &amp;quot;=a;&amp;quot;);
+    mixin(&amp;quot;y&amp;quot; ~ op ~ &amp;quot;=a;&amp;quot;);
+  }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This also shows the use of &lt;code&gt;mixin&lt;/code&gt; to generate compile time code.&lt;/p&gt;
+
+&lt;h2 id=&#34;linking-existing-libraries:95834070c7040d18a199c0907f30b458&#34;&gt;Linking existing libraries&lt;/h2&gt;
+
+&lt;p&gt;The game also came with import libraries for SDL, SDL_mixer, OpenGL and GLU and a static library for BulletML, a custom library used by the original developer to load bullet patterns from XML. Those came as .lib files but they couldn&amp;rsquo;t be read by the Windows SDK tools I tried, &lt;code&gt;lib&lt;/code&gt; or &lt;code&gt;dumpbin&lt;/code&gt; couldn&amp;rsquo;t read them. However, by luck those files are still supported by &lt;code&gt;dmd&lt;/code&gt; and it managed to link with them.&lt;/p&gt;
+
+&lt;p&gt;The changes required are mostly related to how the extern code was defined. For now, because I was only trying to produce a Windows version, I replaced uses of &lt;code&gt;version(Win32)&lt;/code&gt; (which is now &lt;code&gt;version(Windows)&lt;/code&gt;) with just &lt;code&gt;extern(Windows)&lt;/code&gt; unconditionally.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-diff&#34;&gt;--- a/import/opengl.d
++++ b/import/opengl.d
+@@ -1,10 +1,4 @@
+-version (Win32) {
+-	private import std.c.windows.windows;
+-	extern(Windows):
+-}
+-version (linux) {
+-	extern(C):
+-}
++extern(Windows):
+ 
+ alias uint GLenum;
+ alias ubyte GLboolean;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The BulletML binding used &lt;code&gt;extern(C)&lt;/code&gt; and that worked the same so no changes were done.&lt;/p&gt;
+
+&lt;h2 id=&#34;wrapping-up:95834070c7040d18a199c0907f30b458&#34;&gt;Wrapping up&lt;/h2&gt;
+
+&lt;p&gt;With all of this, we&amp;rsquo;ve managed to compile a new Windows executable! What amazed me is how little language changes were necessary. The biggest change was related to Phobos and deprecated library features.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Setup Hugo with Travis CI and GitHub Pages</title>
