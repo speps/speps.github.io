@@ -20,9 +20,9 @@ What made me remember this game is that :
 
 What better project than try to compile a D v0.110 project in a modern version of D! So here we are...
 
-Part 1 - Compiling a new executable
-Part 2 - Running the game for the first time
-Part 3 - Making it cross platform
+* Part 1 - Compiling a new executable
+* Part 2 - Running the game for the first time
+* Part 3 - Making it cross platform
 
 ## Switching from Ant to DUB
 
@@ -185,7 +185,7 @@ D1 used to have `std.string.toString` to convert a value to a `char[]` value. Th
 
 ## Passing strings to C
 
-The usual way to achieve seems to have been to just to use `std.string.toStringz`. However, back in D1 it used to return char* :
+The usual way to pass strings to C seems to have been to just to use `std.string.toStringz`. However, back in D1 it used to return char* :
 
 ```
 char* toStringz(char[] s);
@@ -322,7 +322,7 @@ Again, the fix is quite straightforward. For example, the bindings weren't writt
  }
 ```
 
-* `bit` → `SDL_bool`: the bit was used back in D1, it behaved like a `bool` but used one bit instead so you could make bitfields easily, it was mostly used in the SDL bindings so I replaced it with `SDL_bool`
+* `bit` → `SDL_bool`: the `bit` type was used back in D1, it behaved like a `bool` but used one bit instead so you could make bitfields easily, it was mostly used in the SDL bindings so I replaced it with `SDL_bool`
 
 ```diff
 --- a/import/SDL_video.d
@@ -355,7 +355,7 @@ Again, the fix is quite straightforward. For example, the bindings weren't writt
 
 The old code did use `std.stream`, from what I read this was deprecated in favor of splitting it into a more modular design. However, to transition old code someone rescued the deprecated code and made it into a DUB package called [`undead`](https://code.dlang.org/packages/undead).
 
-This was very useful at the start to get the code to compile. However, I wanted to get rid of this dependency as it didn't feel right to keep old code instead of relying on the modern D equivalent. In D1, `std.stream.File.read` could read binary data into values. I've changed it to use `std.file.read` and `std.bitmanip.read`. It's also important to make sure you specify the endian, the D1 code was implementation-specific regarding the format of types other than byte sized ones so I followed what convention it was on Windows which is little-endian. That means replays and highscores saves should be compatible!
+This was very useful at the start to get the code to compile. However, I wanted to get rid of this dependency as it didn't feel right to keep old code instead of relying on the modern D equivalent. In D1, `std.stream.File.read` could read binary data into values. I've changed it to use `std.file.read` and `std.bitmanip.read`. It's also important to make sure you specify the endian, the D1 code was implementation-specific regarding the format of types other than byte sized ones. On Windows it was little-endian. That means replays and highscores saves are now compatible with the original executable!
 
 ```diff
 --- a/src/abagames/tt/replay.d
