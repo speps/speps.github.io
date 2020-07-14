@@ -1,10 +1,15 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>http://speps.fr/articles/</loc>
+    <lastmod>2020-07-12T19:46:57+00:00</lastmod>
+  </url>
   
   <url>
     <loc>http://speps.fr/</loc>
     <lastmod>2020-07-12T19:46:57+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
@@ -19,6 +24,16 @@
   
   <url>
     <loc>http://speps.fr/profile/</loc>
+    <lastmod>2016-01-15T16:01:45+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://speps.fr/tags/profile/</loc>
+    <lastmod>2016-01-15T16:01:45+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://speps.fr/tags/</loc>
     <lastmod>2016-01-15T16:01:45+00:00</lastmod>
   </url>
   
@@ -69,6 +84,11 @@
   
   <url>
     <loc>http://speps.fr/home/</loc>
+    <lastmod>2016-01-14T18:41:25+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://speps.fr/tags/home/</loc>
     <lastmod>2016-01-14T18:41:25+00:00</lastmod>
   </url>
   

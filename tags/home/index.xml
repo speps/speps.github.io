@@ -1,13 +1,15 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Home on speps.fr - Rémi Gillig</title>
+    <title>home on speps.fr - Rémi Gillig</title>
     <link>http://speps.fr/tags/home/</link>
-    <description>Recent content in Home on speps.fr - Rémi Gillig</description>
+    <description>Recent content in home on speps.fr - Rémi Gillig</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 14 Jan 2016 18:41:25 +0000</lastBuildDate>
-    <atom:link href="http://speps.fr/tags/home/index.xml" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="http://speps.fr/tags/home/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Home</title>
@@ -15,28 +17,9 @@
       <pubDate>Thu, 14 Jan 2016 18:41:25 +0000</pubDate>
       
       <guid>http://speps.fr/home/</guid>
-      <description>
-
-&lt;h2 id=&#34;headline:b9bcf8cb73ce4a081a635ad7c0acd9dd&#34;&gt;Headline&lt;/h2&gt;
-
-&lt;p&gt;Puddle is now out on XBLA/PSN (published by Konami), more information at &lt;a href=&#34;http://puddle-game.com&#34;&gt;http://puddle-game.com&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h1 id=&#34;welcome:b9bcf8cb73ce4a081a635ad7c0acd9dd&#34;&gt;Welcome!&lt;/h1&gt;
-
-&lt;p&gt;I hope you will find interesting things here as I try to update its content with what I&amp;rsquo;m interested in.&lt;/p&gt;
-
-&lt;p&gt;If it&amp;rsquo;s your first time here, I suggest visiting my &lt;a href=&#34;http://speps.fr/aboutme/&#34;&gt;introduction page&lt;/a&gt; which contains some information about myself and my life. Otherwise, you can feel free to use the menu to navigate through the different sections and explore this website.&lt;/p&gt;
-
-&lt;p&gt;You can also see a &lt;a href=&#34;http://speps.fr/projects/&#34;&gt;list of my projects&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h1 id=&#34;latest-personal-project-paperplane:b9bcf8cb73ce4a081a635ad7c0acd9dd&#34;&gt;Latest personal project : PaperPlane&lt;/h1&gt;
-
-
-&lt;div style=&#34;position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden;&#34;&gt;
-  &lt;iframe src=&#34;//www.youtube.com/embed/jof_1ByCtKM&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%;&#34; allowfullscreen frameborder=&#34;0&#34;&gt;&lt;/iframe&gt;
- &lt;/div&gt;
-
-</description>
+      <description>Headline Puddle is now out on XBLA/PSN (published by Konami), more information at http://puddle-game.com.
+Welcome! I hope you will find interesting things here as I try to update its content with what I&amp;rsquo;m interested in.
+If it&amp;rsquo;s your first time here, I suggest visiting my introduction page which contains some information about myself and my life. Otherwise, you can feel free to use the menu to navigate through the different sections and explore this website.</description>
     </item>
     
   </channel>
