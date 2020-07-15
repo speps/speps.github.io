@@ -31,12 +31,12 @@
             </div>
 <div id="content">
 	<div id="page">
+		<h1>Torus Trooper - Rebooting a 15 year-old game written in D - Part 1 Compiling</h1>
 		
 		<div id="sideinfo">
 			<nav id="TableOfContents">
   <ul>
     <li><a href="#switching-from-ant-to-dub">Switching from Ant to DUB</a></li>
-    <li><a href="#compiling">Compiling</a></li>
     <li><a href="#c-style-syntax-errors">C-style syntax errors</a></li>
     <li><a href="#error-template-argument-expected-following-">Error: template argument expected following !</a></li>
     <li><a href="#replacing-char-with-string">Replacing <code>char[]</code> with <code>string</code></a></li>
@@ -51,26 +51,44 @@
 </nav>
 		</div>
 		
-		<h1>Torus Trooper - Rebooting a 15 year-old game written in D - Part 1 Compiling</h1>
-		<p>While exploring D recently, I remembered a game I played while at university 15 years ago. For a long time, I couldn&rsquo;t remember the name at all, only that it was from a Japanese developer. After some search wrangling, I finally managed to find the name of the game: Torus Trooper!</p>
+		<p>See also</p>
+<ul>
+<li><a href="/articles/torus-trooper-part1">Part 1 - Compiling a new executable</a></li>
+<li><del>Part 2 - Running the game for the first time</del></li>
+<li><del>Part 3 - Making it cross platform</del></li>
+</ul>
+<p>While exploring D recently, I remembered a game I played while at university 15 years ago. For a long time, I couldn&rsquo;t remember the name at all, only that it was from a Japanese developer. After some search wrangling, I finally managed to find the name of the game: <strong>Torus Trooper!</strong></p>
 <p>You can find it there: <a href="http://www.asahi-net.or.jp/~cs8k-cyu/windows/tt_e.html">http://www.asahi-net.or.jp/~cs8k-cyu/windows/tt_e.html</a></p>
 <p><img src="/media/articles/tt1.png" alt=""></p>
 <p>Here is a copy of the tt0_22.zip file archived: <a href="https://github.com/speps/tt/archive/legacy.zip">https://github.com/speps/tt/archive/legacy.zip</a></p>
 <p>What made me remember this game is that :</p>
 <ul>
-<li>It came with <a href="https://github.com/speps/tt/tree/legacy/src">source code</a>, quite unusual at the time for me</li>
+<li>It came with <a href="https://github.com/speps/tt/tree/legacy/src/abagames">source code</a>, quite unusual at the time for me</li>
 <li>Written in D, a language I didn&rsquo;t know at all while I was busy studying C++</li>
 <li>It&rsquo;s awfully addictive!</li>
 </ul>
-<p>What better project than try to compile a D v0.110 project in a modern version of D! So here we are&hellip;</p>
-<ul>
-<li>Part 1 - Compiling a new executable</li>
-<li>Part 2 - Running the game for the first time</li>
-<li>Part 3 - Making it cross platform</li>
-</ul>
+<p>What better project than try to compile a <strong>D v0.110</strong> project in a modern version of D! So here we are&hellip;</p>
 <h2 id="switching-from-ant-to-dub">Switching from Ant to DUB</h2>
 <p>The game used Ant and its <code>build.xml</code> file to generate the executable, resources, etc. Since then, D added DUB as a build system / package manager so let&rsquo;s use that!</p>
-<div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span>
 	<span class="nt">&#34;authors&#34;</span><span class="p">:</span> <span class="p">[</span>
 		<span class="s2">&#34;Kenta Cho&#34;</span><span class="p">,</span>
 		<span class="s2">&#34;Remi Gillig&#34;</span>
@@ -84,9 +102,11 @@
 		<span class="s2">&#34;src&#34;</span>
 	<span class="p">]</span>
 <span class="p">}</span>
-</code></pre></div><p>With this initial <code>dub.json</code> file, I was set to run the <code>dub</code> command&hellip;</p>
-<pre><code>Performing &quot;debug&quot; build using C:\D\dmd2\windows\bin64\dmd.exe for x86.
-tt ~master: building configuration &quot;application&quot;...
+</code></pre></td></tr></table>
+</div>
+</div><p>With this initial <code>dub.json</code> file, I was set to run the <code>dub</code> command&hellip;</p>
+<div class="highlight"><pre class="chroma"><code class="language-plaintext" data-lang="plaintext">Performing &#34;debug&#34; build using C:\D\dmd2\windows\bin64\dmd.exe for x86.
+tt ~master: building configuration &#34;application&#34;...
 src\abagames\tt\barrage.d(95,33): Error: instead of C-style syntax, use D-style BulletMLParserTinyXML*[char[]][char[]] parser
 src\abagames\tt\barrage.d(122,28): Error: instead of C-style syntax, use D-style BulletMLParserTinyXML*[] pl
 src\abagames\tt\barrage.d(130,14): Error: instead of C-style syntax, use D-style BulletMLParserTinyXML*[char[]] pa
@@ -98,12 +118,25 @@ src\abagames\util\rand.d(140,20): Error: instead of C-style syntax, use D-style 
 src\abagames\util\sdl\luminous.d(21,10): Error: instead of C-style syntax, use D-style GLuint[LUMINOUS_TEXTURE_WIDTH_MAX * LUMINOUS_TEXTURE_HEIGHT_MAX * 4 * (uint).sizeof] td
 src\abagames\util\sdl\luminous.d(83,17): Error: instead of C-style syntax, use D-style float[2][2] lmOfs
 C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
-</code></pre><p>Alright let&rsquo;s start and get this to compile!</p>
-<h2 id="compiling">Compiling</h2>
+</code></pre></div><p>Alright let&rsquo;s start and get this to compile!</p>
 <h2 id="c-style-syntax-errors">C-style syntax errors</h2>
 <p>This is one is easy to fix, the suggestion from the compiler works, I just replaced every instance of this error with the suggestion.</p>
 <p>Here is an example:</p>
-<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">--- a/import/SDL_audio.d
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">--- a/import/SDL_audio.d
 </span><span class="gd"></span><span class="gi">+++ b/import/SDL_audio.d
 </span><span class="gi"></span><span class="gu">@@ -42,7 +43,7 @@ struct SDL_AudioSpec {
 </span><span class="gu"></span>     Once the callback returns, the buffer will no longer be valid.
@@ -113,9 +146,36 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </span><span class="gd"></span><span class="gi">+ void function(void *userdata, Uint8 *stream, int len) callback;
 </span><span class="gi"></span>  void  *userdata;
  }
-</code></pre></div><h2 id="error-template-argument-expected-following-">Error: template argument expected following !</h2>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="error-template-argument-expected-following-">Error: template argument expected following !</h2>
 <p>This is an interesting one, here is one of the files where this error triggers:</p>
-<div class="highlight"><pre class="chroma"><code class="language-d" data-lang="d">  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">calcIndex</span><span class="o">(</span><span class="k">in</span> <span class="kt">float</span> <span class="n">z</span><span class="o">,</span> <span class="k">out</span> <span class="kt">int</span> <span class="n">idx</span><span class="o">,</span> <span class="k">out</span> <span class="kt">float</span> <span class="n">ofs</span><span class="o">)</span> <span class="o">{</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="hl"><span class="lnt">17
+</span></span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-d" data-lang="d">  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">calcIndex</span><span class="o">(</span><span class="k">in</span> <span class="kt">float</span> <span class="n">z</span><span class="o">,</span> <span class="k">out</span> <span class="kt">int</span> <span class="n">idx</span><span class="o">,</span> <span class="k">out</span> <span class="kt">float</span> <span class="n">ofs</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">idx</span> <span class="o">=</span> <span class="n">slice</span><span class="o">.</span><span class="na">length</span> <span class="o">+</span> <span class="mi">99999</span><span class="o">;</span>
     <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">slice</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
       <span class="k">if</span> <span class="o">(</span><span class="n">z</span> <span class="o">&lt;</span> <span class="n">slice</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">depth</span><span class="o">)</span> <span class="o">{</span>
@@ -131,18 +191,59 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
       <span class="n">idx</span> <span class="o">=</span> <span class="n">slice</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">2</span><span class="o">;</span>
       <span class="n">ofs</span> <span class="o">=</span> <span class="mf">0.99</span><span class="o">;</span>
     <span class="o">}</span>
-    <span class="k">if</span> <span class="o">(</span><span class="n">ofs</span> <span class="o">!&gt;=</span> <span class="mi">0</span><span class="o">)</span> <span class="c1">// ERROR HERE
-</span><span class="c1"></span>      <span class="n">ofs</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<span class="hl">    <span class="k">if</span> <span class="o">(</span><span class="n">ofs</span> <span class="o">!&gt;=</span> <span class="mi">0</span><span class="o">)</span> <span class="c1">// ERROR HERE
+</span></span><span class="c1"></span>      <span class="n">ofs</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
     <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">ofs</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="o">)</span>
       <span class="n">ofs</span> <span class="o">=</span> <span class="mf">0.99</span><span class="o">;</span>
   <span class="o">}</span>
-</code></pre></div><p>I did try a few searches without success so I asked on the D community forums and a few people guessed right, it&rsquo;s of course a <code>not &gt;=</code>, equivalent to <code>&lt;</code>. However, <a href="https://forum.dlang.org/post/rec3d1$toc$1@digitalmars.com">thanks to Walter Bright</a>, I got a link to the <a href="https://www.digitalmars.com/ctg/ctgNumerics.html#comparisons">original documentation from Digital Mars</a>. The subtle difference with <code>!&gt;=</code> is that it will also return <code>true</code> if any operands are <code>NaN</code>. Suggested fix seems to have worked:</p>
-<div class="highlight"><pre class="chroma"><code class="language-d" data-lang="d">    <span class="k">if</span> <span class="o">(</span><span class="n">std</span><span class="o">.</span><span class="na">math</span><span class="o">.</span><span class="na">isNaN</span><span class="o">(</span><span class="n">ofs</span><span class="o">)</span> <span class="o">||</span> <span class="n">ofs</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>I did try a few searches without success so I asked on the D community forums and a few people guessed right, it&rsquo;s of course a <code>not &gt;=</code>, equivalent to <code>&lt;</code>. However, <a href="https://forum.dlang.org/post/rec3d1$toc$1@digitalmars.com">thanks to Walter Bright</a>, I got a link to the <a href="https://www.digitalmars.com/ctg/ctgNumerics.html#comparisons">original documentation from Digital Mars</a>. The subtle difference with <code>!&gt;=</code> is that it will also return <code>true</code> if any operands are <code>NaN</code>. Suggested fix seems to have worked:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-d" data-lang="d">    <span class="k">if</span> <span class="o">(</span><span class="n">std</span><span class="o">.</span><span class="na">math</span><span class="o">.</span><span class="na">isNaN</span><span class="o">(</span><span class="n">ofs</span><span class="o">)</span> <span class="o">||</span> <span class="n">ofs</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>
       <span class="n">ofs</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-</code></pre></div><h2 id="replacing-char-with-string">Replacing <code>char[]</code> with <code>string</code></h2>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="replacing-char-with-string">Replacing <code>char[]</code> with <code>string</code></h2>
 <p>D1 used to have <code>char[]</code> as the string type, and functions in <code>std.string</code> in Phobos to manipulate this type. D2 added a dedidcated <code>string</code> type instead of an alias. As a result, a lot of the code needs updating to deal with this. That includes the code in the custom bindings.</p>
 <p>Most of the changes here are similar to this</p>
-<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">--- a/src/abagames/tt/barrage.d
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">--- a/src/abagames/tt/barrage.d
 </span><span class="gd"></span><span class="gi">+++ b/src/abagames/tt/barrage.d
 </span><span class="gi"></span><span class="gu">@@ -92,24 +91,24 @@ public class Barrage {
 </span><span class="gu"></span>  */
@@ -169,9 +270,34 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
        }
      }
    }
-</code></pre></div><h2 id="converting-value-to-string">Converting value to string</h2>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="converting-value-to-string">Converting value to string</h2>
 <p>D1 used to have <code>std.string.toString</code> to convert a value to a <code>char[]</code> value. This functionality was replaced by <code>std.conv.to!string</code>.</p>
-<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">--- a/src/abagames/tt/shot.d
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">--- a/src/abagames/tt/shot.d
 </span><span class="gd"></span><span class="gi">+++ b/src/abagames/tt/shot.d
 </span><span class="gi"></span><span class="gu">@@ -5,6 +5,7 @@
 </span><span class="gu"></span>  */
@@ -190,13 +316,27 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </span><span class="gi"></span>              cast(int) (30 + multiplier * 0.3f));
      }
      if (chargeShot) {
-</code></pre></div><h2 id="passing-strings-to-c">Passing strings to C</h2>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="passing-strings-to-c">Passing strings to C</h2>
 <p>The usual way to pass strings to C seems to have been to just to use <code>std.string.toStringz</code>. However, back in D1 it used to return char* :</p>
 <pre><code>char* toStringz(char[] s);
 </code></pre><p>This worked well for the C bindings but with D2, it now returns:</p>
 <pre><code>immutable(char)* toStringz(scope return string s) pure nothrow @trusted;
 </code></pre><p>Again, the fix is quite straightforward. For example, the bindings weren&rsquo;t written with this in mind so they need fixing:</p>
-<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">--- a/import/SDL_rwops.d
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">--- a/import/SDL_rwops.d
 </span><span class="gd"></span><span class="gi">+++ b/import/SDL_rwops.d
 </span><span class="gi"></span><span class="gu">@@ -81,7 +81,7 @@ struct SDL_RWops {
 </span><span class="gu"></span> 
@@ -204,11 +344,31 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
  
 <span class="gd">-SDL_RWops * SDL_RWFromFile(char *file, char *mode);
 </span><span class="gd"></span><span class="gi">+SDL_RWops * SDL_RWFromFile(const char *file, const char *mode);
-</span></code></pre></div><h2 id="simple-substitution">Simple substitution</h2>
+</span></code></pre></td></tr></table>
+</div>
+</div><h2 id="simple-substitution">Simple substitution</h2>
 <ul>
 <li><code>typedef</code> → <code>alias</code></li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">--- a/import/SDL_rwops.d
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">--- a/import/SDL_rwops.d
 </span><span class="gd"></span><span class="gi">+++ b/import/SDL_rwops.d
 </span><span class="gi"></span><span class="gu">@@ -28,10 +28,10 @@ import SDL_types;
 </span><span class="gu"></span> 
@@ -222,10 +382,26 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </span><span class="gi">+alias int function(SDL_RWops *context, void *ptr, int size, int maxnum) _read_func_t;
 </span><span class="gi">+alias int function(SDL_RWops *context, void *ptr, int size, int num) _write_func_t;
 </span><span class="gi">+alias int function(SDL_RWops *context) _close_func_t;
-</span></code></pre></div><ul>
+</span></code></pre></td></tr></table>
+</div>
+</div><ul>
 <li><code>inout</code> → <code>ref</code>: this made sense for all instances where <code>inout</code> was used</li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">--- a/src/abagames/tt/prefmanager.d
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">--- a/src/abagames/tt/prefmanager.d
 </span><span class="gd"></span><span class="gi">+++ b/src/abagames/tt/prefmanager.d
 </span><span class="gi"></span><span class="gu">@@ -59,7 +59,7 @@ public class PrefData {
 </span><span class="gu"></span> 
@@ -235,10 +411,43 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </span><span class="gd"></span><span class="gi">+    foreach (ref GradeData gd; gradeData)
 </span><span class="gi"></span>       gd = new GradeData;
    }
-</code></pre></div><ul>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
 <li><code>auto T</code> → <code>auto</code>: it seems the original author specified auto along with the type which isn&rsquo;t allowed anymore</li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">--- a/src/abagames/tt/shape.d
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">--- a/src/abagames/tt/shape.d
 </span><span class="gd"></span><span class="gi">+++ b/src/abagames/tt/shape.d
 </span><span class="gi"></span><span class="gu">@@ -631,9 +631,9 @@ public class BulletShape: Drawable {
 </span><span class="gu"></span>   }
@@ -265,10 +474,33 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </span><span class="gi"></span>       inp = new Vector3;
      for (int i = 0; i &lt; 6; i++) {
        cp.x = cp.y = cp.z = 0;
-</code></pre></div><ul>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
 <li><code>getExt</code> → <code>.extension</code>: behaviour is different but it&rsquo;s easy enough to fix, it now includes the dot</li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">--- a/src/abagames/tt/soundmanager.d
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">--- a/src/abagames/tt/soundmanager.d
 </span><span class="gd"></span><span class="gi">+++ b/src/abagames/tt/soundmanager.d
 </span><span class="gi"></span><span class="gu">@@ -44,10 +45,10 @@ public class SoundManager: abagames.util.sdl.sound.SoundManager {
 </span><span class="gu"></span> 
@@ -285,10 +517,33 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </span><span class="gi"></span>         continue;
        Music music = new Music();
        music.load(fileName);
-</code></pre></div><ul>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
 <li><code>catch(Object)</code> → <code>catch(Throwable)</code>: you could throw any <code>Object</code> before, you have to use Throwable now</li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">--- a/src/abagames/tt/boot.d
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">--- a/src/abagames/tt/boot.d
 </span><span class="gd"></span><span class="gi">+++ b/src/abagames/tt/boot.d
 </span><span class="gi"></span><span class="gu">@@ -83,20 +84,20 @@ public int boot(char[][] args) {
 </span><span class="gu"></span>   }
@@ -305,10 +560,40 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </span><span class="gi"></span>   }
    return EXIT_SUCCESS;
  }
-</code></pre></div><ul>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
 <li><code>bit</code> → <code>SDL_bool</code>: the <code>bit</code> type was used back in D1, it behaved like a <code>bool</code> but used one bit instead so you could make bitfields easily, it was mostly used in the SDL bindings so I replaced it with <code>SDL_bool</code></li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">--- a/import/SDL_video.d
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">--- a/import/SDL_video.d
 </span><span class="gd"></span><span class="gi">+++ b/import/SDL_video.d
 </span><span class="gi"></span><span class="gu">@@ -132,7 +133,7 @@ const uint SDL_SRCALPHA	= 0x00010000;	/* Blit uses source alpha blending */
 </span><span class="gu"></span> const uint SDL_PREALLOC	= 0x01000000;	/* Surface uses preallocated memory */
@@ -332,10 +617,72 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </span><span class="gd">-//		Uint32 UnusedBits :31;
 </span><span class="gd"></span><span class="gi">+	Uint32 flags;
 </span><span class="gi"></span> }
-</code></pre></div><h2 id="phobos">Phobos</h2>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="phobos">Phobos</h2>
 <p>The old code did use <code>std.stream</code>, from what I read this was deprecated in favor of splitting it into a more modular design. However, to transition old code someone rescued the deprecated code and made it into a DUB package called <a href="https://code.dlang.org/packages/undead"><code>undead</code></a>.</p>
 <p>This was very useful at the start to get the code to compile. However, I wanted to get rid of this dependency as it didn&rsquo;t feel right to keep old code instead of relying on the modern D equivalent. In D1, <code>std.stream.File.read</code> could read binary data into values. I&rsquo;ve changed it to use <code>std.file.read</code> and <code>std.bitmanip.read</code>. It&rsquo;s also important to make sure you specify the endian, the D1 code was implementation-specific regarding the format of types other than byte sized ones. On Windows it was little-endian. That means replays and highscores saves are now compatible with the original executable!</p>
-<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">--- a/src/abagames/tt/replay.d
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">--- a/src/abagames/tt/replay.d
 </span><span class="gd"></span><span class="gi">+++ b/src/abagames/tt/replay.d
 </span><span class="gi"></span><span class="gu">@@ -5,7 +5,10 @@
 </span><span class="gu"></span>  */
@@ -391,10 +738,35 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </span><span class="gd"></span><span class="gi">+    padRecord.load(buffer);
 </span><span class="gi"></span>   }
  }
-</code></pre></div><h2 id="operator-overloading">Operator overloading</h2>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="operator-overloading">Operator overloading</h2>
 <p>There is a <code>Vector</code> type in the codebase and naturally it used operator overloading. The syntax for this has changed though.</p>
 <p>Before:</p>
-<div class="highlight"><pre class="chroma"><code class="language-d" data-lang="d">  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">opAddAssign</span><span class="o">(</span><span class="n">Vector</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-d" data-lang="d">  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">opAddAssign</span><span class="o">(</span><span class="n">Vector</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">x</span> <span class="o">+=</span> <span class="n">v</span><span class="o">.</span><span class="na">x</span><span class="o">;</span>
     <span class="n">y</span> <span class="o">+=</span> <span class="n">v</span><span class="o">.</span><span class="na">y</span><span class="o">;</span>
   <span class="o">}</span>
@@ -413,8 +785,23 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
     <span class="n">x</span> <span class="o">/=</span> <span class="n">a</span><span class="o">;</span>
     <span class="n">y</span> <span class="o">/=</span> <span class="n">a</span><span class="o">;</span>
   <span class="o">}</span>
-</code></pre></div><p>After:</p>
-<div class="highlight"><pre class="chroma"><code class="language-d" data-lang="d">  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">opOpAssign</span><span class="o">(</span><span class="kt">string</span> <span class="n">op</span><span class="o">)(</span><span class="n">Vector</span> <span class="n">v</span><span class="o">)</span> <span class="k">if</span> <span class="o">(</span><span class="n">op</span> <span class="o">==</span> <span class="s">&#34;+&#34;</span> <span class="o">||</span> <span class="n">op</span> <span class="o">==</span> <span class="s">&#34;-&#34;</span><span class="o">)</span> <span class="o">{</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>After:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-d" data-lang="d">  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">opOpAssign</span><span class="o">(</span><span class="kt">string</span> <span class="n">op</span><span class="o">)(</span><span class="n">Vector</span> <span class="n">v</span><span class="o">)</span> <span class="k">if</span> <span class="o">(</span><span class="n">op</span> <span class="o">==</span> <span class="s">&#34;+&#34;</span> <span class="o">||</span> <span class="n">op</span> <span class="o">==</span> <span class="s">&#34;-&#34;</span><span class="o">)</span> <span class="o">{</span>
     <span class="k">mixin</span><span class="o">(</span><span class="s">&#34;x&#34;</span> <span class="o">~</span> <span class="n">op</span> <span class="o">~</span> <span class="s">&#34;=v.x;&#34;</span><span class="o">);</span>
     <span class="k">mixin</span><span class="o">(</span><span class="s">&#34;y&#34;</span> <span class="o">~</span> <span class="n">op</span> <span class="o">~</span> <span class="s">&#34;=v.y;&#34;</span><span class="o">);</span>
   <span class="o">}</span>
@@ -423,11 +810,31 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
     <span class="k">mixin</span><span class="o">(</span><span class="s">&#34;x&#34;</span> <span class="o">~</span> <span class="n">op</span> <span class="o">~</span> <span class="s">&#34;=a;&#34;</span><span class="o">);</span>
     <span class="k">mixin</span><span class="o">(</span><span class="s">&#34;y&#34;</span> <span class="o">~</span> <span class="n">op</span> <span class="o">~</span> <span class="s">&#34;=a;&#34;</span><span class="o">);</span>
   <span class="o">}</span>
-</code></pre></div><p>This also shows the use of <code>mixin</code> to generate compile time code.</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>This also shows the use of <code>mixin</code> to generate compile time code.</p>
 <h2 id="linking-existing-libraries">Linking existing libraries</h2>
 <p>The game also came with import libraries for SDL, SDL_mixer, OpenGL and GLU and a static library for BulletML, a custom library used by the original developer to load bullet patterns from XML. Those came as .lib files but they couldn&rsquo;t be read by the Windows SDK tools I tried, <code>lib</code> or <code>dumpbin</code> couldn&rsquo;t read them. However, by luck those files are still supported by <code>dmd</code> and it managed to link with them.</p>
 <p>The changes required are mostly related to how the extern code was defined. For now, because I was only trying to produce a Windows version, I replaced uses of <code>version(Win32)</code> (which is now <code>version(Windows)</code>) with just <code>extern(Windows)</code> unconditionally.</p>
-<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">--- a/import/opengl.d
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">--- a/import/opengl.d
 </span><span class="gd"></span><span class="gi">+++ b/import/opengl.d
 </span><span class="gi"></span><span class="gu">@@ -1,10 +1,4 @@
 </span><span class="gu"></span><span class="gd">-version (Win32) {
@@ -441,13 +848,16 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </span><span class="gi"></span> 
  alias uint GLenum;
  alias ubyte GLboolean;
-</code></pre></div><p>The BulletML binding used <code>extern(C)</code> and that worked the same so no changes were done.</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>The BulletML binding used <code>extern(C)</code> and that worked the same so no changes were done.</p>
 <h2 id="wrapping-up">Wrapping up</h2>
 <p>With all of this, we&rsquo;ve managed to compile a new Windows executable! What amazed me is how little language changes were necessary. The biggest change was related to Phobos and deprecated library features.</p>
+<p>Running the game and seeing if it runs will be part 2.</p>
 
 	</div>
 </div>
-            <div id="footer"><p>2020-07-14 21:14:42 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
+            <div id="footer"><p>2020-07-15 08:01:03 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
         </div>
     </div>
 </body>

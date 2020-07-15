@@ -17,10 +17,8 @@
       <pubDate>Sun, 12 Jul 2020 19:46:57 +0000</pubDate>
       
       <guid>http://speps.fr/articles/torus-trooper-part1/</guid>
-      <description>While exploring D recently, I remembered a game I played while at university 15 years ago. For a long time, I couldn&amp;rsquo;t remember the name at all, only that it was from a Japanese developer. After some search wrangling, I finally managed to find the name of the game: Torus Trooper!
-You can find it there: http://www.asahi-net.or.jp/~cs8k-cyu/windows/tt_e.html
-Here is a copy of the tt0_22.zip file archived: https://github.com/speps/tt/archive/legacy.zip
-What made me remember this game is that :</description>
+      <description>See also
+ Part 1 - Compiling a new executable Part 2 - Running the game for the first time Part 3 - Making it cross platform  While exploring D recently, I remembered a game I played while at university 15 years ago. For a long time, I couldn&amp;rsquo;t remember the name at all, only that it was from a Japanese developer. After some search wrangling, I finally managed to find the name of the game: Torus Trooper!</description>
     </item>
     
     <item>
@@ -157,7 +155,7 @@ If it&amp;rsquo;s your first time here, I suggest visiting my introduction page 
       <guid>http://speps.fr/aboutme/</guid>
       <description>About Me My name is Rémi Gillig, I was born in France and I studied video games programming at ENJMIN.
 My passion for programming began some time ago and I spent most of my education learning programming. At first, I had the chance to have access at home to early computers and wrote some basic programs using GW-BASIC. For the record, it looks like this :
-10INPUT&amp;#34;WHAT IS YOUR NAME&amp;#34;;N$ 20PRINT&amp;#34;HELLO &amp;#34;N$&amp;#34; :)&amp;#34; This is awesome for a 6 year-old boy and when you discover the power of IF/THEN/ELSE and GOTO you can achieve pretty much anything, right?</description>
+1 2  10INPUT&amp;#34;WHAT IS YOUR NAME&amp;#34;;N$ 20PRINT&amp;#34;HELLO &amp;#34;N$&amp;#34; :)&amp;#34;   This is awesome for a 6 year-old boy and when you discover the power of IF/THEN/ELSE and GOTO you can achieve pretty much anything, right?</description>
     </item>
     
     <item>

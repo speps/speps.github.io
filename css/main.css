@@ -148,6 +148,12 @@ body, html
     color: #000;
 }
 
+#content img
+{
+    max-width: 100%;
+    height: auto;
+}
+
 #content a
 {
     color: #003366;
@@ -163,23 +169,27 @@ body, html
 
 #content h1
 {
-    font-size: 1.4em;
+    clear: both;
+    font-size: 1.8em;
     padding-left: 20px;
-    background: url(../images/bullet-orange.gif) 0px 12px no-repeat;
+    margin: 1em auto;
+    background: url(../images/bullet-orange.gif) left 50% repeat-y;
 }
 
 #content h2
 {
-    font-size: 1.2em;
+    font-size: 1.6em;
     padding-left: 20px;
-    background: url(../images/bullet-grey.gif) 0px 11px no-repeat;
+    margin: 1em auto;
+    background: url(../images/bullet-grey.gif) left 50% repeat-y;
 }
 
 #content h3
 {
-    font-size: 1em;
+    font-size: 1.4em;
     padding-left: 20px;
-    background: url(../images/bullet-grey.gif) 0px 10px no-repeat;
+    margin: 1em auto;
+    background: url(../images/bullet-grey.gif) left 50% repeat-y;
 }
 
 #content p
@@ -191,6 +201,22 @@ body, html
 {
     margin-left: 2em;
     list-style-type: square;
+}
+
+#content .highlight
+{
+    font-size: 0.9em;
+    overflow: auto;
+    width: 80%;
+    font-family: "Courier New", Courier, monospace;
+    padding: 0.5em;
+    border: 1px solid #006699;
+    margin: 0.5em auto;
+}
+
+#content .highlight td:nth-child(2)
+{
+    width: 100%;
 }
 
 #actions ul
@@ -239,7 +265,7 @@ body, html
 
 #page
 {
-    font-size: 1.3em;
+    font-size: 1em;
     line-height: 2em;
     text-align: left;
 }

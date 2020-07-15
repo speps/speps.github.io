@@ -31,6 +31,7 @@
             </div>
 <div id="content">
 	<div id="page">
+		<h1>Setup Hugo with Travis CI and GitHub Pages</h1>
 		
 		<div id="sideinfo">
 			<nav id="TableOfContents">
@@ -50,7 +51,6 @@
 </nav>
 		</div>
 		
-		<h1>Setup Hugo with Travis CI and GitHub Pages</h1>
 		<p>This article aims to introduce and show how to generate your <a href="http://gohugo.io">Hugo</a> site on <a href="http://travis-ci.org">Travis CI</a> and then deploy it automatically to <a href="https://pages.github.com">GitHub Pages</a>.</p>
 <h2 id="have-your-hugo-website-ready">Have your Hugo website ready</h2>
 <p>The first step is to have your Hugo website working locally at least. It should build without errors. The default output folder is <code>public</code>. NOTE: if you changed that using <code>publishdir</code> in your config file please change it in the following steps.</p>
@@ -69,12 +69,41 @@
 <p>You need to generate a new &ldquo;Personal Access Token&rdquo; from this GitHub page : <a href="https://github.com/settings/tokens">https://github.com/settings/tokens</a></p>
 <p>Click on &ldquo;Generate new token&rdquo; and follow the instructions. You need to select the <code>public_repo</code> or <code>repo</code> scopes. Once the token is generated, you need to copy it.</p>
 <p>Then you need to encrypt it so you can use on Travis CI, <a href="https://docs.travis-ci.com/user/encryption-keys/">follow those instructions</a> and then run this command :</p>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">travis encrypt <span class="nv">GIT_DEPLOY_REPO</span><span class="o">=</span>https://GENERATED_TOKEN@github.com/username/reponame.git
-</code></pre></div><p>Replace <code>GENERATED_TOKEN</code> with the generated token earlier and <code>username</code> by your GitHub username and <code>reponame</code> by the repository name.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">travis encrypt <span class="nv">GIT_DEPLOY_REPO</span><span class="o">=</span>https://GENERATED_TOKEN@github.com/username/reponame.git
+</code></pre></td></tr></table>
+</div>
+</div><p>Replace <code>GENERATED_TOKEN</code> with the generated token earlier and <code>username</code> by your GitHub username and <code>reponame</code> by the repository name.</p>
 <h3 id="setup-travisyml">Setup .travis.yml</h3>
 <p>In your <code>sources</code> branch, you have to create a .travis.yml file which will be picked up by Travis CI and be used to configure your build process.</p>
 <p>The contents of .travis.yml should be as follows, <strong>note instructions inlined</strong> :</p>
-<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">env</span><span class="p">:</span><span class="w">
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">env</span><span class="p">:</span><span class="w">
 </span><span class="w">  </span><span class="k">global</span><span class="p">:</span><span class="w">
 </span><span class="w">    </span>- <span class="k">secure</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;...&#34;</span><span class="w"> </span><span class="c"># replace by the output from travis encrypt done earlier</span><span class="w">
 </span><span class="w">    </span>- GIT_DEPLOY_DIR=public<span class="w"> </span><span class="c"># this is the default output dir of Hugo</span><span class="w">
@@ -92,16 +121,29 @@
 </span><span class="w"></span><span class="k">after_success</span><span class="p">:</span><span class="w">
 </span><span class="w">  </span>- cp<span class="w"> </span>.travis.yml<span class="w"> </span>public<span class="w"> </span><span class="c"># all branches need this file</span><span class="w">
 </span><span class="w">  </span>- bash<span class="w"> </span>deploy.sh<span class="w"> </span><span class="c"># run the deploy script</span><span class="w">
-</span></code></pre></div><p>NOTE the <a href="https://github.com/speps/speps.github.io/blob/sources/.travis.yml">latest version of <code>.travis.yml</code> will always be at my <code>sources</code> branch</a>.</p>
+</span></code></pre></td></tr></table>
+</div>
+</div><p>NOTE the <a href="https://github.com/speps/speps.github.io/blob/sources/.travis.yml">latest version of <code>.travis.yml</code> will always be at my <code>sources</code> branch</a>.</p>
 <h3 id="cross-compiling-hugo">Cross compiling Hugo</h3>
 <p>You could setup your Travis CI to install a Go version, but it will be faster to cross compile the <code>hugo</code> binary yourself and then deploy it in your <code>sources</code> branch.</p>
 <p>Run from your root folder those following commands, line by line :</p>
-<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">mkdir binaries
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">mkdir binaries
 <span class="nb">cd</span> binaries
 env <span class="nv">GOPATH</span><span class="o">=</span><span class="s2">&#34;`pwd`&#34;</span> go get -v github.com/spf13/hugo
 env <span class="nv">GOPATH</span><span class="o">=</span><span class="s2">&#34;`pwd`&#34;</span> <span class="nv">GOOS</span><span class="o">=</span>linux <span class="nv">GOARCH</span><span class="o">=</span>amd64 go build -v github.com/spf13/hugo
 git add hugo
-</code></pre></div><p>This will add the <code>hugo</code> binary compiled for a Travis VM to Git&rsquo;s index. Don&rsquo;t forget to commit it.</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>This will add the <code>hugo</code> binary compiled for a Travis VM to Git&rsquo;s index. Don&rsquo;t forget to commit it.</p>
 <h2 id="wrapping-up">Wrapping up</h2>
 <p>By the end of these steps, you should now have something like this in your root folder :</p>
 <ul>
@@ -129,7 +171,7 @@ git add hugo
 
 	</div>
 </div>
-            <div id="footer"><p>2020-07-14 21:14:42 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
+            <div id="footer"><p>2020-07-15 08:01:03 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
         </div>
     </div>
 </body>

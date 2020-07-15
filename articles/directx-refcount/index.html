@@ -31,18 +31,96 @@
             </div>
 <div id="content">
 	<div id="page">
+		<h1>Debugging a DirectX memory leak</h1>
 		
 		<div id="sideinfo">
 			<nav id="TableOfContents"></nav>
 		</div>
 		
-		<h1>Debugging a DirectX memory leak</h1>
 		<p>A short tale (with pictures and code) of a recent debugging session.</p>
 <p>DirectX uses reference counting to handle the destruction of its resources. When creating a resource, the handle returned by DirectX already has a reference counter of 1. When this resource is not needed anymore, you call Release, each call decrements the reference counter by 1. However, the memory allocated by DirectX for this resource will only be released when the reference counter reaches 0.</p>
 <p>Knowing this, it becomes easy to create your own objects to manage DirectX resources like a VertexBuffer.</p>
-<script type="application/javascript" src="https://gist.github.com/speps/82c86de7540e965b7ef3.js"></script>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#pragma once
+</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;d3d11.h&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;d3dx11.h&gt;</span><span class="cp">
+</span><span class="cp"></span>
+<span class="k">class</span> <span class="nc">VertexBuffer</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">VertexBuffer</span><span class="p">(</span><span class="n">ID3D11Buffer</span><span class="o">*</span> <span class="n">d3d11buffer</span><span class="p">)</span>
+        <span class="o">:</span> <span class="n">mD3D11Buffer</span><span class="p">(</span><span class="n">d3d11buffer</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">mD3D11Buffer</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">mD3D11Buffer</span><span class="o">-&gt;</span><span class="n">AddRef</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
 
-<p>This is quite simple in most cases, but you&rsquo;ll have to read through the documentation to know which functions add or hold a reference or not.</p>
+    <span class="n">VertexBuffer</span><span class="p">(</span><span class="k">const</span> <span class="n">VertexBuffer</span><span class="o">&amp;</span> <span class="n">other</span><span class="p">)</span>
+        <span class="o">:</span> <span class="n">mD3D11Buffer</span><span class="p">(</span><span class="n">other</span><span class="p">.</span><span class="n">mD3D11Buffer</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">mD3D11Buffer</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">mD3D11Buffer</span><span class="o">-&gt;</span><span class="n">AddRef</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="o">~</span><span class="n">VertexBuffer</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">mD3D11Buffer</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">mD3D11Buffer</span><span class="o">-&gt;</span><span class="n">Release</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">ID3D11Buffer</span><span class="o">*</span> <span class="n">mD3D11Buffer</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>This is quite simple in most cases, but you&rsquo;ll have to read through the documentation to know which functions add or hold a reference or not.</p>
 <p>For example looking at ID3D11DeviceContext::IASetVertexBuffers, it says &ldquo;The method will hold a reference to the interfaces passed in&rdquo;. That means while the vertex buffer is bound onto the device, the reference counter for this vertex buffer will be at least one. In other words, this method will call AddRef when a new vertex buffer is bound and Release on the previous one (if there was one). You usually don&rsquo;t have to worry about methods like this one because they behave as expected, a quick MSDN search can find them all.</p>
 <p>Now looking at ID3D11DeviceContext::IAGetVertexBuffers you will notice the documentation says &ldquo;Any returned interfaces will have their reference count incremented by one&rdquo;. This is a clue ! Again, a search can help you find these ones. However, these methods, because they query the current state of the device, should not be used too often. The calls to set the vertex buffers should be cached locally with your own device context wrapper so you don&rsquo;t have to ask the driver what the current state is. These &ldquo;Get&rdquo; methods are expensive, and it&rsquo;s easy to mess up with the reference counting.</p>
 <p>Now onto the memory leak problem. Sometimes you have some complex rendering code, and don&rsquo;t know where the references to your resources are being held. It helps to print the return value of AddRef and Release (which is the reference counter) but it would be great to know when the reference counter is incremented or decremented outside of your own code.</p>
@@ -52,17 +130,89 @@
 <p>After breaking into dummy calls to AddRef/Release, right click on the code and select &ldquo;Go To Disassembly&rdquo; (that&rsquo;s in Visual Studio 2010).</p>
 <p><img src="/media/articles/directx2.png" alt=""></p>
 <p>Next, you need to do step-by-step of each instruction and check the registers. Here is a rundown of the flattened sequence to the final increment of the reference counter. Activating the register window in the Debug&gt;Windows&gt;Registers menu is very helpful. This is disassembly from a x64 version of the code above as it&rsquo;s easier to follow than x86 in my opinion, but the same steps can be applied.</p>
-<script type="application/javascript" src="https://gist.github.com/speps/3e2ba0d88c3894f9bdee.js"></script>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-plaintext" data-lang="plaintext">000000013FA017A0  mov         rcx,qword ptr [g_pVertexBuffer (13FA04628h)]  
+000000013FA017A7  mov         rax,qword ptr [rcx]  
+000000013FA017AA  call        qword ptr [rax+8]  
 
-<p>At the end of the first &ldquo;call&rdquo; instruction, rcx contains the this pointer. Then the address in &ldquo;rcx + 0x18&rdquo; is dereferenced and put back into rcx. After the &ldquo;jmp&rdquo; instruction, the xadd instruction adds one to the value at address &ldquo;rcx + 8&rdquo;.</p>
+000007FEF76B0BBC  mov         rcx,qword ptr [rcx+18h]  
+000007FEF76B0BC0  mov         rax,qword ptr [rcx]  
+000007FEF76B0BC3  jmp         qword ptr [rax+8] 
+
+000007FEF76DF590  push        rbx  
+000007FEF76DF592  sub         rsp,20h  
+000007FEF76DF596  mov         rax,100000000h  
+000007FEF76DF5A0  mov         rbx,rax  
+000007FEF76DF5A3  lock xadd   qword ptr [rcx+8],rbx  
+</code></pre></td></tr></table>
+</div>
+</div><p>At the end of the first &ldquo;call&rdquo; instruction, rcx contains the this pointer. Then the address in &ldquo;rcx + 0x18&rdquo; is dereferenced and put back into rcx. After the &ldquo;jmp&rdquo; instruction, the xadd instruction adds one to the value at address &ldquo;rcx + 8&rdquo;.</p>
 <p>Let&rsquo;s construct a helper macro to get the current reference count of our vertex buffer. This is mostly for debug purposes as the reference counter is very likely atomic (as noted by the &ldquo;lock xadd&rdquo; instruction which is an atomic exchange and add).</p>
 <p>In C and C++, to be able to add bytes to an existing pointer, you need it to be char*. Doing pointer arithmetic with void* is a compile error and adding to other types shifts by the size of the type so you have to be careful. For example pInt+1 if pInt is int* will actually point to pInt+8 if sizeof(int) is 8.</p>
-<script type="application/javascript" src="https://gist.github.com/speps/cd3139aab7ad2f713963.js"></script>
-
-<p>Modifying the previous code to debug the reference counter gives us the right value.</p>
-<script type="application/javascript" src="https://gist.github.com/speps/50cfb074e0c9e524e17b.js"></script>
-
-<p>Printing the address of the reference counter is very useful for setting a data breakpoint.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#define VBUFFER_REFCOUNTPTR(x) \
+</span><span class="cp">  (((unsigned long*)(((char*)(*(long long*)(((char*)(x))+0x18)))+12)))
+</span><span class="cp"></span><span class="c1">//                                                   ^- like rcx, add 0x18 bytes to it
+</span><span class="c1">//                                    ^- cast to a pointer type, long long on x64, adapt on your platform
+</span><span class="c1">//                            ^- dereference the pointer and cast to char*
+</span><span class="c1">//                                                               ^- the asm code adds 8 but looking at memory the value is at 12
+</span><span class="c1">//    ^- cast to the type of the return value of AddRef, ULONG
+</span></code></pre></td></tr></table>
+</div>
+</div><p>Modifying the previous code to debug the reference counter gives us the right value.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="n">ULONG</span> <span class="n">countAfterAdd</span> <span class="o">=</span> <span class="n">g_pVertexBuffer</span><span class="o">-&gt;</span><span class="n">AddRef</span><span class="p">();</span>
+<span class="n">ULONG</span> <span class="o">*</span><span class="n">pRefCount</span> <span class="o">=</span> <span class="n">VBUFFER_REFCOUNTPTR</span><span class="p">(</span><span class="n">g_pVertexBuffer</span><span class="p">);</span>
+<span class="n">ULONG</span> <span class="n">countAfterAddMacro</span> <span class="o">=</span> <span class="o">*</span><span class="n">pRefCount</span><span class="p">;</span>
+<span class="n">debugLog</span><span class="p">(</span><span class="sa">L</span><span class="s">&#34;ref count return=%d memory=%d (%p)</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">countAfterAdd</span><span class="p">,</span> <span class="n">countAfterAddMacro</span><span class="p">,</span> <span class="n">pRefCount</span><span class="p">);</span>
+<span class="n">ULONG</span> <span class="n">countAfterRelease</span> <span class="o">=</span> <span class="n">g_pVertexBuffer</span><span class="o">-&gt;</span><span class="n">Release</span><span class="p">();</span>
+<span class="n">ULONG</span> <span class="n">countAfterReleaseMacro</span> <span class="o">=</span> <span class="o">*</span><span class="n">pRefCount</span><span class="p">;</span>
+<span class="n">debugLog</span><span class="p">(</span><span class="sa">L</span><span class="s">&#34;ref count return=%d memory=%d (%p)</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">countAfterRelease</span><span class="p">,</span> <span class="n">countAfterReleaseMacro</span><span class="p">,</span> <span class="n">pRefCount</span><span class="p">);</span>
+<span class="c1">// outputs:
+</span><span class="c1">// ref count return=2 memory=2 (000000000025FDEC)
+</span><span class="c1">// ref count return=1 memory=1 (000000000025FDEC)
+</span></code></pre></td></tr></table>
+</div>
+</div><p>Printing the address of the reference counter is very useful for setting a data breakpoint.</p>
 <p><img src="/media/articles/directx3.png" alt=""></p>
 <p>Next time the reference counter is changed internally by a DirectX call, you&rsquo;ll see that the breakpoint is hit.</p>
 <p><img src="/media/articles/directx4.png" alt=""></p>
@@ -72,7 +222,7 @@
 
 	</div>
 </div>
-            <div id="footer"><p>2020-07-14 21:14:42 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
+            <div id="footer"><p>2020-07-15 08:01:03 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
         </div>
     </div>
 </body>
