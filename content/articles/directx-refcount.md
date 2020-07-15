@@ -9,7 +9,45 @@ DirectX uses reference counting to handle the destruction of its resources. When
 
 Knowing this, it becomes easy to create your own objects to manage DirectX resources like a VertexBuffer.
 
-{{< gist speps 82c86de7540e965b7ef3 >}}
+```cpp
+#pragma once
+
+#include <d3d11.h>
+#include <d3dx11.h>
+
+class VertexBuffer
+{
+public:
+    VertexBuffer(ID3D11Buffer* d3d11buffer)
+        : mD3D11Buffer(d3d11buffer)
+    {
+        if (mD3D11Buffer != nullptr)
+        {
+            mD3D11Buffer->AddRef();
+        }
+    }
+
+    VertexBuffer(const VertexBuffer& other)
+        : mD3D11Buffer(other.mD3D11Buffer)
+    {
+        if (mD3D11Buffer != nullptr)
+        {
+            mD3D11Buffer->AddRef();
+        }
+    }
+
+    ~VertexBuffer()
+    {
+        if (mD3D11Buffer != nullptr)
+        {
+            mD3D11Buffer->Release();
+        }
+    }
+
+private:
+    ID3D11Buffer* mD3D11Buffer;
+};
+```
 
 This is quite simple in most cases, but you'll have to read through the documentation to know which functions add or hold a reference or not.
 
@@ -31,7 +69,21 @@ After breaking into dummy calls to AddRef/Release, right click on the code and s
 
 Next, you need to do step-by-step of each instruction and check the registers. Here is a rundown of the flattened sequence to the final increment of the reference counter. Activating the register window in the Debug>Windows>Registers menu is very helpful. This is disassembly from a x64 version of the code above as it's easier to follow than x86 in my opinion, but the same steps can be applied.
 
-{{< gist speps 3e2ba0d88c3894f9bdee >}}
+```plaintext
+000000013FA017A0  mov         rcx,qword ptr [g_pVertexBuffer (13FA04628h)]  
+000000013FA017A7  mov         rax,qword ptr [rcx]  
+000000013FA017AA  call        qword ptr [rax+8]  
+
+000007FEF76B0BBC  mov         rcx,qword ptr [rcx+18h]  
+000007FEF76B0BC0  mov         rax,qword ptr [rcx]  
+000007FEF76B0BC3  jmp         qword ptr [rax+8] 
+
+000007FEF76DF590  push        rbx  
+000007FEF76DF592  sub         rsp,20h  
+000007FEF76DF596  mov         rax,100000000h  
+000007FEF76DF5A0  mov         rbx,rax  
+000007FEF76DF5A3  lock xadd   qword ptr [rcx+8],rbx  
+```
 
 At the end of the first "call" instruction, rcx contains the this pointer. Then the address in "rcx + 0x18" is dereferenced and put back into rcx. After the "jmp" instruction, the xadd instruction adds one to the value at address "rcx + 8".
 
@@ -39,11 +91,30 @@ Let's construct a helper macro to get the current reference count of our vertex 
 
 In C and C++, to be able to add bytes to an existing pointer, you need it to be char*. Doing pointer arithmetic with void* is a compile error and adding to other types shifts by the size of the type so you have to be careful. For example pInt+1 if pInt is int* will actually point to pInt+8 if sizeof(int) is 8.
 
-{{< gist speps cd3139aab7ad2f713963 >}}
+```cpp
+#define VBUFFER_REFCOUNTPTR(x) \
+  (((unsigned long*)(((char*)(*(long long*)(((char*)(x))+0x18)))+12)))
+//                                                   ^- like rcx, add 0x18 bytes to it
+//                                    ^- cast to a pointer type, long long on x64, adapt on your platform
+//                            ^- dereference the pointer and cast to char*
+//                                                               ^- the asm code adds 8 but looking at memory the value is at 12
+//    ^- cast to the type of the return value of AddRef, ULONG
+```
 
 Modifying the previous code to debug the reference counter gives us the right value.
 
-{{< gist speps 50cfb074e0c9e524e17b >}}
+```cpp
+ULONG countAfterAdd = g_pVertexBuffer->AddRef();
+ULONG *pRefCount = VBUFFER_REFCOUNTPTR(g_pVertexBuffer);
+ULONG countAfterAddMacro = *pRefCount;
+debugLog(L"ref count return=%d memory=%d (%p)\n", countAfterAdd, countAfterAddMacro, pRefCount);
+ULONG countAfterRelease = g_pVertexBuffer->Release();
+ULONG countAfterReleaseMacro = *pRefCount;
+debugLog(L"ref count return=%d memory=%d (%p)\n", countAfterRelease, countAfterReleaseMacro, pRefCount);
+// outputs:
+// ref count return=2 memory=2 (000000000025FDEC)
+// ref count return=1 memory=1 (000000000025FDEC)
+```
 
 Printing the address of the reference counter is very useful for setting a data breakpoint.
 

@@ -1,7 +1,6 @@
 .vspace { margin-bottom: 0.5em; }
 .large { font-size: 115%; }
 .small { font-size: 80%; }
-.highlight { background-color: yellow; padding: 0px 3px 0px 3px; }
 .marks { font-size: 80%; color: red; }
 .uppercase { text-transform: uppercase; }
 .lowercase { text-transform: lowercase; }
@@ -18,8 +17,6 @@ table.fmt, table.fmt th, table.fmt td { width: auto; border-collapse: collapse; 
 .box { background-color: #f0f0f0; padding: 7px; border: 1px solid #006699; margin-bottom: 3px; }
 .box li { margin: 5px 5px 5px 5px;}
 .box ul { margin: 0px 0px 0px 20px;}
-.code, pre { font-family: "Courier New", Courier, monospace; background-color: #f0f0f0; padding: 7px; border: 1px solid #006699; margin-bottom: 3px; }
-.code ul { margin: 0px 0px 0px 20px;}
 .message { background-color: #f0f0f0; padding: 7px; margin: 0px 0px 7px 0px; border: 1px solid #006699; font-style: italic; color: #006699; }
 .messageid { font-style: italic; color: #006699; }
 .diff { color: #006699; font-size:75%; background-color: #ccc; padding: 2px 5px 2px 5px; line-height: 2.5em;}

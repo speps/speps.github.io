@@ -1,10 +1,15 @@
 +++
 date = "2020-07-12T19:46:57Z"
 title = "Torus Trooper - Rebooting a 15 year-old game written in D - Part 1 Compiling"
-draft = false
 +++
 
-While exploring D recently, I remembered a game I played while at university 15 years ago. For a long time, I couldn't remember the name at all, only that it was from a Japanese developer. After some search wrangling, I finally managed to find the name of the game: Torus Trooper!
+See also
+
+* [Part 1 - Compiling a new executable](/articles/torus-trooper-part1)
+* ~~Part 2 - Running the game for the first time~~
+* ~~Part 3 - Making it cross platform~~
+
+While exploring D recently, I remembered a game I played while at university 15 years ago. For a long time, I couldn't remember the name at all, only that it was from a Japanese developer. After some search wrangling, I finally managed to find the name of the game: **Torus Trooper!**
 
 You can find it there: http://www.asahi-net.or.jp/~cs8k-cyu/windows/tt_e.html
 
@@ -14,15 +19,11 @@ Here is a copy of the tt0_22.zip file archived: https://github.com/speps/tt/arch
 
 What made me remember this game is that :
 
-- It came with [source code](https://github.com/speps/tt/tree/legacy/src), quite unusual at the time for me
+- It came with [source code](https://github.com/speps/tt/tree/legacy/src/abagames), quite unusual at the time for me
 - Written in D, a language I didn't know at all while I was busy studying C++
 - It's awfully addictive!
 
-What better project than try to compile a D v0.110 project in a modern version of D! So here we are...
-
-* Part 1 - Compiling a new executable
-* Part 2 - Running the game for the first time
-* Part 3 - Making it cross platform
+What better project than try to compile a **D v0.110** project in a modern version of D! So here we are...
 
 ## Switching from Ant to DUB
 
@@ -47,7 +48,7 @@ The game used Ant and its `build.xml` file to generate the executable, resources
 
 With this initial `dub.json` file, I was set to run the `dub` command...
 
-```
+```plaintext {linenos=false}
 Performing "debug" build using C:\D\dmd2\windows\bin64\dmd.exe for x86.
 tt ~master: building configuration "application"...
 src\abagames\tt\barrage.d(95,33): Error: instead of C-style syntax, use D-style BulletMLParserTinyXML*[char[]][char[]] parser
@@ -64,8 +65,6 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 ```
 
 Alright let's start and get this to compile!
-
-## Compiling
 
 ## C-style syntax errors
 
@@ -90,7 +89,7 @@ Here is an example:
 
 This is an interesting one, here is one of the files where this error triggers:
 
-```d
+```d {hl_lines=[17]}
   private void calcIndex(in float z, out int idx, out float ofs) {
     idx = slice.length + 99999;
     for (int i = 1; i < slice.length; i++) {
@@ -116,7 +115,7 @@ This is an interesting one, here is one of the files where this error triggers:
 
 I did try a few searches without success so I asked on the D community forums and a few people guessed right, it's of course a `not >=`, equivalent to `<`. However, [thanks to Walter Bright](https://forum.dlang.org/post/rec3d1$toc$1@digitalmars.com), I got a link to the [original documentation from Digital Mars](https://www.digitalmars.com/ctg/ctgNumerics.html#comparisons). The subtle difference with `!>=` is that it will also return `true` if any operands are `NaN`. Suggested fix seems to have worked:
 
-```d
+```d {linenostart=17}
     if (std.math.isNaN(ofs) || ofs < 0)
       ofs = 0;
 ```
@@ -488,3 +487,5 @@ The BulletML binding used `extern(C)` and that worked the same so no changes wer
 ## Wrapping up
 
 With all of this, we've managed to compile a new Windows executable! What amazed me is how little language changes were necessary. The biggest change was related to Phobos and deprecated library features.
+
+Running the game and seeing if it runs will be part 2.

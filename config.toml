@@ -4,5 +4,9 @@ title = "speps.fr - Rémi Gillig"
 theme = "speps"
 pygmentsUseClasses = true
 
+[markup]
+	[markup.highlight]
+		lineNos = true
+
 [taxonomies]
 tag = "tags"
