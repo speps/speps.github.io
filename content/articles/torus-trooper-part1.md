@@ -6,7 +6,7 @@ title = "Torus Trooper - Rebooting a 15 year-old game written in D - Part 1 Comp
 See also
 
 * [Part 1 - Compiling a new executable](/articles/torus-trooper-part1)
-* ~~Part 2 - Running the game for the first time~~
+* [Part 2 - Running the game for the first time](/articles/torus-trooper-part2)
 * ~~Part 3 - Making it cross platform~~
 
 While exploring D recently, I remembered a game I played while at university 15 years ago. For a long time, I couldn't remember the name at all, only that it was from a Japanese developer. After some search wrangling, I finally managed to find the name of the game: **Torus Trooper!**
@@ -464,4 +464,4 @@ The BulletML binding used `extern(C)` and that worked the same so no changes wer
 
 With all of this, we've managed to compile a new Windows executable! What amazed me is how little language changes were necessary. The biggest change was related to Phobos and deprecated library features.
 
-Running the game and seeing if it runs will be part 2.
+Running the game and seeing if it runs will be [part 2](/articles/torus-trooper-part2).
