@@ -73,8 +73,6 @@ This is one is easy to fix, the suggestion from the compiler works, I just repla
 Here is an example:
 
 ```diff
---- a/import/SDL_audio.d
-+++ b/import/SDL_audio.d
 @@ -42,7 +43,7 @@ struct SDL_AudioSpec {
      Once the callback returns, the buffer will no longer be valid.
      Stereo samples are stored in a LRLRLR ordering.
@@ -127,8 +125,6 @@ D1 used to have `char[]` as the string type, and functions in `std.string` in Ph
 Most of the changes here are similar to this
 
 ```diff
---- a/src/abagames/tt/barrage.d
-+++ b/src/abagames/tt/barrage.d
 @@ -92,24 +91,24 @@ public class Barrage {
   */
  public class BarrageManager {
@@ -161,8 +157,6 @@ Most of the changes here are similar to this
 D1 used to have `std.string.toString` to convert a value to a `char[]` value. This functionality was replaced by `std.conv.to!string`.
 
 ```diff
---- a/src/abagames/tt/shot.d
-+++ b/src/abagames/tt/shot.d
 @@ -5,6 +5,7 @@
   */
  module abagames.tt.shot;
@@ -199,8 +193,6 @@ immutable(char)* toStringz(scope return string s) pure nothrow @trusted;
 Again, the fix is quite straightforward. For example, the bindings weren't written with this in mind so they need fixing:
 
 ```diff
---- a/import/SDL_rwops.d
-+++ b/import/SDL_rwops.d
 @@ -81,7 +81,7 @@ struct SDL_RWops {
  
  /* Functions to create SDL_RWops structures from various data sources */
@@ -214,8 +206,6 @@ Again, the fix is quite straightforward. For example, the bindings weren't writt
 * `typedef` → `alias`
 
 ```diff
---- a/import/SDL_rwops.d
-+++ b/import/SDL_rwops.d
 @@ -28,10 +28,10 @@ import SDL_types;
  
  extern(C):
@@ -233,8 +223,6 @@ Again, the fix is quite straightforward. For example, the bindings weren't writt
 * `inout` → `ref`: this made sense for all instances where `inout` was used
 
 ```diff
---- a/src/abagames/tt/prefmanager.d
-+++ b/src/abagames/tt/prefmanager.d
 @@ -59,7 +59,7 @@ public class PrefData {
  
    public this() {
@@ -248,8 +236,6 @@ Again, the fix is quite straightforward. For example, the bindings weren't writt
 * `auto T` → `auto`: it seems the original author specified auto along with the type which isn't allowed anymore
 
 ```diff
---- a/src/abagames/tt/shape.d
-+++ b/src/abagames/tt/shape.d
 @@ -631,9 +631,9 @@ public class BulletShape: Drawable {
    }
  
@@ -280,8 +266,6 @@ Again, the fix is quite straightforward. For example, the bindings weren't writt
 * `getExt` → `.extension`: behaviour is different but it's easy enough to fix, it now includes the dot
 
 ```diff
---- a/src/abagames/tt/soundmanager.d
-+++ b/src/abagames/tt/soundmanager.d
 @@ -44,10 +45,10 @@ public class SoundManager: abagames.util.sdl.sound.SoundManager {
  
    private static Music[] loadMusics() {
@@ -302,8 +286,6 @@ Again, the fix is quite straightforward. For example, the bindings weren't writt
 * `catch(Object)` → `catch(Throwable)`: you could throw any `Object` before, you have to use Throwable now
 
 ```diff
---- a/src/abagames/tt/boot.d
-+++ b/src/abagames/tt/boot.d
 @@ -83,20 +84,20 @@ public int boot(char[][] args) {
    }
    try {
@@ -324,8 +306,6 @@ Again, the fix is quite straightforward. For example, the bindings weren't writt
 * `bit` → `SDL_bool`: the `bit` type was used back in D1, it behaved like a `bool` but used one bit instead so you could make bitfields easily, it was mostly used in the SDL bindings so I replaced it with `SDL_bool`
 
 ```diff
---- a/import/SDL_video.d
-+++ b/import/SDL_video.d
 @@ -132,7 +133,7 @@ const uint SDL_SRCALPHA	= 0x00010000;	/* Blit uses source alpha blending */
  const uint SDL_PREALLOC	= 0x01000000;	/* Surface uses preallocated memory */
  
@@ -357,8 +337,6 @@ The old code did use `std.stream`, from what I read this was deprecated in favor
 This was very useful at the start to get the code to compile. However, I wanted to get rid of this dependency as it didn't feel right to keep old code instead of relying on the modern D equivalent. In D1, `std.stream.File.read` could read binary data into values. I've changed it to use `std.file.read` and `std.bitmanip.read`. It's also important to make sure you specify the endian, the D1 code was implementation-specific regarding the format of types other than byte sized ones. On Windows it was little-endian. That means replays and highscores saves are now compatible with the original executable!
 
 ```diff
---- a/src/abagames/tt/replay.d
-+++ b/src/abagames/tt/replay.d
 @@ -5,7 +5,10 @@
   */
  module abagames.tt.replay;
@@ -466,8 +444,6 @@ The game also came with import libraries for SDL, SDL_mixer, OpenGL and GLU and 
 The changes required are mostly related to how the extern code was defined. For now, because I was only trying to produce a Windows version, I replaced uses of `version(Win32)` (which is now `version(Windows)`) with just `extern(Windows)` unconditionally.
 
 ```diff
---- a/import/opengl.d
-+++ b/import/opengl.d
 @@ -1,10 +1,4 @@
 -version (Win32) {
 -	private import std.c.windows.windows;
