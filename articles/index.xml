@@ -6,10 +6,23 @@
     <description>Recent content in Articles on speps.fr - Rémi Gillig</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 12 Jul 2020 19:46:57 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 19 Jul 2020 22:23:30 +0000</lastBuildDate>
     
 	<atom:link href="http://speps.fr/articles/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Torus Trooper - Rebooting a 15 year-old game written in D - Part 2 Running</title>
+      <link>http://speps.fr/articles/torus-trooper-part2/</link>
+      <pubDate>Sun, 19 Jul 2020 22:23:30 +0000</pubDate>
+      
+      <guid>http://speps.fr/articles/torus-trooper-part2/</guid>
+      <description>See also
+ Part 1 - Compiling a new executable Part 2 - Running the game for the first time Part 3 - Making it cross platform  From part 1, we stopped after successfully compiling a new executable, but will it run?
+Answer is&amp;hellip; NO!
+Alright, let&amp;rsquo;s dig into it!
+D1&amp;rsquo;s std.file.listdir core.exception.RangeError@src\abagames\tt\barrage.d(110): Range violation ---------------- 0x00448944 in _d_newarrayU 0x0041734B in void abagames.tt.barrage.Barrage.addBml(immutable(char)[], immutable(char)[], float, bool, float) D1 used to have a function named listdir in Phobos.</description>
+    </item>
     
     <item>
       <title>Torus Trooper - Rebooting a 15 year-old game written in D - Part 1 Compiling</title>
@@ -19,19 +32,6 @@
       <guid>http://speps.fr/articles/torus-trooper-part1/</guid>
       <description>See also
  Part 1 - Compiling a new executable Part 2 - Running the game for the first time Part 3 - Making it cross platform  While exploring D recently, I remembered a game I played while at university 15 years ago. For a long time, I couldn&amp;rsquo;t remember the name at all, only that it was from a Japanese developer. After some search wrangling, I finally managed to find the name of the game: Torus Trooper!</description>
-    </item>
-    
-    <item>
-      <title>Torus Trooper - Rebooting a 15 year-old game written in D - Part 2 Running</title>
-      <link>http://speps.fr/articles/torus-trooper-part2/</link>
-      <pubDate>Sun, 12 Jul 2020 19:46:57 +0000</pubDate>
-      
-      <guid>http://speps.fr/articles/torus-trooper-part2/</guid>
-      <description>See also
- Part 1 - Compiling a new executable Part 2 - Running the game for the first time Part 3 - Making it cross platform  From part 1, we stopped after successfully compiling a new executable, but will it run?
-Answer is&amp;hellip; NO!
-Alright, let&amp;rsquo;s dig into it!
-D1&amp;rsquo;s std.file.listdir core.exception.RangeError@src\abagames\tt\barrage.d(110): Range violation ---------------- 0x00448944 in _d_newarrayU 0x0041734B in void abagames.tt.barrage.Barrage.addBml(immutable(char)[], immutable(char)[], float, bool, float) D1 used to have a function named listdir in Phobos.</description>
     </item>
     
     <item>
