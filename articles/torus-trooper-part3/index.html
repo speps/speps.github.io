@@ -1,0 +1,550 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>speps.fr - Rémi Gillig - Torus Trooper - Rebooting a 15 year-old game written in D - Part 3 WebAssembly</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="/css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/syntax.css"/>
+    <link rel='shortcut icon' href='/favicon.ico' />
+    <link rel='icon' href='/favicon.gif' type='image/gif'/>
+</head>
+<body>
+    <div id="bg-container">
+        <div id="bg">
+            <div id="bg-right"></div>
+        </div>
+    </div>
+    <div id="main-container">
+        <div id="main">
+            <div id="header">
+                <h1><a href="/" title="Return to the first page">speps.fr</a></h1>
+                <ul>
+                    <li><a href="/aboutme" title="Some information about myself"><span class="left"></span><span class="mid">About Me</span><span class="right"></span></a></li>
+                    <li><a href="/projects" title="My work, my projects, my hobbies"><span class="left"></span><span class="mid">Projects</span><span class="right"></span></a></li>
+                    <li><a href="/articles" title="Some articles I wrote"><span class="left"></span><span class="mid">Articles</span><span class="right"></span></a></li>
+                    <li><a href="/resume" title="My resume for your recruiting needs"><span class="left"></span><span class="mid">Resume</span><span class="right"></span></a></li>
+                    <li><a href="/links" title="What I spend my time with on the web"><span class="left"></span><span class="mid">Links</span><span class="right"></span></a></li>
+                </ul>
+                <div id="social"><a href="http://www.linkedin.com/in/remigillig"><img src="/images/linkedin.png"/></a></div>
+                <div id="social">&nbsp;</div>
+                <div id="social"><a href="http://twitter.com/remigillig"><img src="/images/twitter.png"/></a></div>
+            </div>
+<div id="content">
+	<div id="page">
+		<h1>Torus Trooper - Rebooting a 15 year-old game written in D - Part 3 WebAssembly</h1>
+		
+		<div id="sideinfo">
+			<nav id="TableOfContents">
+  <ul>
+    <li><a href="#removing-glu-dependency">Removing GLU dependency</a></li>
+    <li><a href="#some-windows-specific-code">Some Windows specific code</a></li>
+    <li><a href="#bulletml">BulletML</a>
+      <ul>
+        <li><a href="#finding-the-original-code">Finding the original code</a></li>
+        <li><a href="#reading-the-original-code">Reading the original code</a></li>
+        <li><a href="#porting-to-d">Porting to D</a></li>
+      </ul>
+    </li>
+    <li><a href="#modern-opengl">Modern OpenGL</a>
+      <ul>
+        <li><a href="#emulated-immediate-mode">Emulated immediate mode</a></li>
+      </ul>
+    </li>
+    <li><a href="#abstracting-platform-dependencies">Abstracting platform dependencies</a></li>
+  </ul>
+</nav>
+		</div>
+		
+		<p>See also</p>
+<ul>
+<li><a href="/articles/torus-trooper-part1">Part 1 - Compiling a new executable</a></li>
+<li><a href="/articles/torus-trooper-part2">Part 2 - Running the game for the first time</a></li>
+<li><a href="/articles/torus-trooper-part3">Part 3 - Porting to WebAssembly</a></li>
+</ul>
+<h2 id="removing-glu-dependency">Removing GLU dependency</h2>
+<p>GLU is the OpenGL Utility library from SGI. It&rsquo;s an API with helpful functions that work along with OpenGL. In our project, it&rsquo;s used to create a view matrix using <code>gluLookAt</code>. So the fix here is just to copy the code for that method from the original SGI code which has a permissive licence, i.e. the SGI licence.</p>
+<h2 id="some-windows-specific-code">Some Windows specific code</h2>
+<p>It seems Windows wasn&rsquo;t supported as well in the past in DMD so there was a specific <code>main</code> function that did the right plumbing:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-d" data-lang="d"><span class="k">version</span> <span class="o">(</span><span class="n">Win32_release</span><span class="o">)</span> <span class="o">{</span>
+  <span class="c1">// Boot as the Windows executable.
+</span><span class="c1"></span>  <span class="kn">import</span> <span class="nn">std.c.windows.windows</span><span class="o">;</span>
+  <span class="kn">import</span> <span class="nn">std.string</span><span class="o">;</span>
+
+  <span class="n">extern</span> <span class="o">(</span><span class="n">C</span><span class="o">)</span> <span class="kt">void</span> <span class="nf">gc_init</span><span class="o">();</span>
+  <span class="n">extern</span> <span class="o">(</span><span class="n">C</span><span class="o">)</span> <span class="kt">void</span> <span class="nf">gc_term</span><span class="o">();</span>
+  <span class="n">extern</span> <span class="o">(</span><span class="n">C</span><span class="o">)</span> <span class="kt">void</span> <span class="nf">_minit</span><span class="o">();</span>
+  <span class="n">extern</span> <span class="o">(</span><span class="n">C</span><span class="o">)</span> <span class="kt">void</span> <span class="nf">_moduleCtor</span><span class="o">();</span>
+
+  <span class="n">extern</span> <span class="o">(</span><span class="n">Windows</span><span class="o">)</span>
+  <span class="kd">public</span> <span class="kt">int</span> <span class="nf">WinMain</span><span class="o">(</span><span class="n">HINSTANCE</span> <span class="n">hInstance</span><span class="o">,</span>
+             <span class="n">HINSTANCE</span> <span class="n">hPrevInstance</span><span class="o">,</span>
+             <span class="n">LPSTR</span> <span class="n">lpCmdLine</span><span class="o">,</span>
+             <span class="kt">int</span> <span class="n">nCmdShow</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="n">result</span><span class="o">;</span>
+    <span class="n">gc_init</span><span class="o">();</span>
+    <span class="n">_minit</span><span class="o">();</span>
+    <span class="k">try</span> <span class="o">{</span>
+      <span class="n">_moduleCtor</span><span class="o">();</span>
+      <span class="kt">char</span><span class="o">[</span><span class="mi">4096</span><span class="o">]</span> <span class="n">exe</span><span class="o">;</span>
+      <span class="n">GetModuleFileNameA</span><span class="o">(</span><span class="kc">null</span><span class="o">,</span> <span class="n">exe</span><span class="o">,</span> <span class="mi">4096</span><span class="o">);</span>
+      <span class="kt">char</span><span class="o">[][</span><span class="mi">1</span><span class="o">]</span> <span class="n">prog</span><span class="o">;</span>
+      <span class="n">prog</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">std</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">exe</span><span class="o">);</span>
+      <span class="n">result</span> <span class="o">=</span> <span class="n">boot</span><span class="o">(</span><span class="n">prog</span> <span class="o">~</span> <span class="n">std</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="n">std</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">lpCmdLine</span><span class="o">)));</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Object</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span>
+      <span class="n">Logger</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">&#34;Exception: &#34;</span> <span class="o">~</span> <span class="n">o</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+      <span class="n">result</span> <span class="o">=</span> <span class="n">EXIT_FAILURE</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="n">gc_term</span><span class="o">();</span>
+    <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+  <span class="o">}</span>
+<span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+  <span class="c1">// Boot as the general executable.
+</span><span class="c1"></span>  <span class="kd">public</span> <span class="kt">int</span> <span class="nf">main</span><span class="o">(</span><span class="kt">string</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">boot</span><span class="o">(</span><span class="n">args</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>This isn&rsquo;t necessary anymore and was just removed.</p>
+<h2 id="bulletml">BulletML</h2>
+<p>BulletML is a code library used by Kenta Cho, the original developer of the project. It&rsquo;s used in a lot of his projects and handles the behaviour of bullets. It&rsquo;s based on XML and is written in C++ and compiled to .dll/.lib for linking into the final executable.</p>
+<h3 id="finding-the-original-code">Finding the original code</h3>
+<p>The main website for libBulletML has a download for a C++ library and a D port of it. I first tried the C++ library, it looked the closest from the imported API called from the game&rsquo;s D code.</p>
+<p>I could even open the original Visual C++ project in Visual Studio 2019 without issues. I then modified it to export a similar C API and compiled it to a DLL. I could now swap the original <code>bulletml.dll</code> with my own and it worked exactly as expected at runtime so I knew the C++ implementation was the one used in the original game code.</p>
+<h3 id="reading-the-original-code">Reading the original code</h3>
+<p>The original C++ BulletML code was an interesting read. It used TinyXML to parse XML, which is an old C++ library that came as a .cpp/.h files for easy integration. The BulletML data also allows expressions that specify the behaviour of the bullets. This expression parser was written using a YACC grammar, most likely the example grammar from YACC modified to allow for defining variables.</p>
+<p>The main part of the original code is actually the runner code. The runner is what evaluates the behaviours defined in XML (and parsed into runtime structures).</p>
+<h3 id="porting-to-d">Porting to D</h3>
+<p>Even though there was a D port of BulletML, it seemed like I would have an easier just porting the original behaviour of the C++ library as I had no way of knowing if the D port of BulletML would behave the same in the game itself.</p>
+<p>Most of the code would easily be ported without issues but getting the expression parsing and XML parsing parts were the most challenging.</p>
+<h4 id="expression-parsing">Expression Parsing</h4>
+<p>Instead of reusing the YACC grammar which mixes C code with the grammar, and creates some messy generated code, I decided to look into what&rsquo;s recommended nowadays for parsing. I ended up with a simpler lexer inspired by <a href="https://talks.golang.org/2011/lex.slide">Lexical Scanning in Go</a> and mixed it with a simple Pratt parser inspired by <a href="https://journal.stuffwithstuff.com/2011/03/19/pratt-parsers-expression-parsing-made-easy/">Pratt Parsers: Expression Parsing Made Easy</a>.</p>
+<p>That worked quite well and the whole parser was smaller and clearer than the original C++ code.</p>
+<h4 id="xml-parsing">XML Parsing</h4>
+<p>At first, I just used <a href="https://code.dlang.org/packages/dxml">dxml</a> and it was fine. However, my final goal is to port the game to WebAssembly and that didn&rsquo;t play well at all with a custom runtime. I also tried <code>std.xml</code> but it was similar. For example, implementing exceptions would have been quite difficult.</p>
+<p>Finally, I decided I would just reuse the lexer base code from the expression parser and made it output XML events like SAX parser but all at once. I only needed parsing XML files, and they were quite simple anyway so it worked out perfectly.</p>
+<p>I was finally able to load the BulletML XML files without any dependencies, no DUB package or .dll/.lib from the original code.</p>
+<h2 id="modern-opengl">Modern OpenGL</h2>
+<p>The code base uses immediate mode OpenGL commands like <code>glBegin</code>/<code>glVertex</code>/<code>glEnd</code>. This needs modernizing as those APIs have been deprecated for some time now in favor of vertex/index buffers and a programmable pipeline.</p>
+<h3 id="emulated-immediate-mode">Emulated immediate mode</h3>
+<p>To avoid having to change a lot of the gameplay/rendering code, I decided to make a simple replacement interface for most of OpenGL deprecated calls. The way this works is by mirroring what the old API would do under the hood and map it to the more modern API.</p>
+<p>Here is what the interface looks like:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span><span class="lnt">137
+</span><span class="lnt">138
+</span><span class="lnt">139
+</span><span class="lnt">140
+</span><span class="lnt">141
+</span><span class="lnt">142
+</span><span class="lnt">143
+</span><span class="lnt">144
+</span><span class="lnt">145
+</span><span class="lnt">146
+</span><span class="lnt">147
+</span><span class="lnt">148
+</span><span class="lnt">149
+</span><span class="lnt">150
+</span><span class="lnt">151
+</span><span class="lnt">152
+</span><span class="lnt">153
+</span><span class="lnt">154
+</span><span class="lnt">155
+</span><span class="lnt">156
+</span><span class="lnt">157
+</span><span class="lnt">158
+</span><span class="lnt">159
+</span><span class="lnt">160
+</span><span class="lnt">161
+</span><span class="lnt">162
+</span><span class="lnt">163
+</span><span class="lnt">164
+</span><span class="lnt">165
+</span><span class="lnt">166
+</span><span class="lnt">167
+</span><span class="lnt">168
+</span><span class="lnt">169
+</span><span class="lnt">170
+</span><span class="lnt">171
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-d" data-lang="d"><span class="kd">static</span> <span class="kd">class</span> <span class="nc">GL</span>
+<span class="o">{</span>
+  <span class="kd">alias</span> <span class="n">Matrix</span> <span class="o">=</span> <span class="kt">float</span><span class="o">[</span><span class="mi">16</span><span class="o">];</span>
+  <span class="kd">static</span> <span class="kd">const</span> <span class="n">Matrix</span> <span class="n">Identity</span> <span class="o">=</span> <span class="o">[</span>
+    <span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span>
+    <span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span>
+    <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span>
+    <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span>
+  <span class="o">];</span>
+  <span class="kd">enum</span> <span class="n">MatrixMode</span> <span class="o">{</span>
+    <span class="n">ModelView</span><span class="o">,</span>
+    <span class="n">Projection</span><span class="o">,</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">normalize</span><span class="o">(</span><span class="n">ref</span> <span class="kt">float</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kt">float</span> <span class="n">r</span><span class="o">;</span>
+
+    <span class="n">r</span> <span class="o">=</span> <span class="n">sqrt</span><span class="o">(</span><span class="n">v</span><span class="o">[</span><span class="mi">0</span><span class="o">]*</span><span class="n">v</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">+</span> <span class="n">v</span><span class="o">[</span><span class="mi">1</span><span class="o">]*</span><span class="n">v</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">+</span> <span class="n">v</span><span class="o">[</span><span class="mi">2</span><span class="o">]*</span><span class="n">v</span><span class="o">[</span><span class="mi">2</span><span class="o">]);</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">r</span> <span class="o">==</span> <span class="mf">0.0</span><span class="o">)</span> <span class="k">return</span><span class="o">;</span>
+
+    <span class="n">v</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">/=</span> <span class="n">r</span><span class="o">;</span>
+    <span class="n">v</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">/=</span> <span class="n">r</span><span class="o">;</span>
+    <span class="n">v</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">/=</span> <span class="n">r</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">cross</span><span class="o">(</span><span class="kt">float</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span> <span class="n">v1</span><span class="o">,</span> <span class="kt">float</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span> <span class="n">v2</span><span class="o">,</span> <span class="k">out</span> <span class="kt">float</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span> <span class="n">result</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">result</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">v1</span><span class="o">[</span><span class="mi">1</span><span class="o">]*</span><span class="n">v2</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">-</span> <span class="n">v1</span><span class="o">[</span><span class="mi">2</span><span class="o">]*</span><span class="n">v2</span><span class="o">[</span><span class="mi">1</span><span class="o">];</span>
+    <span class="n">result</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">v1</span><span class="o">[</span><span class="mi">2</span><span class="o">]*</span><span class="n">v2</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">-</span> <span class="n">v1</span><span class="o">[</span><span class="mi">0</span><span class="o">]*</span><span class="n">v2</span><span class="o">[</span><span class="mi">2</span><span class="o">];</span>
+    <span class="n">result</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">=</span> <span class="n">v1</span><span class="o">[</span><span class="mi">0</span><span class="o">]*</span><span class="n">v2</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">-</span> <span class="n">v1</span><span class="o">[</span><span class="mi">1</span><span class="o">]*</span><span class="n">v2</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">()</span> <span class="o">{}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">matrixMode</span><span class="o">(</span><span class="n">MatrixMode</span> <span class="n">mode</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">mode</span> <span class="o">==</span> <span class="n">MatrixMode</span><span class="o">.</span><span class="na">Projection</span><span class="o">)</span> <span class="o">{</span>
+      <span class="n">glMatrixMode</span><span class="o">(</span><span class="n">GL_PROJECTION</span><span class="o">);</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">mode</span> <span class="o">==</span> <span class="n">MatrixMode</span><span class="o">.</span><span class="na">ModelView</span><span class="o">)</span> <span class="o">{</span>
+      <span class="n">glMatrixMode</span><span class="o">(</span><span class="n">GL_MODELVIEW</span><span class="o">);</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">loadIdentity</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">glLoadIdentity</span><span class="o">();</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">pushMatrix</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">glPushMatrix</span><span class="o">();</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">popMatrix</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">glPopMatrix</span><span class="o">();</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">multMatrix</span><span class="o">(</span><span class="n">Matrix</span> <span class="n">m</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">glMultMatrixf</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="na">ptr</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">translate</span><span class="o">(</span><span class="kt">float</span> <span class="n">x</span><span class="o">,</span> <span class="kt">float</span> <span class="n">y</span><span class="o">,</span> <span class="kt">float</span> <span class="n">z</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">glTranslatef</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">z</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">translate</span><span class="o">(</span><span class="n">Vector3</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">translate</span><span class="o">(</span><span class="n">v</span><span class="o">.</span><span class="na">x</span><span class="o">,</span> <span class="n">v</span><span class="o">.</span><span class="na">y</span><span class="o">,</span> <span class="n">v</span><span class="o">.</span><span class="na">z</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">rotate</span><span class="o">(</span><span class="kt">float</span> <span class="n">angle</span><span class="o">,</span> <span class="kt">float</span> <span class="n">x</span><span class="o">,</span> <span class="kt">float</span> <span class="n">y</span><span class="o">,</span> <span class="kt">float</span> <span class="n">z</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">glRotatef</span><span class="o">(</span><span class="n">angle</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">z</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">scale</span><span class="o">(</span><span class="kt">float</span> <span class="n">x</span><span class="o">,</span> <span class="kt">float</span> <span class="n">y</span><span class="o">,</span> <span class="kt">float</span> <span class="n">z</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">glScalef</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">z</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">ortho</span><span class="o">(</span><span class="kt">float</span> <span class="n">left</span><span class="o">,</span> <span class="kt">float</span> <span class="n">right</span><span class="o">,</span> <span class="kt">float</span> <span class="n">bottom</span><span class="o">,</span> <span class="kt">float</span> <span class="n">top</span><span class="o">,</span> <span class="kt">float</span> <span class="n">near</span><span class="o">,</span> <span class="kt">float</span> <span class="n">far</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">glOrtho</span><span class="o">(</span><span class="n">left</span><span class="o">,</span> <span class="n">right</span><span class="o">,</span> <span class="n">bottom</span><span class="o">,</span> <span class="n">top</span><span class="o">,</span> <span class="n">near</span><span class="o">,</span> <span class="n">far</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">frustum</span><span class="o">(</span><span class="kt">float</span> <span class="n">left</span><span class="o">,</span> <span class="kt">float</span> <span class="n">right</span><span class="o">,</span> <span class="kt">float</span> <span class="n">bottom</span><span class="o">,</span> <span class="kt">float</span> <span class="n">top</span><span class="o">,</span> <span class="kt">float</span> <span class="n">near</span><span class="o">,</span> <span class="kt">float</span> <span class="n">far</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">glFrustum</span><span class="o">(</span><span class="n">left</span><span class="o">,</span> <span class="n">right</span><span class="o">,</span> <span class="n">bottom</span><span class="o">,</span> <span class="n">top</span><span class="o">,</span> <span class="n">near</span><span class="o">,</span> <span class="n">far</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">lookAt</span><span class="o">(</span><span class="kt">float</span> <span class="n">eyex</span><span class="o">,</span> <span class="kt">float</span> <span class="n">eyey</span><span class="o">,</span> <span class="kt">float</span> <span class="n">eyez</span><span class="o">,</span> <span class="kt">float</span> <span class="n">centerx</span><span class="o">,</span> <span class="kt">float</span> <span class="n">centery</span><span class="o">,</span> <span class="kt">float</span> <span class="n">centerz</span><span class="o">,</span> <span class="kt">float</span> <span class="n">upx</span><span class="o">,</span> <span class="kt">float</span> <span class="n">upy</span><span class="o">,</span> <span class="kt">float</span> <span class="n">upz</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="n">i</span><span class="o">;</span>
+    <span class="kt">float</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span> <span class="n">forward</span><span class="o">,</span> <span class="n">side</span><span class="o">,</span> <span class="n">up</span><span class="o">;</span>
+
+    <span class="n">forward</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">centerx</span> <span class="o">-</span> <span class="n">eyex</span><span class="o">;</span>
+    <span class="n">forward</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">centery</span> <span class="o">-</span> <span class="n">eyey</span><span class="o">;</span>
+    <span class="n">forward</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">=</span> <span class="n">centerz</span> <span class="o">-</span> <span class="n">eyez</span><span class="o">;</span>
+
+    <span class="n">up</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">upx</span><span class="o">;</span>
+    <span class="n">up</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">upy</span><span class="o">;</span>
+    <span class="n">up</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">=</span> <span class="n">upz</span><span class="o">;</span>
+
+    <span class="n">normalize</span><span class="o">(</span><span class="n">forward</span><span class="o">);</span>
+
+    <span class="cm">/* Side = forward x up */</span>
+    <span class="n">cross</span><span class="o">(</span><span class="n">forward</span><span class="o">,</span> <span class="n">up</span><span class="o">,</span> <span class="n">side</span><span class="o">);</span>
+    <span class="n">normalize</span><span class="o">(</span><span class="n">side</span><span class="o">);</span>
+
+    <span class="cm">/* Recompute up as: up = side x forward */</span>
+    <span class="n">cross</span><span class="o">(</span><span class="n">side</span><span class="o">,</span> <span class="n">forward</span><span class="o">,</span> <span class="n">up</span><span class="o">);</span>
+
+    <span class="n">Matrix</span> <span class="n">m</span> <span class="o">=</span> <span class="n">Identity</span><span class="o">[];</span>
+
+    <span class="n">m</span><span class="o">[</span><span class="mi">0</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">side</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+    <span class="n">m</span><span class="o">[</span><span class="mi">0</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">side</span><span class="o">[</span><span class="mi">1</span><span class="o">];</span>
+    <span class="n">m</span><span class="o">[</span><span class="mi">0</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">2</span><span class="o">]</span> <span class="o">=</span> <span class="n">side</span><span class="o">[</span><span class="mi">2</span><span class="o">];</span>
+
+    <span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">up</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+    <span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">up</span><span class="o">[</span><span class="mi">1</span><span class="o">];</span>
+    <span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">2</span><span class="o">]</span> <span class="o">=</span> <span class="n">up</span><span class="o">[</span><span class="mi">2</span><span class="o">];</span>
+
+    <span class="n">m</span><span class="o">[</span><span class="mi">2</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">forward</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+    <span class="n">m</span><span class="o">[</span><span class="mi">2</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">forward</span><span class="o">[</span><span class="mi">1</span><span class="o">];</span>
+    <span class="n">m</span><span class="o">[</span><span class="mi">2</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">2</span><span class="o">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">forward</span><span class="o">[</span><span class="mi">2</span><span class="o">];</span>
+
+    <span class="n">GL</span><span class="o">.</span><span class="na">multMatrix</span><span class="o">(</span><span class="n">m</span><span class="o">);</span>
+    <span class="n">GL</span><span class="o">.</span><span class="na">translate</span><span class="o">(-</span><span class="n">eyex</span><span class="o">,</span> <span class="o">-</span><span class="n">eyey</span><span class="o">,</span> <span class="o">-</span><span class="n">eyez</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">vertex</span><span class="o">(</span><span class="kt">float</span> <span class="n">x</span><span class="o">,</span> <span class="kt">float</span> <span class="n">y</span><span class="o">,</span> <span class="kt">float</span> <span class="n">z</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">glVertex3f</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">z</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">vertex</span><span class="o">(</span><span class="n">Vector3</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">vertex</span><span class="o">(</span><span class="n">v</span><span class="o">.</span><span class="na">x</span><span class="o">,</span> <span class="n">v</span><span class="o">.</span><span class="na">y</span><span class="o">,</span> <span class="n">v</span><span class="o">.</span><span class="na">z</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">color</span><span class="o">(</span><span class="kt">float</span> <span class="n">r</span><span class="o">,</span> <span class="kt">float</span> <span class="n">g</span><span class="o">,</span> <span class="kt">float</span> <span class="n">b</span><span class="o">,</span> <span class="kt">float</span> <span class="n">a</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">glColor4f</span><span class="o">(</span><span class="n">r</span><span class="o">,</span> <span class="n">g</span><span class="o">,</span> <span class="n">b</span><span class="o">,</span> <span class="n">a</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">viewport</span><span class="o">(</span><span class="kt">int</span> <span class="n">left</span><span class="o">,</span> <span class="kt">int</span> <span class="n">right</span><span class="o">,</span> <span class="kt">int</span> <span class="n">width</span><span class="o">,</span> <span class="kt">int</span> <span class="n">height</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">glViewport</span><span class="o">(</span><span class="n">left</span><span class="o">,</span> <span class="n">right</span><span class="o">,</span> <span class="n">width</span><span class="o">,</span> <span class="n">height</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">clearColor</span><span class="o">(</span><span class="kt">float</span> <span class="n">r</span><span class="o">,</span> <span class="kt">float</span> <span class="n">g</span><span class="o">,</span> <span class="kt">float</span> <span class="n">b</span><span class="o">,</span> <span class="kt">float</span> <span class="n">a</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">glClearColor</span><span class="o">(</span><span class="n">r</span><span class="o">,</span> <span class="n">g</span><span class="o">,</span> <span class="n">b</span><span class="o">,</span> <span class="n">a</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">clear</span><span class="o">(</span><span class="n">GLbitfield</span> <span class="n">flag</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">glClear</span><span class="o">(</span><span class="n">flag</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">blendFunc</span><span class="o">(</span><span class="n">GLenum</span> <span class="n">src</span><span class="o">,</span> <span class="n">GLenum</span> <span class="n">dest</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">glBlendFunc</span><span class="o">(</span><span class="n">src</span><span class="o">,</span> <span class="n">dest</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">enable</span><span class="o">(</span><span class="n">GLenum</span> <span class="n">flag</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">glEnable</span><span class="o">(</span><span class="n">flag</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">disable</span><span class="o">(</span><span class="n">GLenum</span> <span class="n">flag</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">glDisable</span><span class="o">(</span><span class="n">flag</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">lineWidth</span><span class="o">(</span><span class="kt">float</span> <span class="n">w</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">glLineWidth</span><span class="o">(</span><span class="n">w</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">frameStart</span><span class="o">()</span> <span class="o">{}</span>
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">frameEnd</span><span class="o">()</span> <span class="o">{}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">begin</span><span class="o">(</span><span class="kt">int</span> <span class="n">primitiveType</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">glBegin</span><span class="o">(</span><span class="n">primitiveType</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">end</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">glEnd</span><span class="o">();</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Using this, all OpenGL calls now go through these methods. From here, you&rsquo;ll need to:</p>
+<ul>
+<li>Record what <code>glBegin</code>/<code>glVertex</code>/<code>glEnd</code> receive</li>
+<li>Record the matrix stack</li>
+<li>Draw the primitives with a shader that takes the current model-view/projection matrix</li>
+</ul>
+<p>Doing it this way works but has some drawbacks:</p>
+<ul>
+<li>It&rsquo;s <strong>SLOW</strong>, this is because it relies on uploading the primitives to the GPU every time <code>glEnd</code> is called</li>
+<li>Creating a more recent OpenGL context than 1.1 will not support the <code>GL_QUADS</code> primitive and skip it</li>
+</ul>
+<p>However, it&rsquo;s not too difficult once this is in place:</p>
+<ul>
+<li>Apply the model-view matrix from the stack when you record the calls to <code>glVertex</code>, that&rsquo;s so one buffer can store vertices from multiple <code>glBegin</code>/<code>glEnd</code> pairs</li>
+<li>When recording vertices, map the primitive type to triangles and lines only, that helps with performance as we can push more of the same data into the buffers. We map GL_TRIANGLE_STRIP to normal triangles, and we can also support GL_QUADS quite easily</li>
+<li>Render the primitives recorded so far whenever the state changes like <code>glBlendFunc</code> or the projection matrix changes</li>
+</ul>
+<p>It&rsquo;s now a lot faster as we don&rsquo;t have to upload to the GPU as often and the number of draw calls is significantly lower. However, we now have to do some matrix math CPU side in our own code. We&rsquo;re back to the steady 60 FPS we had back in immediate mode but the code now conforms to a more recent OpenGL API closer to what WebGL would expect.</p>
+<p>Note that to simplify the porting effort, it&rsquo;s usually good to skip parts that will be an issue. Removing some code paths with less used features helps to reduce the amount of code that needs porting. For example, the title screen has a logo of the game loaded from a <code>.bmp</code> file. However, it also features text displayed as LCD style letters so I replaced the image with those letters and now nothing has to load images, removing OpenGL, SDL and IO code.</p>
+<h2 id="abstracting-platform-dependencies">Abstracting platform dependencies</h2>
+<p>One of the things that helps with cross platform development is some kind of abstraction layer to isolate the game code from low level code like rendering, input, audio, etc.</p>
+
+	</div>
+</div>
+            <div id="footer"><p>2020-10-18 16:21:33 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
+        </div>
+    </div>
+</body>
+</html>
