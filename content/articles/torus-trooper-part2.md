@@ -7,7 +7,7 @@ See also
 
 * [Part 1 - Compiling a new executable](/articles/torus-trooper-part1)
 * [Part 2 - Running the game for the first time](/articles/torus-trooper-part2)
-* ~~Part 3 - Making it cross platform~~
+* [Part 3 - Porting to WebAssembly](/articles/torus-trooper-part3)
 
 From part 1, we stopped after successfully compiling a new executable, but will it run?
 
@@ -304,6 +304,6 @@ I suspected my original fix might have had consequences down the line, at least 
 
 With this, the game is playable as far I could tell. Replays work, saves work and it behaves the same as the original executable!
 
-However, the original only supplied a Windows executable. The original source code shows it might have worked on other systems but the libs for this weren't supplied. To be able to port the game to other platforms, the main issue I can think of would be the BulletML library which is a custom static library. 
+However, the original only supplied a Windows executable. The original source code shows it might have worked on other systems but the libs for this weren't supplied. To be able to port the game to other platforms, the main issue I can think of would be the BulletML library which is a custom dynamic library.
 
 I think I found the original C++ code for BulletML which I'll have a look at in part 2 where I will try to make the codebase support multiple systems.
