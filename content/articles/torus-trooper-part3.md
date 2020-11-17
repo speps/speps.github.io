@@ -13,56 +13,11 @@ See also
 
 GLU is the OpenGL Utility library from SGI. It's an API with helpful functions that work along with OpenGL. In our project, it's used to create a view matrix using `gluLookAt`. So the fix here is just to copy the code for that method from the original SGI code which has a permissive licence, i.e. the SGI licence.
 
-## Some Windows specific code
-
-It seems Windows wasn't supported as well in the past in DMD so there was a specific `main` function that did the right plumbing:
-
-```d
-version (Win32_release) {
-  // Boot as the Windows executable.
-  import std.c.windows.windows;
-  import std.string;
-
-  extern (C) void gc_init();
-  extern (C) void gc_term();
-  extern (C) void _minit();
-  extern (C) void _moduleCtor();
-
-  extern (Windows)
-  public int WinMain(HINSTANCE hInstance,
-             HINSTANCE hPrevInstance,
-             LPSTR lpCmdLine,
-             int nCmdShow) {
-    int result;
-    gc_init();
-    _minit();
-    try {
-      _moduleCtor();
-      char[4096] exe;
-      GetModuleFileNameA(null, exe, 4096);
-      char[][1] prog;
-      prog[0] = std.string.toString(exe);
-      result = boot(prog ~ std.string.split(std.string.toString(lpCmdLine)));
-    } catch (Object o) {
-      Logger.error("Exception: " ~ o.toString());
-      result = EXIT_FAILURE;
-    }
-    gc_term();
-    return result;
-  }
-} else {
-  // Boot as the general executable.
-  public int main(string[] args) {
-    return boot(args);
-  }
-}
-```
-
-This isn't necessary anymore and was just removed.
-
 ## BulletML
 
 BulletML is a code library used by Kenta Cho, the original developer of the project. It's used in a lot of his projects and handles the behaviour of bullets. It's based on XML and is written in C++ and compiled to .dll/.lib for linking into the final executable.
+
+![](/media/articles/tt6.png)
 
 ### Finding the original code
 
@@ -294,7 +249,7 @@ Doing it this way works but has some drawbacks:
 However, it's not too difficult once this is in place:
 
 * Apply the model-view matrix from the stack when you record the calls to `glVertex`, that's so one buffer can store vertices from multiple `glBegin`/`glEnd` pairs
-* When recording vertices, map the primitive type to triangles and lines only, that helps with performance as we can push more of the same data into the buffers. We map GL_TRIANGLE_STRIP to normal triangles, and we can also support GL_QUADS quite easily
+* When recording vertices, map the primitive type to triangles and lines buckets, that helps with performance as we can push more of the same data into the buffers. We map `GL_TRIANGLE_STRIP` to normal triangles, and we can also support `GL_QUADS` quite easily. We also map `GL_LINE_STRIP`/`GL_LINE_LOOP` to `GL_LINES`.
 * Render the primitives recorded so far whenever the state changes like `glBlendFunc` or the projection matrix changes
 
 It's now a lot faster as we don't have to upload to the GPU as often and the number of draw calls is significantly lower. However, we now have to do some matrix math CPU side in our own code. We're back to the steady 60 FPS we had back in immediate mode but the code now conforms to a more recent OpenGL API closer to what WebGL would expect.
@@ -374,7 +329,47 @@ SDL is used for initializing the window and creating the OpenGL context. It's no
 
 Given the small amount of files required by the game to be loaded on startup (and remember I removed images from that original list), we can embed these files. D has a handy feature equivalent to C's `#include`. It's using the call `import(fileName)` to load a file to a byte array which is embedded into the executable.
 
+```d
+string readText(string path) {
+  if (path == "barrage/basic/straight.xml") return import("barrage/basic/straight.xml");
+  if (path == "barrage/middle/35way.xml") return import("barrage/middle/35way.xml");
+  if (path == "barrage/middle/alt_nway.xml") return import("barrage/middle/alt_nway.xml");
+  if (path == "barrage/middle/alt_sideshot.xml") return import("barrage/middle/alt_sideshot.xml");
+  if (path == "barrage/middle/backword_spread.xml") return import("barrage/middle/backword_spread.xml");
+  if (path == "barrage/middle/clow_rocket.xml") return import("barrage/middle/clow_rocket.xml");
+  if (path == "barrage/middle/diamondnway.xml") return import("barrage/middle/diamondnway.xml");
+  if (path == "barrage/middle/fast_aim.xml") return import("barrage/middle/fast_aim.xml");
+  if (path == "barrage/middle/forward_1way.xml") return import("barrage/middle/forward_1way.xml");
+  if (path == "barrage/middle/grow.xml") return import("barrage/middle/grow.xml");
+  if (path == "barrage/middle/grow3way.xml") return import("barrage/middle/grow3way.xml");
+  if (path == "barrage/middle/nway.xml") return import("barrage/middle/nway.xml");
+  if (path == "barrage/middle/random_fire.xml") return import("barrage/middle/random_fire.xml");
+  if (path == "barrage/middle/spread2blt.xml") return import("barrage/middle/spread2blt.xml");
+  if (path == "barrage/middle/squirt.xml") return import("barrage/middle/squirt.xml");
+  if (path == "barrage/morph/0to1.xml") return import("barrage/morph/0to1.xml");
+  if (path == "barrage/morph/accel.xml") return import("barrage/morph/accel.xml");
+  if (path == "barrage/morph/accelshot.xml") return import("barrage/morph/accelshot.xml");
+  if (path == "barrage/morph/bar.xml") return import("barrage/morph/bar.xml");
+  if (path == "barrage/morph/divide.xml") return import("barrage/morph/divide.xml");
+  if (path == "barrage/morph/fast.xml") return import("barrage/morph/fast.xml");
+  if (path == "barrage/morph/fire_slowshot.xml") return import("barrage/morph/fire_slowshot.xml");
+  if (path == "barrage/morph/slide.xml") return import("barrage/morph/slide.xml");
+  if (path == "barrage/morph/slowdown.xml") return import("barrage/morph/slowdown.xml");
+  if (path == "barrage/morph/speed_rnd.xml") return import("barrage/morph/speed_rnd.xml");
+  if (path == "barrage/morph/twin.xml") return import("barrage/morph/twin.xml");
+  if (path == "barrage/morph/wedge_half.xml") return import("barrage/morph/wedge_half.xml");
+  if (path == "barrage/morph/wide.xml") return import("barrage/morph/wide.xml");
+  assert(false, "unknown file: " ~ path);
+}
+```
+
+It's not clever in any way but it works!
+
 For now, I'll skip file writing as it's only for replays and scores. However, I could extend this to save to local storage in JS and even possibly have online scoreboards for the game.
+
+### Audio
+
+The original code just used SDL_mixer, which has a D binding of course but I made it so no audio is loaded for the WebAssembly version. It'll probably have to handled partway between JS and WASM here as it would wasteful to send byte arrays to JS from WASM just to play audio when the browser could do the heavy lifting. As I don't know yet how to handle this I'll skip audio for WASM for now.
 
 ## D's Runtime and Phobos
 
@@ -393,6 +388,14 @@ While doing this I found it helpful to have a version of the game that ran with 
 
 After I got everything to compile, I had to sort out the WebAssembly/JavaScript side. That wasn't too hard but I only found at this point that I wasn't exporting symbols apart from `_start`. That was easily solved by adding `--export=dynamic`. I took care of only using WebGL 1.0 compatible calls in the new OpenGL I wrote so the interface for this wasn't too difficult, the only issue I had was with converting IDs used by OpenGL to/from JS Objects used by WebGL. I got confused by `getUniformLocation` which returns an object but `getAttribLocation` returns an index.
 
-I will also note that I didn't want to implement my own math functions so I redirect that to the JS Math ones and it works for now.
+I will also note that I didn't want to implement my own math functions so those are redirected to the JS Math ones and it works for now.
+
+## Wrapping up
+
+After weeks of actual work, the title screen finally showed up in a web browser!
 
 {{< video src="/media/articles/tt_wasm_title.mp4" >}}
+
+There are still lots of things that need to be done like hooking up the input, checking the game mode works, playing the audio (the background music is great as well) and possibly saving the scores and replays.
+
+For now, you can follow the progress so far on the GitHub depot: https://github.com/speps/tt
