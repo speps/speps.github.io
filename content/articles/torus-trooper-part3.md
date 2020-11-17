@@ -78,7 +78,7 @@ The main part of the original code is actually the runner code. The runner is wh
 
 ### Porting to D
 
-Even though there was a D port of BulletML, it seemed like I would have an easier just porting the original behaviour of the C++ library as I had no way of knowing if the D port of BulletML would behave the same in the game itself.
+Even though there was a D port of BulletML, it seemed like I would have an easier time just porting the original behaviour of the C++ library as I had no way of knowing if the D port of BulletML would behave the same in the game itself. The D port seemed overly complicated as well.
 
 Most of the code would easily be ported without issues but getting the expression parsing and XML parsing parts were the most challenging.
 
@@ -90,9 +90,9 @@ That worked quite well and the whole parser was smaller and clearer than the ori
 
 #### XML Parsing
 
-At first, I just used [dxml](https://code.dlang.org/packages/dxml) and it was fine. However, my final goal is to port the game to WebAssembly and that didn't play well at all with a custom runtime. I also tried `std.xml` but it was similar. For example, implementing exceptions would have been quite difficult.
+At first, I just used [dxml](https://code.dlang.org/packages/dxml) and it was fine. However, my goal is to port the game to WebAssembly and that didn't play well at all with a custom runtime. I also tried `std.xml` but it was similar and it's going to be deprecated soon.
 
-Finally, I decided I would just reuse the lexer base code from the expression parser and made it output XML events like SAX parser but all at once. I only needed parsing XML files, and they were quite simple anyway so it worked out perfectly.
+Finally, I decided I would just reuse the lexer base code from the expression parser and made it output XML events like SAX parser but all at once as an array. I only needed to parse XML files, and they were quite simple anyway so it worked out perfectly.
 
 I was finally able to load the BulletML XML files without any dependencies, no DUB package or .dll/.lib from the original code.
 
@@ -299,8 +299,100 @@ However, it's not too difficult once this is in place:
 
 It's now a lot faster as we don't have to upload to the GPU as often and the number of draw calls is significantly lower. However, we now have to do some matrix math CPU side in our own code. We're back to the steady 60 FPS we had back in immediate mode but the code now conforms to a more recent OpenGL API closer to what WebGL would expect.
 
-Note that to simplify the porting effort, it's usually good to skip parts that will be an issue. Removing some code paths with less used features helps to reduce the amount of code that needs porting. For example, the title screen has a logo of the game loaded from a `.bmp` file. However, it also features text displayed as LCD style letters so I replaced the image with those letters and now nothing has to load images, removing OpenGL, SDL and IO code.
+Note that to simplify the porting effort, it's usually good to skip parts that will be an issue. Removing some code paths with less used features helps to reduce the amount of code that needs porting. For example, the title screen has a logo of the game loaded from a `.bmp` file. However, it also features text displayed as LCD style letters so I replaced the image with those letters and now nothing has to load images, removing some OpenGL, SDL and IO code.
 
 ## Abstracting platform dependencies
 
 One of the things that helps with cross platform development is some kind of abstraction layer to isolate the game code from low level code like rendering, input, audio, etc.
+
+### Input
+
+The `Pad` class handles reading keyboard values using `SDL_GetKeyboardState`. It's also inherited by `RecordablePad` which handles doing the replays by recording the inputs. This design is okay but to be able to replace the backend of how inputs are fed into it, I modified `Pad` to receive a `Input` interface like this:
+
+```d
+public interface InputBackend {
+  public void update();
+  public int getDirState();
+  public int getButtonState();
+  public bool getExitState();
+  public bool getPauseState();
+}
+```
+
+Then, the code from `Pad` can now be moved into `InputBackendSDL`:
+
+```d
+public class InputBackendSDL : InputBackend {
+private:
+  Uint8 *keys;
+
+  public override void update() {
+    keys = SDL_GetKeyboardState(null);
+  }
+
+  public override int getDirState() {
+    int dir = 0;
+    if (keys[SDL_SCANCODE_RIGHT] == SDL_PRESSED || keys[SDL_SCANCODE_KP_6] == SDL_PRESSED || keys[SDL_SCANCODE_D] == SDL_PRESSED)
+      dir |= Input.Dir.RIGHT;
+    if (keys[SDL_SCANCODE_LEFT] == SDL_PRESSED || keys[SDL_SCANCODE_KP_4] == SDL_PRESSED || keys[SDL_SCANCODE_A] == SDL_PRESSED)
+      dir |= Input.Dir.LEFT;
+    if (keys[SDL_SCANCODE_DOWN] == SDL_PRESSED || keys[SDL_SCANCODE_KP_2] == SDL_PRESSED || keys[SDL_SCANCODE_S] == SDL_PRESSED)
+      dir |= Input.Dir.DOWN;
+    if (keys[SDL_SCANCODE_UP] == SDL_PRESSED ||  keys[SDL_SCANCODE_KP_8] == SDL_PRESSED || keys[SDL_SCANCODE_W] == SDL_PRESSED)
+      dir |= Input.Dir.UP;
+    return dir;
+  }
+
+  public override int getButtonState() {
+    int btn = 0;
+    if (keys[SDL_SCANCODE_Z] == SDL_PRESSED || keys[SDL_SCANCODE_PERIOD] == SDL_PRESSED || keys[SDL_SCANCODE_LCTRL] == SDL_PRESSED)
+      btn |= Input.Button.A;
+    if (keys[SDL_SCANCODE_X] == SDL_PRESSED || keys[SDL_SCANCODE_SLASH] == SDL_PRESSED || keys[SDL_SCANCODE_LALT] == SDL_PRESSED || keys[SDL_SCANCODE_LSHIFT] == SDL_PRESSED)
+      btn |= Input.Button.B;
+    return btn;
+  }
+
+  public override bool getExitState() {
+    return keys[SDL_SCANCODE_ESCAPE] == SDL_PRESSED;
+  }
+
+  public override bool getPauseState() {
+    return keys[SDL_SCANCODE_P] == SDL_PRESSED;
+  }
+}
+```
+
+And an instance of `InputBackendSDL` passed where we create the `RecordablePad` instance.
+
+Note again that I've simplified the code to not support reversing the buttons and removed joystick support. These can be added later in a better way. I feel like it's important to get some progress instead of being stuck on details for now.
+
+### Window management
+
+SDL is used for initializing the window and creating the OpenGL context. It's not difficult to isolate this the original code. Most of the SDL calls are done in the `Screen3D` class. For WebAssembly, we won't need a window as render directly to a HTML5 canvas element, so we'll stub most methods here.
+
+### File system
+
+Given the small amount of files required by the game to be loaded on startup (and remember I removed images from that original list), we can embed these files. D has a handy feature equivalent to C's `#include`. It's using the call `import(fileName)` to load a file to a byte array which is embedded into the executable.
+
+For now, I'll skip file writing as it's only for replays and scores. However, I could extend this to save to local storage in JS and even possibly have online scoreboards for the game.
+
+## D's Runtime and Phobos
+
+There are options to compile the runtime to WebAssembly like [Spasm by Sebastian Koppe](https://github.com/skoppe/spasm). And there are WebAssembly examples which use a custom runtime like [WebAssembly example by Adam D. Ruppe](http://webassembly.arsdnet.net/). I tried the first option but couldn't every part running smoothly. Given that I had a small-ish codebase, I thought it would be possible to reuse some of the code from Adam and extend it until it works.
+
+Here are some steps along the way:
+
+* Figure out internals of the runtime by looking at LDC's source code
+* Asking a lot of questions on the forums to understand some strange behaviours (like why `TypeInfo_Array`'s `base` member is null or finding out `_aaInX` has possibly a compiler bug in LDC)
+* Understand the way array append/concat works internally
+* Replace `std` methods with my own fake ones (like `std.file.read` or adapting `listdir` to return static list of folders)
+
+While doing this I found it helpful to have a version of the game that ran with all the same code as what the WebAssembly build would be but as an x86 executable so I could debug it in Visual Studio with Visual D. That helped a lot, also because I would sometimes get different results between the two.
+
+## WebGL / WebAssembly
+
+After I got everything to compile, I had to sort out the WebAssembly/JavaScript side. That wasn't too hard but I only found at this point that I wasn't exporting symbols apart from `_start`. That was easily solved by adding `--export=dynamic`. I took care of only using WebGL 1.0 compatible calls in the new OpenGL I wrote so the interface for this wasn't too difficult, the only issue I had was with converting IDs used by OpenGL to/from JS Objects used by WebGL. I got confused by `getUniformLocation` which returns an object but `getAttribLocation` returns an index.
+
+I will also note that I didn't want to implement my own math functions so I redirect that to the JS Math ones and it works for now.
+
+{{< video src="/media/articles/tt_wasm_title.mp4" >}}
