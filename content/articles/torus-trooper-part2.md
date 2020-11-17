@@ -306,4 +306,4 @@ With this, the game is playable as far I could tell. Replays work, saves work an
 
 However, the original only supplied a Windows executable. The original source code shows it might have worked on other systems but the libs for this weren't supplied. To be able to port the game to other platforms, the main issue I can think of would be the BulletML library which is a custom dynamic library.
 
-I think I found the original C++ code for BulletML which I'll have a look at in part 2 where I will try to make the codebase support multiple systems.
+I think I found the original C++ code for BulletML which I'll have a look at in [part 3](/articles/torus-trooper-part3) where I will try to make the codebase support multiple systems.
