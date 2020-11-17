@@ -50,7 +50,15 @@
         <li><a href="#emulated-immediate-mode">Emulated immediate mode</a></li>
       </ul>
     </li>
-    <li><a href="#abstracting-platform-dependencies">Abstracting platform dependencies</a></li>
+    <li><a href="#abstracting-platform-dependencies">Abstracting platform dependencies</a>
+      <ul>
+        <li><a href="#input">Input</a></li>
+        <li><a href="#window-management">Window management</a></li>
+        <li><a href="#file-system">File system</a></li>
+      </ul>
+    </li>
+    <li><a href="#ds-runtime-and-phobos">D&rsquo;s Runtime and Phobos</a></li>
+    <li><a href="#webgl--webassembly">WebGL / WebAssembly</a></li>
   </ul>
 </nav>
 		</div>
@@ -157,14 +165,14 @@
 <p>The original C++ BulletML code was an interesting read. It used TinyXML to parse XML, which is an old C++ library that came as a .cpp/.h files for easy integration. The BulletML data also allows expressions that specify the behaviour of the bullets. This expression parser was written using a YACC grammar, most likely the example grammar from YACC modified to allow for defining variables.</p>
 <p>The main part of the original code is actually the runner code. The runner is what evaluates the behaviours defined in XML (and parsed into runtime structures).</p>
 <h3 id="porting-to-d">Porting to D</h3>
-<p>Even though there was a D port of BulletML, it seemed like I would have an easier just porting the original behaviour of the C++ library as I had no way of knowing if the D port of BulletML would behave the same in the game itself.</p>
+<p>Even though there was a D port of BulletML, it seemed like I would have an easier time just porting the original behaviour of the C++ library as I had no way of knowing if the D port of BulletML would behave the same in the game itself. The D port seemed overly complicated as well.</p>
 <p>Most of the code would easily be ported without issues but getting the expression parsing and XML parsing parts were the most challenging.</p>
 <h4 id="expression-parsing">Expression Parsing</h4>
 <p>Instead of reusing the YACC grammar which mixes C code with the grammar, and creates some messy generated code, I decided to look into what&rsquo;s recommended nowadays for parsing. I ended up with a simpler lexer inspired by <a href="https://talks.golang.org/2011/lex.slide">Lexical Scanning in Go</a> and mixed it with a simple Pratt parser inspired by <a href="https://journal.stuffwithstuff.com/2011/03/19/pratt-parsers-expression-parsing-made-easy/">Pratt Parsers: Expression Parsing Made Easy</a>.</p>
 <p>That worked quite well and the whole parser was smaller and clearer than the original C++ code.</p>
 <h4 id="xml-parsing">XML Parsing</h4>
-<p>At first, I just used <a href="https://code.dlang.org/packages/dxml">dxml</a> and it was fine. However, my final goal is to port the game to WebAssembly and that didn&rsquo;t play well at all with a custom runtime. I also tried <code>std.xml</code> but it was similar. For example, implementing exceptions would have been quite difficult.</p>
-<p>Finally, I decided I would just reuse the lexer base code from the expression parser and made it output XML events like SAX parser but all at once. I only needed parsing XML files, and they were quite simple anyway so it worked out perfectly.</p>
+<p>At first, I just used <a href="https://code.dlang.org/packages/dxml">dxml</a> and it was fine. However, my goal is to port the game to WebAssembly and that didn&rsquo;t play well at all with a custom runtime. I also tried <code>std.xml</code> but it was similar and it&rsquo;s going to be deprecated soon.</p>
+<p>Finally, I decided I would just reuse the lexer base code from the expression parser and made it output XML events like SAX parser but all at once as an array. I only needed to parse XML files, and they were quite simple anyway so it worked out perfectly.</p>
 <p>I was finally able to load the BulletML XML files without any dependencies, no DUB package or .dll/.lib from the original code.</p>
 <h2 id="modern-opengl">Modern OpenGL</h2>
 <p>The code base uses immediate mode OpenGL commands like <code>glBegin</code>/<code>glVertex</code>/<code>glEnd</code>. This needs modernizing as those APIs have been deprecated for some time now in favor of vertex/index buffers and a programmable pipeline.</p>
@@ -537,13 +545,139 @@
 <li>Render the primitives recorded so far whenever the state changes like <code>glBlendFunc</code> or the projection matrix changes</li>
 </ul>
 <p>It&rsquo;s now a lot faster as we don&rsquo;t have to upload to the GPU as often and the number of draw calls is significantly lower. However, we now have to do some matrix math CPU side in our own code. We&rsquo;re back to the steady 60 FPS we had back in immediate mode but the code now conforms to a more recent OpenGL API closer to what WebGL would expect.</p>
-<p>Note that to simplify the porting effort, it&rsquo;s usually good to skip parts that will be an issue. Removing some code paths with less used features helps to reduce the amount of code that needs porting. For example, the title screen has a logo of the game loaded from a <code>.bmp</code> file. However, it also features text displayed as LCD style letters so I replaced the image with those letters and now nothing has to load images, removing OpenGL, SDL and IO code.</p>
+<p>Note that to simplify the porting effort, it&rsquo;s usually good to skip parts that will be an issue. Removing some code paths with less used features helps to reduce the amount of code that needs porting. For example, the title screen has a logo of the game loaded from a <code>.bmp</code> file. However, it also features text displayed as LCD style letters so I replaced the image with those letters and now nothing has to load images, removing some OpenGL, SDL and IO code.</p>
 <h2 id="abstracting-platform-dependencies">Abstracting platform dependencies</h2>
 <p>One of the things that helps with cross platform development is some kind of abstraction layer to isolate the game code from low level code like rendering, input, audio, etc.</p>
+<h3 id="input">Input</h3>
+<p>The <code>Pad</code> class handles reading keyboard values using <code>SDL_GetKeyboardState</code>. It&rsquo;s also inherited by <code>RecordablePad</code> which handles doing the replays by recording the inputs. This design is okay but to be able to replace the backend of how inputs are fed into it, I modified <code>Pad</code> to receive a <code>Input</code> interface like this:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-d" data-lang="d"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">InputBackend</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">();</span>
+  <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getDirState</span><span class="o">();</span>
+  <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getButtonState</span><span class="o">();</span>
+  <span class="kd">public</span> <span class="kt">bool</span> <span class="nf">getExitState</span><span class="o">();</span>
+  <span class="kd">public</span> <span class="kt">bool</span> <span class="nf">getPauseState</span><span class="o">();</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Then, the code from <code>Pad</code> can now be moved into <code>InputBackendSDL</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-d" data-lang="d"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">InputBackendSDL</span> <span class="o">:</span> <span class="n">InputBackend</span> <span class="o">{</span>
+<span class="kd">private</span><span class="o">:</span>
+  <span class="n">Uint8</span> <span class="o">*</span><span class="n">keys</span><span class="o">;</span>
+
+  <span class="kd">public</span> <span class="kd">override</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="n">SDL_GetKeyboardState</span><span class="o">(</span><span class="kc">null</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kd">override</span> <span class="kt">int</span> <span class="nf">getDirState</span><span class="o">()</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="n">dir</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_RIGHT</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_KP_6</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_D</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span><span class="o">)</span>
+      <span class="n">dir</span> <span class="o">|=</span> <span class="n">Input</span><span class="o">.</span><span class="na">Dir</span><span class="o">.</span><span class="na">RIGHT</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_LEFT</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_KP_4</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_A</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span><span class="o">)</span>
+      <span class="n">dir</span> <span class="o">|=</span> <span class="n">Input</span><span class="o">.</span><span class="na">Dir</span><span class="o">.</span><span class="na">LEFT</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_DOWN</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_KP_2</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_S</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span><span class="o">)</span>
+      <span class="n">dir</span> <span class="o">|=</span> <span class="n">Input</span><span class="o">.</span><span class="na">Dir</span><span class="o">.</span><span class="na">DOWN</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_UP</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span>  <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_KP_8</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_W</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span><span class="o">)</span>
+      <span class="n">dir</span> <span class="o">|=</span> <span class="n">Input</span><span class="o">.</span><span class="na">Dir</span><span class="o">.</span><span class="na">UP</span><span class="o">;</span>
+    <span class="k">return</span> <span class="n">dir</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kd">override</span> <span class="kt">int</span> <span class="nf">getButtonState</span><span class="o">()</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="n">btn</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_Z</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_PERIOD</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_LCTRL</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span><span class="o">)</span>
+      <span class="n">btn</span> <span class="o">|=</span> <span class="n">Input</span><span class="o">.</span><span class="na">Button</span><span class="o">.</span><span class="na">A</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_X</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_SLASH</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_LALT</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_LSHIFT</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span><span class="o">)</span>
+      <span class="n">btn</span> <span class="o">|=</span> <span class="n">Input</span><span class="o">.</span><span class="na">Button</span><span class="o">.</span><span class="na">B</span><span class="o">;</span>
+    <span class="k">return</span> <span class="n">btn</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kd">override</span> <span class="kt">bool</span> <span class="nf">getExitState</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_ESCAPE</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span><span class="o">;</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kd">override</span> <span class="kt">bool</span> <span class="nf">getPauseState</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_P</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span><span class="o">;</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>And an instance of <code>InputBackendSDL</code> passed where we create the <code>RecordablePad</code> instance.</p>
+<p>Note again that I&rsquo;ve simplified the code to not support reversing the buttons and removed joystick support. These can be added later in a better way. I feel like it&rsquo;s important to get some progress instead of being stuck on details for now.</p>
+<h3 id="window-management">Window management</h3>
+<p>SDL is used for initializing the window and creating the OpenGL context. It&rsquo;s not difficult to isolate this the original code. Most of the SDL calls are done in the <code>Screen3D</code> class. For WebAssembly, we won&rsquo;t need a window as render directly to a HTML5 canvas element, so we&rsquo;ll stub most methods here.</p>
+<h3 id="file-system">File system</h3>
+<p>Given the small amount of files required by the game to be loaded on startup (and remember I removed images from that original list), we can embed these files. D has a handy feature equivalent to C&rsquo;s <code>#include</code>. It&rsquo;s using the call <code>import(fileName)</code> to load a file to a byte array which is embedded into the executable.</p>
+<p>For now, I&rsquo;ll skip file writing as it&rsquo;s only for replays and scores. However, I could extend this to save to local storage in JS and even possibly have online scoreboards for the game.</p>
+<h2 id="ds-runtime-and-phobos">D&rsquo;s Runtime and Phobos</h2>
+<p>There are options to compile the runtime to WebAssembly like <a href="https://github.com/skoppe/spasm">Spasm by Sebastian Koppe</a>. And there are WebAssembly examples which use a custom runtime like <a href="http://webassembly.arsdnet.net/">WebAssembly example by Adam D. Ruppe</a>. I tried the first option but couldn&rsquo;t every part running smoothly. Given that I had a small-ish codebase, I thought it would be possible to reuse some of the code from Adam and extend it until it works.</p>
+<p>Here are some steps along the way:</p>
+<ul>
+<li>Figure out internals of the runtime by looking at LDC&rsquo;s source code</li>
+<li>Asking a lot of questions on the forums to understand some strange behaviours (like why <code>TypeInfo_Array</code>'s <code>base</code> member is null or finding out <code>_aaInX</code> has possibly a compiler bug in LDC)</li>
+<li>Understand the way array append/concat works internally</li>
+<li>Replace <code>std</code> methods with my own fake ones (like <code>std.file.read</code> or adapting <code>listdir</code> to return static list of folders)</li>
+</ul>
+<p>While doing this I found it helpful to have a version of the game that ran with all the same code as what the WebAssembly build would be but as an x86 executable so I could debug it in Visual Studio with Visual D. That helped a lot, also because I would sometimes get different results between the two.</p>
+<h2 id="webgl--webassembly">WebGL / WebAssembly</h2>
+<p>After I got everything to compile, I had to sort out the WebAssembly/JavaScript side. That wasn&rsquo;t too hard but I only found at this point that I wasn&rsquo;t exporting symbols apart from <code>_start</code>. That was easily solved by adding <code>--export=dynamic</code>. I took care of only using WebGL 1.0 compatible calls in the new OpenGL I wrote so the interface for this wasn&rsquo;t too difficult, the only issue I had was with converting IDs used by OpenGL to/from JS Objects used by WebGL. I got confused by <code>getUniformLocation</code> which returns an object but <code>getAttribLocation</code> returns an index.</p>
+<p>I will also note that I didn&rsquo;t want to implement my own math functions so I redirect that to the JS Math ones and it works for now.</p>
+<video controls src="/media/articles/tt_wasm_title.mp4"></video>
 
 	</div>
 </div>
-            <div id="footer"><p>2020-10-18 16:21:33 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
+            <div id="footer"><p>2020-11-17 21:24:33 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
         </div>
     </div>
 </body>
