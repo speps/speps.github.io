@@ -37,7 +37,6 @@
 			<nav id="TableOfContents">
   <ul>
     <li><a href="#removing-glu-dependency">Removing GLU dependency</a></li>
-    <li><a href="#some-windows-specific-code">Some Windows specific code</a></li>
     <li><a href="#bulletml">BulletML</a>
       <ul>
         <li><a href="#finding-the-original-code">Finding the original code</a></li>
@@ -55,10 +54,12 @@
         <li><a href="#input">Input</a></li>
         <li><a href="#window-management">Window management</a></li>
         <li><a href="#file-system">File system</a></li>
+        <li><a href="#audio">Audio</a></li>
       </ul>
     </li>
     <li><a href="#ds-runtime-and-phobos">D&rsquo;s Runtime and Phobos</a></li>
     <li><a href="#webgl--webassembly">WebGL / WebAssembly</a></li>
+    <li><a href="#wrapping-up">Wrapping up</a></li>
   </ul>
 </nav>
 		</div>
@@ -71,93 +72,9 @@
 </ul>
 <h2 id="removing-glu-dependency">Removing GLU dependency</h2>
 <p>GLU is the OpenGL Utility library from SGI. It&rsquo;s an API with helpful functions that work along with OpenGL. In our project, it&rsquo;s used to create a view matrix using <code>gluLookAt</code>. So the fix here is just to copy the code for that method from the original SGI code which has a permissive licence, i.e. the SGI licence.</p>
-<h2 id="some-windows-specific-code">Some Windows specific code</h2>
-<p>It seems Windows wasn&rsquo;t supported as well in the past in DMD so there was a specific <code>main</code> function that did the right plumbing:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span><span class="lnt">27
-</span><span class="lnt">28
-</span><span class="lnt">29
-</span><span class="lnt">30
-</span><span class="lnt">31
-</span><span class="lnt">32
-</span><span class="lnt">33
-</span><span class="lnt">34
-</span><span class="lnt">35
-</span><span class="lnt">36
-</span><span class="lnt">37
-</span><span class="lnt">38
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-d" data-lang="d"><span class="k">version</span> <span class="o">(</span><span class="n">Win32_release</span><span class="o">)</span> <span class="o">{</span>
-  <span class="c1">// Boot as the Windows executable.
-</span><span class="c1"></span>  <span class="kn">import</span> <span class="nn">std.c.windows.windows</span><span class="o">;</span>
-  <span class="kn">import</span> <span class="nn">std.string</span><span class="o">;</span>
-
-  <span class="n">extern</span> <span class="o">(</span><span class="n">C</span><span class="o">)</span> <span class="kt">void</span> <span class="nf">gc_init</span><span class="o">();</span>
-  <span class="n">extern</span> <span class="o">(</span><span class="n">C</span><span class="o">)</span> <span class="kt">void</span> <span class="nf">gc_term</span><span class="o">();</span>
-  <span class="n">extern</span> <span class="o">(</span><span class="n">C</span><span class="o">)</span> <span class="kt">void</span> <span class="nf">_minit</span><span class="o">();</span>
-  <span class="n">extern</span> <span class="o">(</span><span class="n">C</span><span class="o">)</span> <span class="kt">void</span> <span class="nf">_moduleCtor</span><span class="o">();</span>
-
-  <span class="n">extern</span> <span class="o">(</span><span class="n">Windows</span><span class="o">)</span>
-  <span class="kd">public</span> <span class="kt">int</span> <span class="nf">WinMain</span><span class="o">(</span><span class="n">HINSTANCE</span> <span class="n">hInstance</span><span class="o">,</span>
-             <span class="n">HINSTANCE</span> <span class="n">hPrevInstance</span><span class="o">,</span>
-             <span class="n">LPSTR</span> <span class="n">lpCmdLine</span><span class="o">,</span>
-             <span class="kt">int</span> <span class="n">nCmdShow</span><span class="o">)</span> <span class="o">{</span>
-    <span class="kt">int</span> <span class="n">result</span><span class="o">;</span>
-    <span class="n">gc_init</span><span class="o">();</span>
-    <span class="n">_minit</span><span class="o">();</span>
-    <span class="k">try</span> <span class="o">{</span>
-      <span class="n">_moduleCtor</span><span class="o">();</span>
-      <span class="kt">char</span><span class="o">[</span><span class="mi">4096</span><span class="o">]</span> <span class="n">exe</span><span class="o">;</span>
-      <span class="n">GetModuleFileNameA</span><span class="o">(</span><span class="kc">null</span><span class="o">,</span> <span class="n">exe</span><span class="o">,</span> <span class="mi">4096</span><span class="o">);</span>
-      <span class="kt">char</span><span class="o">[][</span><span class="mi">1</span><span class="o">]</span> <span class="n">prog</span><span class="o">;</span>
-      <span class="n">prog</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">std</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">exe</span><span class="o">);</span>
-      <span class="n">result</span> <span class="o">=</span> <span class="n">boot</span><span class="o">(</span><span class="n">prog</span> <span class="o">~</span> <span class="n">std</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="n">std</span><span class="o">.</span><span class="na">string</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">lpCmdLine</span><span class="o">)));</span>
-    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Object</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span>
-      <span class="n">Logger</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">&#34;Exception: &#34;</span> <span class="o">~</span> <span class="n">o</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
-      <span class="n">result</span> <span class="o">=</span> <span class="n">EXIT_FAILURE</span><span class="o">;</span>
-    <span class="o">}</span>
-    <span class="n">gc_term</span><span class="o">();</span>
-    <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
-  <span class="o">}</span>
-<span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-  <span class="c1">// Boot as the general executable.
-</span><span class="c1"></span>  <span class="kd">public</span> <span class="kt">int</span> <span class="nf">main</span><span class="o">(</span><span class="kt">string</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-    <span class="k">return</span> <span class="n">boot</span><span class="o">(</span><span class="n">args</span><span class="o">);</span>
-  <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>This isn&rsquo;t necessary anymore and was just removed.</p>
 <h2 id="bulletml">BulletML</h2>
 <p>BulletML is a code library used by Kenta Cho, the original developer of the project. It&rsquo;s used in a lot of his projects and handles the behaviour of bullets. It&rsquo;s based on XML and is written in C++ and compiled to .dll/.lib for linking into the final executable.</p>
+<p><img src="/media/articles/tt6.png" alt=""></p>
 <h3 id="finding-the-original-code">Finding the original code</h3>
 <p>The main website for libBulletML has a download for a C++ library and a D port of it. I first tried the C++ library, it looked the closest from the imported API called from the game&rsquo;s D code.</p>
 <p>I could even open the original Visual C++ project in Visual Studio 2019 without issues. I then modified it to export a similar C API and compiled it to a DLL. I could now swap the original <code>bulletml.dll</code> with my own and it worked exactly as expected at runtime so I knew the C++ implementation was the one used in the original game code.</p>
@@ -541,7 +458,7 @@
 <p>However, it&rsquo;s not too difficult once this is in place:</p>
 <ul>
 <li>Apply the model-view matrix from the stack when you record the calls to <code>glVertex</code>, that&rsquo;s so one buffer can store vertices from multiple <code>glBegin</code>/<code>glEnd</code> pairs</li>
-<li>When recording vertices, map the primitive type to triangles and lines only, that helps with performance as we can push more of the same data into the buffers. We map GL_TRIANGLE_STRIP to normal triangles, and we can also support GL_QUADS quite easily</li>
+<li>When recording vertices, map the primitive type to triangles and lines buckets, that helps with performance as we can push more of the same data into the buffers. We map <code>GL_TRIANGLE_STRIP</code> to normal triangles, and we can also support <code>GL_QUADS</code> quite easily. We also map <code>GL_LINE_STRIP</code>/<code>GL_LINE_LOOP</code> to <code>GL_LINES</code>.</li>
 <li>Render the primitives recorded so far whenever the state changes like <code>glBlendFunc</code> or the projection matrix changes</li>
 </ul>
 <p>It&rsquo;s now a lot faster as we don&rsquo;t have to upload to the GPU as often and the number of draw calls is significantly lower. However, we now have to do some matrix math CPU side in our own code. We&rsquo;re back to the steady 60 FPS we had back in immediate mode but the code now conforms to a more recent OpenGL API closer to what WebGL would expect.</p>
@@ -659,7 +576,78 @@
 <p>SDL is used for initializing the window and creating the OpenGL context. It&rsquo;s not difficult to isolate this the original code. Most of the SDL calls are done in the <code>Screen3D</code> class. For WebAssembly, we won&rsquo;t need a window as render directly to a HTML5 canvas element, so we&rsquo;ll stub most methods here.</p>
 <h3 id="file-system">File system</h3>
 <p>Given the small amount of files required by the game to be loaded on startup (and remember I removed images from that original list), we can embed these files. D has a handy feature equivalent to C&rsquo;s <code>#include</code>. It&rsquo;s using the call <code>import(fileName)</code> to load a file to a byte array which is embedded into the executable.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-d" data-lang="d"><span class="kt">string</span> <span class="nf">readText</span><span class="o">(</span><span class="kt">string</span> <span class="n">path</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/basic/straight.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/basic/straight.xml&#34;</span><span class="o">);</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/35way.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/35way.xml&#34;</span><span class="o">);</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/alt_nway.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/alt_nway.xml&#34;</span><span class="o">);</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/alt_sideshot.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/alt_sideshot.xml&#34;</span><span class="o">);</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/backword_spread.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/backword_spread.xml&#34;</span><span class="o">);</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/clow_rocket.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/clow_rocket.xml&#34;</span><span class="o">);</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/diamondnway.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/diamondnway.xml&#34;</span><span class="o">);</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/fast_aim.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/fast_aim.xml&#34;</span><span class="o">);</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/forward_1way.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/forward_1way.xml&#34;</span><span class="o">);</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/grow.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/grow.xml&#34;</span><span class="o">);</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/grow3way.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/grow3way.xml&#34;</span><span class="o">);</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/nway.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/nway.xml&#34;</span><span class="o">);</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/random_fire.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/random_fire.xml&#34;</span><span class="o">);</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/spread2blt.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/spread2blt.xml&#34;</span><span class="o">);</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/squirt.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/squirt.xml&#34;</span><span class="o">);</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/0to1.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/0to1.xml&#34;</span><span class="o">);</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/accel.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/accel.xml&#34;</span><span class="o">);</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/accelshot.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/accelshot.xml&#34;</span><span class="o">);</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/bar.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/bar.xml&#34;</span><span class="o">);</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/divide.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/divide.xml&#34;</span><span class="o">);</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/fast.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/fast.xml&#34;</span><span class="o">);</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/fire_slowshot.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/fire_slowshot.xml&#34;</span><span class="o">);</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/slide.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/slide.xml&#34;</span><span class="o">);</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/slowdown.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/slowdown.xml&#34;</span><span class="o">);</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/speed_rnd.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/speed_rnd.xml&#34;</span><span class="o">);</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/twin.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/twin.xml&#34;</span><span class="o">);</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/wedge_half.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/wedge_half.xml&#34;</span><span class="o">);</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/wide.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/wide.xml&#34;</span><span class="o">);</span>
+  <span class="k">assert</span><span class="o">(</span><span class="kc">false</span><span class="o">,</span> <span class="s">&#34;unknown file: &#34;</span> <span class="o">~</span> <span class="n">path</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>It&rsquo;s not clever in any way but it works!</p>
 <p>For now, I&rsquo;ll skip file writing as it&rsquo;s only for replays and scores. However, I could extend this to save to local storage in JS and even possibly have online scoreboards for the game.</p>
+<h3 id="audio">Audio</h3>
+<p>The original code just used SDL_mixer, which has a D binding of course but I made it so no audio is loaded for the WebAssembly version. It&rsquo;ll probably have to handled partway between JS and WASM here as it would wasteful to send byte arrays to JS from WASM just to play audio when the browser could do the heavy lifting. As I don&rsquo;t know yet how to handle this I&rsquo;ll skip audio for WASM for now.</p>
 <h2 id="ds-runtime-and-phobos">D&rsquo;s Runtime and Phobos</h2>
 <p>There are options to compile the runtime to WebAssembly like <a href="https://github.com/skoppe/spasm">Spasm by Sebastian Koppe</a>. And there are WebAssembly examples which use a custom runtime like <a href="http://webassembly.arsdnet.net/">WebAssembly example by Adam D. Ruppe</a>. I tried the first option but couldn&rsquo;t every part running smoothly. Given that I had a small-ish codebase, I thought it would be possible to reuse some of the code from Adam and extend it until it works.</p>
 <p>Here are some steps along the way:</p>
@@ -672,12 +660,16 @@
 <p>While doing this I found it helpful to have a version of the game that ran with all the same code as what the WebAssembly build would be but as an x86 executable so I could debug it in Visual Studio with Visual D. That helped a lot, also because I would sometimes get different results between the two.</p>
 <h2 id="webgl--webassembly">WebGL / WebAssembly</h2>
 <p>After I got everything to compile, I had to sort out the WebAssembly/JavaScript side. That wasn&rsquo;t too hard but I only found at this point that I wasn&rsquo;t exporting symbols apart from <code>_start</code>. That was easily solved by adding <code>--export=dynamic</code>. I took care of only using WebGL 1.0 compatible calls in the new OpenGL I wrote so the interface for this wasn&rsquo;t too difficult, the only issue I had was with converting IDs used by OpenGL to/from JS Objects used by WebGL. I got confused by <code>getUniformLocation</code> which returns an object but <code>getAttribLocation</code> returns an index.</p>
-<p>I will also note that I didn&rsquo;t want to implement my own math functions so I redirect that to the JS Math ones and it works for now.</p>
+<p>I will also note that I didn&rsquo;t want to implement my own math functions so those are redirected to the JS Math ones and it works for now.</p>
+<h2 id="wrapping-up">Wrapping up</h2>
+<p>After weeks of actual work, the title screen finally showed up in a web browser!</p>
 <video controls src="/media/articles/tt_wasm_title.mp4"></video>
+<p>There are still lots of things that need to be done like hooking up the input, checking the game mode works, playing the audio (the background music is great as well) and possibly saving the scores and replays.</p>
+<p>For now, you can follow the progress so far on the GitHub depot: <a href="https://github.com/speps/tt">https://github.com/speps/tt</a></p>
 
 	</div>
 </div>
-            <div id="footer"><p>2020-11-17 21:24:33 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
+            <div id="footer"><p>2020-11-18 00:00:10 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
         </div>
     </div>
 </body>
