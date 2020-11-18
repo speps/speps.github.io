@@ -200,6 +200,20 @@ body, html
     margin: 0.5em 0px;
 }
 
+#content code, #content .highlight
+{
+    font-family: "Consolas", "Monaco", "Menlo", "Courier New", Courier, monospace;
+}
+
+#content code
+{
+    font-weight: 400;
+}
+
+#content .highlight > code {
+    font-weight: 100;
+}
+
 #content ul
 {
     margin-left: 2em;
@@ -211,7 +225,6 @@ body, html
     font-size: 0.9em;
     overflow: auto;
     width: 80%;
-    font-family: "Courier New", Courier, monospace;
     padding: 0.5em;
     border: 1px solid #006699;
     margin: 0.5em auto;
