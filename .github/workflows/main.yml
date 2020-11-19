@@ -26,4 +26,4 @@ jobs:
       - name: Deploy 'master'
         run: |
           cd $GITHUB_WORKSPACE/master
-          ls -al
+          rsync -avhW --no-compress $GITHUB_WORKSPACE/sources/public/ ./
