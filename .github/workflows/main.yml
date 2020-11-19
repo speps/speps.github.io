@@ -10,13 +10,20 @@ jobs:
     steps:
       - name: Sync depot
         uses: actions/checkout@v2
+        with:
+          path: sources
       - name: Build website
         run: |
-          cd $GITHUB_WORKSPACE
+          cd $GITHUB_WORKSPACE/sources
           binaries/hugo version
           binaries/hugo
           binaries/hugo gen chromastyles --style=github > public/css/syntax.css
       - name: Update pages
+        uses: actions/checkout@v2
+        with:
+          path: master
         run: |
-          cd $GITHUB_WORKSPACE
-          
+          cd $GITHUB_WORKSPACE/master
+          rsync -a $GITHUB_WORKSPACE/sources .
+          git add --all --dry-run
+          git status
