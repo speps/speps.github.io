@@ -26,6 +26,4 @@ jobs:
       - name: Deploy 'master'
         run: |
           cd $GITHUB_WORKSPACE/master
-          rsync -a $GITHUB_WORKSPACE/sources .
-          git add --all --dry-run
-          git status
+          ls -al
