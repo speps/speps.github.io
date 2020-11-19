@@ -15,6 +15,7 @@ jobs:
       - name: Sync 'master'
         uses: actions/checkout@v2
         with:
+          ref: master
           path: master
       - name: Build website
         run: |
