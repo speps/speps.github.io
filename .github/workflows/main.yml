@@ -1,4 +1,4 @@
-name: Update Website
+name: speps.github.io
 on:
   push:
     branches:
@@ -16,3 +16,7 @@ jobs:
           binaries/hugo version
           binaries/hugo
           binaries/hugo gen chromastyles --style=github > public/css/syntax.css
+      - name: Update pages
+        run: |
+          cd $GITHUB_WORKSPACE
+          
