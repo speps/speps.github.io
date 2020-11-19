@@ -8,20 +8,21 @@ jobs:
     name: Build Website
     runs-on: ubuntu-latest
     steps:
-      - name: Sync depot
+      - name: Sync 'sources'
         uses: actions/checkout@v2
         with:
           path: sources
+      - name: Sync 'master'
+        uses: actions/checkout@v2
+        with:
+          path: master
       - name: Build website
         run: |
           cd $GITHUB_WORKSPACE/sources
           binaries/hugo version
           binaries/hugo
           binaries/hugo gen chromastyles --style=github > public/css/syntax.css
-      - name: Update pages
-        uses: actions/checkout@v2
-        with:
-          path: master
+      - name: Deploy 'master'
         run: |
           cd $GITHUB_WORKSPACE/master
           rsync -a $GITHUB_WORKSPACE/sources .
