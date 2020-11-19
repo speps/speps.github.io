@@ -27,3 +27,8 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/master
           rsync -avhW --no-compress $GITHUB_WORKSPACE/sources/public/ ./
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add --all
+          git commit -m "Deploy $GITHUB_SHA from 'sources' branch"
+          git push
