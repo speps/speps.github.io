@@ -6,10 +6,21 @@
     <description>Recent content on speps.fr - Rémi Gillig</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 26 Jul 2020 21:36:11 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 26 Nov 2020 22:07:27 +0000</lastBuildDate>
     
 	<atom:link href="http://speps.fr/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Torus Trooper - Rebooting a 15 year-old game written in D - Part 4 Final steps</title>
+      <link>http://speps.fr/articles/torus-trooper-part4/</link>
+      <pubDate>Thu, 26 Nov 2020 22:07:27 +0000</pubDate>
+      
+      <guid>http://speps.fr/articles/torus-trooper-part4/</guid>
+      <description>See also
+ Part 1 - Compiling a new executable Part 2 - Running the game for the first time Part 3 - Porting to WebAssembly Part 4 - Final steps  Hooking up keyboard input Remember the interface we made earlier:
+1 2 3 4 5 6 7  public interface InputBackend { public void update(); public int getDirState(); public int getButtonState(); public bool getExitState(); public bool getPauseState(); }   Here is the implementation for WebAssembly:</description>
+    </item>
     
     <item>
       <title>Torus Trooper - Rebooting a 15 year-old game written in D - Part 3 WebAssembly</title>
@@ -18,7 +29,7 @@
       
       <guid>http://speps.fr/articles/torus-trooper-part3/</guid>
       <description>See also
- Part 1 - Compiling a new executable Part 2 - Running the game for the first time Part 3 - Porting to WebAssembly  Removing GLU dependency GLU is the OpenGL Utility library from SGI. It&amp;rsquo;s an API with helpful functions that work along with OpenGL. In our project, it&amp;rsquo;s used to create a view matrix using gluLookAt. So the fix here is just to copy the code for that method from the original SGI code which has a permissive licence, i.</description>
+ Part 1 - Compiling a new executable Part 2 - Running the game for the first time Part 3 - Porting to WebAssembly Part 4 - Final steps  Removing GLU dependency GLU is the OpenGL Utility library from SGI. It&amp;rsquo;s an API with helpful functions that work along with OpenGL. In our project, it&amp;rsquo;s used to create a view matrix using gluLookAt. So the fix here is just to copy the code for that method from the original SGI code which has a permissive licence, i.</description>
     </item>
     
     <item>
@@ -28,7 +39,7 @@
       
       <guid>http://speps.fr/articles/torus-trooper-part2/</guid>
       <description>See also
- Part 1 - Compiling a new executable Part 2 - Running the game for the first time Part 3 - Porting to WebAssembly  From part 1, we stopped after successfully compiling a new executable, but will it run?
+ Part 1 - Compiling a new executable Part 2 - Running the game for the first time Part 3 - Porting to WebAssembly Part 4 - Final steps  From part 1, we stopped after successfully compiling a new executable, but will it run?
 Answer is&amp;hellip; NO!
 Alright, let&amp;rsquo;s dig into it!
 D1&amp;rsquo;s std.file.listdir core.exception.RangeError@src\abagames\tt\barrage.d(110): Range violation ---------------- 0x00448944 in _d_newarrayU 0x0041734B in void abagames.tt.barrage.Barrage.addBml(immutable(char)[], immutable(char)[], float, bool, float) D1 used to have a function named listdir in Phobos.</description>
@@ -41,7 +52,7 @@ D1&amp;rsquo;s std.file.listdir core.exception.RangeError@src\abagames\tt\barrag
       
       <guid>http://speps.fr/articles/torus-trooper-part1/</guid>
       <description>See also
- Part 1 - Compiling a new executable Part 2 - Running the game for the first time Part 3 - Porting to WebAssembly  While exploring D recently, I remembered a game I played while at university 15 years ago. For a long time, I couldn&amp;rsquo;t remember the name at all, only that it was from a Japanese developer. After some search wrangling, I finally managed to find the name of the game: Torus Trooper!</description>
+ Part 1 - Compiling a new executable Part 2 - Running the game for the first time Part 3 - Porting to WebAssembly Part 4 - Final steps  While exploring D recently, I remembered a game I played while at university 15 years ago. For a long time, I couldn&amp;rsquo;t remember the name at all, only that it was from a Japanese developer. After some search wrangling, I finally managed to find the name of the game: Torus Trooper!</description>
     </item>
     
     <item>

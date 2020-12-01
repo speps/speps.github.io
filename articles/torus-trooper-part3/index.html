@@ -59,7 +59,7 @@
     </li>
     <li><a href="#ds-runtime-and-phobos">D&rsquo;s Runtime and Phobos</a></li>
     <li><a href="#webgl--webassembly">WebGL / WebAssembly</a></li>
-    <li><a href="#wrapping-up">Wrapping up</a></li>
+    <li><a href="#wrapping-up-part-3">Wrapping up part 3</a></li>
   </ul>
 </nav>
 		</div>
@@ -69,6 +69,7 @@
 <li><a href="/articles/torus-trooper-part1">Part 1 - Compiling a new executable</a></li>
 <li><a href="/articles/torus-trooper-part2">Part 2 - Running the game for the first time</a></li>
 <li><a href="/articles/torus-trooper-part3">Part 3 - Porting to WebAssembly</a></li>
+<li><a href="/articles/torus-trooper-part4">Part 4 - Final steps</a></li>
 </ul>
 <h2 id="removing-glu-dependency">Removing GLU dependency</h2>
 <p>GLU is the OpenGL Utility library from SGI. It&rsquo;s an API with helpful functions that work along with OpenGL. In our project, it&rsquo;s used to create a view matrix using <code>gluLookAt</code>. So the fix here is just to copy the code for that method from the original SGI code which has a permissive licence, i.e. the SGI licence.</p>
@@ -661,15 +662,14 @@
 <h2 id="webgl--webassembly">WebGL / WebAssembly</h2>
 <p>After I got everything to compile, I had to sort out the WebAssembly/JavaScript side. That wasn&rsquo;t too hard but I only found at this point that I wasn&rsquo;t exporting symbols apart from <code>_start</code>. That was easily solved by adding <code>--export=dynamic</code>. I took care of only using WebGL 1.0 compatible calls in the new OpenGL I wrote so the interface for this wasn&rsquo;t too difficult, the only issue I had was with converting IDs used by OpenGL to/from JS Objects used by WebGL. I got confused by <code>getUniformLocation</code> which returns an object but <code>getAttribLocation</code> returns an index.</p>
 <p>I will also note that I didn&rsquo;t want to implement my own math functions so those are redirected to the JS Math ones and it works for now.</p>
-<h2 id="wrapping-up">Wrapping up</h2>
-<p>After weeks of actual work, the title screen finally showed up in a web browser!</p>
+<h2 id="wrapping-up-part-3">Wrapping up part 3</h2>
+<p>After weeks of effort, the title screen finally showed up in a web browser!</p>
 <video controls src="/media/articles/tt_wasm_title.mp4"></video>
-<p>There are still lots of things that need to be done like hooking up the input, checking the game mode works, playing the audio (the background music is great as well) and possibly saving the scores and replays.</p>
-<p>For now, you can follow the progress so far on the GitHub depot: <a href="https://github.com/speps/tt">https://github.com/speps/tt</a></p>
+<p>There are still lots of things that need to be done like hooking up the input, checking that the game mode works, playing the audio (the background music is great as well) and possibly saving the scores and replays, that&rsquo;ll be covered in <a href="/articles/torus-trooper-part4">part 4</a>.</p>
 
 	</div>
 </div>
-            <div id="footer"><p>2020-11-19 09:13:22 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
+            <div id="footer"><p>2020-12-01 20:23:48 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
         </div>
     </div>
 </body>
