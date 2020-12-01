@@ -8,6 +8,7 @@ See also
 * [Part 1 - Compiling a new executable](/articles/torus-trooper-part1)
 * [Part 2 - Running the game for the first time](/articles/torus-trooper-part2)
 * [Part 3 - Porting to WebAssembly](/articles/torus-trooper-part3)
+* [Part 4 - Final steps](/articles/torus-trooper-part4)
 
 ## Removing GLU dependency
 
@@ -390,12 +391,10 @@ After I got everything to compile, I had to sort out the WebAssembly/JavaScript 
 
 I will also note that I didn't want to implement my own math functions so those are redirected to the JS Math ones and it works for now.
 
-## Wrapping up
+## Wrapping up part 3
 
-After weeks of actual work, the title screen finally showed up in a web browser!
+After weeks of effort, the title screen finally showed up in a web browser!
 
 {{< video src="/media/articles/tt_wasm_title.mp4" >}}
 
-There are still lots of things that need to be done like hooking up the input, checking the game mode works, playing the audio (the background music is great as well) and possibly saving the scores and replays.
-
-For now, you can follow the progress so far on the GitHub depot: https://github.com/speps/tt
+There are still lots of things that need to be done like hooking up the input, checking that the game mode works, playing the audio (the background music is great as well) and possibly saving the scores and replays, that'll be covered in [part 4](/articles/torus-trooper-part4).

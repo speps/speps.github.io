@@ -8,6 +8,7 @@ See also
 * [Part 1 - Compiling a new executable](/articles/torus-trooper-part1)
 * [Part 2 - Running the game for the first time](/articles/torus-trooper-part2)
 * [Part 3 - Porting to WebAssembly](/articles/torus-trooper-part3)
+* [Part 4 - Final steps](/articles/torus-trooper-part4)
 
 While exploring D recently, I remembered a game I played while at university 15 years ago. For a long time, I couldn't remember the name at all, only that it was from a Japanese developer. After some search wrangling, I finally managed to find the name of the game: **Torus Trooper!**
 

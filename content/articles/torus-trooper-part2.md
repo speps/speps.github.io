@@ -8,6 +8,7 @@ See also
 * [Part 1 - Compiling a new executable](/articles/torus-trooper-part1)
 * [Part 2 - Running the game for the first time](/articles/torus-trooper-part2)
 * [Part 3 - Porting to WebAssembly](/articles/torus-trooper-part3)
+* [Part 4 - Final steps](/articles/torus-trooper-part4)
 
 From part 1, we stopped after successfully compiling a new executable, but will it run?
 
