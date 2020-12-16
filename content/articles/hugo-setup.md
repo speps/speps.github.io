@@ -4,6 +4,10 @@ title = "Setup Hugo with Travis CI and GitHub Pages"
 toc = true
 +++
 
+## Disclaimer
+
+**This article is now obsolete as TravisCI added severe limitations to their free tier. Use GitHub Actions which is [what I used to replace the workflow](https://github.com/speps/speps.github.io/blob/sources/.github/workflows/main.yml) described here. Main difference with the usual tutorials is that I commit the `hugo` binary so I know what version is used and the website isn't broken by Hugo updates.**
+
 This article aims to introduce and show how to generate your [Hugo](http://gohugo.io) site on [Travis CI](http://travis-ci.org) and then deploy it automatically to [GitHub Pages](https://pages.github.com).
 
 ## Have your Hugo website ready
