@@ -80,7 +80,7 @@
 <p>The main website for libBulletML has a download for a C++ library and a D port of it. I first tried the C++ library, it looked the closest from the imported API called from the game&rsquo;s D code.</p>
 <p>I could even open the original Visual C++ project in Visual Studio 2019 without issues. I then modified it to export a similar C API and compiled it to a DLL. I could now swap the original <code>bulletml.dll</code> with my own and it worked exactly as expected at runtime so I knew the C++ implementation was the one used in the original game code.</p>
 <h3 id="reading-the-original-code">Reading the original code</h3>
-<p>The original C++ BulletML code was an interesting read. It used TinyXML to parse XML, which is an old C++ library that came as a .cpp/.h files for easy integration. The BulletML data also allows expressions that specify the behaviour of the bullets. This expression parser was written using a YACC grammar, most likely the example grammar from YACC modified to allow for defining variables.</p>
+<p>The original C++ BulletML code was an interesting read. It used TinyXML to parse XML, which is an old C++ library that came as a .h/.cpp files for easy integration. The BulletML data also allows expressions that specify the behaviour of the bullets. This expression parser was written using a YACC grammar, from what I could tell it&rsquo;s close to the example grammar from YACC modified to allow for defining variables.</p>
 <p>The main part of the original code is actually the runner code. The runner is what evaluates the behaviours defined in XML (and parsed into runtime structures).</p>
 <h3 id="porting-to-d">Porting to D</h3>
 <p>Even though there was a D port of BulletML, it seemed like I would have an easier time just porting the original behaviour of the C++ library as I had no way of knowing if the D port of BulletML would behave the same in the game itself. The D port seemed overly complicated as well.</p>
@@ -91,7 +91,7 @@
 <h4 id="xml-parsing">XML Parsing</h4>
 <p>At first, I just used <a href="https://code.dlang.org/packages/dxml">dxml</a> and it was fine. However, my goal is to port the game to WebAssembly and that didn&rsquo;t play well at all with a custom runtime. I also tried <code>std.xml</code> but it was similar and it&rsquo;s going to be deprecated soon.</p>
 <p>Finally, I decided I would just reuse the lexer base code from the expression parser and made it output XML events like SAX parser but all at once as an array. I only needed to parse XML files, and they were quite simple anyway so it worked out perfectly.</p>
-<p>I was finally able to load the BulletML XML files without any dependencies, no DUB package or .dll/.lib from the original code.</p>
+<p>I was finally able to load the BulletML XML files without any dependencies, no external DUB package or .dll/.lib from the original code.</p>
 <h2 id="modern-opengl">Modern OpenGL</h2>
 <p>The code base uses immediate mode OpenGL commands like <code>glBegin</code>/<code>glVertex</code>/<code>glEnd</code>. This needs modernizing as those APIs have been deprecated for some time now in favor of vertex/index buffers and a programmable pipeline.</p>
 <h3 id="emulated-immediate-mode">Emulated immediate mode</h3>
@@ -445,7 +445,7 @@
 <span class="o">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>Using this, all OpenGL calls now go through these methods. From here, you&rsquo;ll need to:</p>
+</div><p>Using this, all OpenGL calls now go through these methods. From here, I&rsquo;ll need to:</p>
 <ul>
 <li>Record what <code>glBegin</code>/<code>glVertex</code>/<code>glEnd</code> receive</li>
 <li>Record the matrix stack</li>
@@ -459,15 +459,15 @@
 <p>However, it&rsquo;s not too difficult once this is in place:</p>
 <ul>
 <li>Apply the model-view matrix from the stack when you record the calls to <code>glVertex</code>, that&rsquo;s so one buffer can store vertices from multiple <code>glBegin</code>/<code>glEnd</code> pairs</li>
-<li>When recording vertices, map the primitive type to triangles and lines buckets, that helps with performance as we can push more of the same data into the buffers. We map <code>GL_TRIANGLE_STRIP</code> to normal triangles, and we can also support <code>GL_QUADS</code> quite easily. We also map <code>GL_LINE_STRIP</code>/<code>GL_LINE_LOOP</code> to <code>GL_LINES</code>.</li>
+<li>When recording vertices, map the primitive type to triangles and lines buckets, that helps with performance as I can push more of the same data into the buffers. We map <code>GL_TRIANGLE_STRIP</code> to normal triangles, and we can also support <code>GL_QUADS</code> quite easily. I also map <code>GL_LINE_STRIP</code>/<code>GL_LINE_LOOP</code> to <code>GL_LINES</code>.</li>
 <li>Render the primitives recorded so far whenever the state changes like <code>glBlendFunc</code> or the projection matrix changes</li>
 </ul>
-<p>It&rsquo;s now a lot faster as we don&rsquo;t have to upload to the GPU as often and the number of draw calls is significantly lower. However, we now have to do some matrix math CPU side in our own code. We&rsquo;re back to the steady 60 FPS we had back in immediate mode but the code now conforms to a more recent OpenGL API closer to what WebGL would expect.</p>
+<p>It&rsquo;s now a lot faster as I don&rsquo;t have to upload to the GPU as often and the number of draw calls is significantly lower. However, I now have to do some matrix math CPU side in our own code. It&rsquo;s back to the steady 60 FPS we had back in immediate mode but the code now conforms to a more recent OpenGL API closer to what WebGL would expect.</p>
 <p>Note that to simplify the porting effort, it&rsquo;s usually good to skip parts that will be an issue. Removing some code paths with less used features helps to reduce the amount of code that needs porting. For example, the title screen has a logo of the game loaded from a <code>.bmp</code> file. However, it also features text displayed as LCD style letters so I replaced the image with those letters and now nothing has to load images, removing some OpenGL, SDL and IO code.</p>
 <h2 id="abstracting-platform-dependencies">Abstracting platform dependencies</h2>
 <p>One of the things that helps with cross platform development is some kind of abstraction layer to isolate the game code from low level code like rendering, input, audio, etc.</p>
 <h3 id="input">Input</h3>
-<p>The <code>Pad</code> class handles reading keyboard values using <code>SDL_GetKeyboardState</code>. It&rsquo;s also inherited by <code>RecordablePad</code> which handles doing the replays by recording the inputs. This design is okay but to be able to replace the backend of how inputs are fed into it, I modified <code>Pad</code> to receive a <code>Input</code> interface like this:</p>
+<p>The <code>Pad</code> class handles reading keyboard values using <code>SDL_GetKeyboardState</code>. It&rsquo;s also inherited by <code>RecordablePad</code> which handles doing the replays by recording the inputs. This design is okay but to be able to replace the backend of how inputs are fed into it, I modified <code>Pad</code> to receive a <code>InputBackend</code> interface like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -571,12 +571,12 @@
 <span class="o">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>And an instance of <code>InputBackendSDL</code> passed where we create the <code>RecordablePad</code> instance.</p>
+</div><p>And an instance of <code>InputBackendSDL</code> passed where the <code>RecordablePad</code> instance is created.</p>
 <p>Note again that I&rsquo;ve simplified the code to not support reversing the buttons and removed joystick support. These can be added later in a better way. I feel like it&rsquo;s important to get some progress instead of being stuck on details for now.</p>
 <h3 id="window-management">Window management</h3>
-<p>SDL is used for initializing the window and creating the OpenGL context. It&rsquo;s not difficult to isolate this the original code. Most of the SDL calls are done in the <code>Screen3D</code> class. For WebAssembly, we won&rsquo;t need a window as render directly to a HTML5 canvas element, so we&rsquo;ll stub most methods here.</p>
+<p>SDL is used for initializing the window and creating the OpenGL context. It&rsquo;s not difficult to isolate this the original code. Most of the SDL calls are done in the <code>Screen3D</code> class. For WebAssembly, there&rsquo;s no need for a window as render directly to a HTML5 canvas element, so we&rsquo;ll stub most methods here.</p>
 <h3 id="file-system">File system</h3>
-<p>Given the small amount of files required by the game to be loaded on startup (and remember I removed images from that original list), we can embed these files. D has a handy feature equivalent to C&rsquo;s <code>#include</code>. It&rsquo;s using the call <code>import(fileName)</code> to load a file to a byte array which is embedded into the executable.</p>
+<p>Given the small amount of files required by the game to be loaded on startup (and remember I removed images from that original list), it&rsquo;s possible to embed these files. D has a handy feature equivalent to C&rsquo;s <code>#include</code>. It&rsquo;s using the call <code>import(fileName)</code> to load a file to a byte array which is embedded into the executable.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -660,7 +660,7 @@
 </ul>
 <p>While doing this I found it helpful to have a version of the game that ran with all the same code as what the WebAssembly build would be but as an x86 executable so I could debug it in Visual Studio with Visual D. That helped a lot, also because I would sometimes get different results between the two.</p>
 <h2 id="webgl--webassembly">WebGL / WebAssembly</h2>
-<p>After I got everything to compile, I had to sort out the WebAssembly/JavaScript side. That wasn&rsquo;t too hard but I only found at this point that I wasn&rsquo;t exporting symbols apart from <code>_start</code>. That was easily solved by adding <code>--export=dynamic</code>. I took care of only using WebGL 1.0 compatible calls in the new OpenGL I wrote so the interface for this wasn&rsquo;t too difficult, the only issue I had was with converting IDs used by OpenGL to/from JS Objects used by WebGL. I got confused by <code>getUniformLocation</code> which returns an object but <code>getAttribLocation</code> returns an index.</p>
+<p>After I got everything to compile, I had to sort out the WebAssembly/JavaScript side. That wasn&rsquo;t too hard but I only found at this point that I wasn&rsquo;t exporting symbols apart from <code>_start</code>. That was easily solved by adding <code>--export=dynamic</code>. I took care of only using WebGL 1.0 compatible calls in the new OpenGL code I wrote so the interface for this wasn&rsquo;t too difficult, the only issue I had was with converting IDs used by OpenGL to/from JS Objects used by WebGL. I got confused by <code>getUniformLocation</code> which returns an object but <code>getAttribLocation</code> returns an index.</p>
 <p>I will also note that I didn&rsquo;t want to implement my own math functions so those are redirected to the JS Math ones and it works for now.</p>
 <h2 id="wrapping-up-part-3">Wrapping up part 3</h2>
 <p>After weeks of effort, the title screen finally showed up in a web browser!</p>
@@ -669,7 +669,7 @@
 
 	</div>
 </div>
-            <div id="footer"><p>2020-12-01 20:23:48 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
+            <div id="footer"><p>2020-12-16 14:52:31 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
         </div>
     </div>
 </body>

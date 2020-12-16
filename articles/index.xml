@@ -18,7 +18,7 @@
       
       <guid>http://speps.fr/articles/torus-trooper-part4/</guid>
       <description>See also
- Part 1 - Compiling a new executable Part 2 - Running the game for the first time Part 3 - Porting to WebAssembly Part 4 - Final steps  Hooking up keyboard input Remember the interface we made earlier:
+ Part 1 - Compiling a new executable Part 2 - Running the game for the first time Part 3 - Porting to WebAssembly Part 4 - Final steps  Hooking up keyboard input Remember the interface described earlier:
 1 2 3 4 5 6 7  public interface InputBackend { public void update(); public int getDirState(); public int getButtonState(); public bool getExitState(); public bool getPauseState(); }   Here is the implementation for WebAssembly:</description>
     </item>
     
@@ -39,7 +39,7 @@
       
       <guid>http://speps.fr/articles/torus-trooper-part2/</guid>
       <description>See also
- Part 1 - Compiling a new executable Part 2 - Running the game for the first time Part 3 - Porting to WebAssembly Part 4 - Final steps  From part 1, we stopped after successfully compiling a new executable, but will it run?
+ Part 1 - Compiling a new executable Part 2 - Running the game for the first time Part 3 - Porting to WebAssembly Part 4 - Final steps  From part 1, I stopped after successfully compiling a new executable, but will it run?
 Answer is&amp;hellip; NO!
 Alright, let&amp;rsquo;s dig into it!
 D1&amp;rsquo;s std.file.listdir core.exception.RangeError@src\abagames\tt\barrage.d(110): Range violation ---------------- 0x00448944 in _d_newarrayU 0x0041734B in void abagames.tt.barrage.Barrage.addBml(immutable(char)[], immutable(char)[], float, bool, float) D1 used to have a function named listdir in Phobos.</description>

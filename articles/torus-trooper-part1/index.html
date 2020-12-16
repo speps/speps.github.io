@@ -68,7 +68,7 @@
 <li>Written in D, a language I didn&rsquo;t know at all while I was busy studying C++</li>
 <li>It&rsquo;s awfully addictive!</li>
 </ul>
-<p>What better project than try to compile a <strong>D v0.110</strong> project in a modern version of D! So here we are&hellip;</p>
+<p>What better project than try to compile a <strong>D v0.110</strong> project in a modern version of D and possibly porting the game to WebAssembly+WebGL! So here we are&hellip;</p>
 <h2 id="switching-from-ant-to-dub">Switching from Ant to DUB</h2>
 <p>The game used Ant and its <code>build.xml</code> file to generate the executable, resources, etc. Since then, D added DUB as a build system / package manager so let&rsquo;s use that!</p>
 <div class="highlight"><div class="chroma">
@@ -207,7 +207,7 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </code></pre></td></tr></table>
 </div>
 </div><h2 id="replacing-char-with-string">Replacing <code>char[]</code> with <code>string</code></h2>
-<p>D1 used to have <code>char[]</code> as the string type, and functions in <code>std.string</code> in Phobos to manipulate this type. D2 added a dedidcated <code>string</code> type instead of an alias. As a result, a lot of the code needs updating to deal with this. That includes the code in the custom bindings.</p>
+<p>D1 used to have <code>char[]</code> as the string type, and functions in <code>std.string</code> in Phobos to manipulate this type. D2 replaced this with an <code>alias string = immutable(char)[]</code>. As a result, a lot of the code needs updating to deal with this. That includes the code in the custom bindings.</p>
 <p>Most of the changes here are similar to this</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -805,12 +805,12 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </div>
 </div><p>The BulletML binding used <code>extern(C)</code> and that worked the same so no changes were done.</p>
 <h2 id="wrapping-up">Wrapping up</h2>
-<p>With all of this, we&rsquo;ve managed to compile a new Windows executable! What amazed me is how little language changes were necessary. The biggest change was related to Phobos and deprecated library features.</p>
+<p>With all of this, I&rsquo;ve managed to compile a new Windows executable! What amazed me is how little language changes were necessary. The biggest change was related to Phobos and deprecated library features.</p>
 <p>Running the game and seeing if it runs will be <a href="/articles/torus-trooper-part2">part 2</a>.</p>
 
 	</div>
 </div>
-            <div id="footer"><p>2020-12-01 20:23:48 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
+            <div id="footer"><p>2020-12-16 14:52:31 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
         </div>
     </div>
 </body>

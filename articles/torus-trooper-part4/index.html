@@ -48,6 +48,7 @@
       <ul>
         <li><a href="#fullscreen-mode">Fullscreen mode</a></li>
         <li><a href="#on-screen-controls">On screen controls</a></li>
+        <li><a href="#progressive-web-app-pwa-support">Progressive Web App (PWA) support</a></li>
       </ul>
     </li>
     <li><a href="#wrapping-up-the-series">Wrapping up the series</a></li>
@@ -63,7 +64,7 @@
 <li><a href="/articles/torus-trooper-part4">Part 4 - Final steps</a></li>
 </ul>
 <h2 id="hooking-up-keyboard-input">Hooking up keyboard input</h2>
-<p>Remember the interface we made earlier:</p>
+<p>Remember the interface described earlier:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -116,7 +117,7 @@
 </code></pre></td></tr></table>
 </div>
 </div><p>Very simple, the good thing is that the original code already used masks for gameplay inputs. I just had to add another bit for exit and another one for pause.</p>
-<p>From the JS side, we have <code>keydown</code>/<code>keyup</code> events that map the masks to the final value:</p>
+<p>From the JS side, there are <code>keydown</code>/<code>keyup</code> events that map the masks to the final value:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -191,9 +192,9 @@
 <span class="p">},</span> <span class="kc">true</span><span class="p">);</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>This works well enough, we can extend it later with more keys that map to the same input or make it customisable.</p>
+</div><p>This works well enough, it can be extended later with more keys that map to the same input or make it customisable.</p>
 <h2 id="fmodf">fmodf</h2>
-<p>While doing the custom runtime, and because we&rsquo;re not using any C runtime stuff, it complained about an undefined <code>fmod</code> symbol at link time. It&rsquo;s a math function to compute the floating-point remainder of the operation x/y.</p>
+<p>While doing the custom runtime, and because it&rsquo;s not using any C runtime stuff, it complained about an undefined <code>fmod</code> symbol at link time. It&rsquo;s a math function to compute the floating-point remainder of the operation <code>x / y</code>.</p>
 <p>Unfortunately this doesn&rsquo;t have a JS <code>Math</code> equivalent like the other ones, but it works in JS with the <code>%</code> operator, so I just ended up using that:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -223,7 +224,7 @@
 <span class="o">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>However, during gameplay there are class instances that will live beyond the scope of a method and will need cleaning up once ununsed (eg. bullets or enemies). Ideally, we&rsquo;d want the GC to take care of that for us but D doesn&rsquo;t really have a GC unless you use the <code>druntime</code> code. Best we can do do here is reuse memory as much as we can and identify which parts still need allocations.</p>
+</div><p>However, during gameplay there are class instances that will live beyond the scope of a method and will need cleaning up once ununsed (eg. bullets or enemies). Ideally, the GC would take care of that but D doesn&rsquo;t really have a GC unless you use the <code>druntime</code> code. Best here is to reuse memory as much as possible and identify which parts still need allocations.</p>
 <p>This is an area that probably needs more attention as it currently leaks memory but it&rsquo;s still possible to play through the game multiple times before it&rsquo;s an issue. Help would be appreciated on a solution, possibly making a very basic GC would be good but an easier way would just be to make a pool of most things that can be reused (some classes already did that but only for game stuff).</p>
 <h2 id="resizing-the-game">Resizing the game</h2>
 <p>I did the whole series so far using a fixed resolution of 800 x 600 but all the code to support resizing is available so let&rsquo;s try to handle that correctly.</p>
@@ -313,7 +314,7 @@
 <span class="o">}</span>
 </code></pre></td></tr></table>
 </div>
-</div><p>Then we add a few new WASM exposed methods:</p>
+</div><p>Then add a few new WASM exposed methods:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt">1
@@ -333,12 +334,12 @@
 </code></pre></td></tr></table>
 </div>
 </div><p>The main trick here was to make sure of 2 things:</p>
-<ol>
-<li>We can play the same sound effect multiple times in a row</li>
-<li>The music system needs to behave the same way as SDL_Mixer: only one music at once an, in a loop, and some way to fade before the next music is played</li>
-</ol>
+<ul>
+<li>Playing the same sound effect multiple times in a row is possible</li>
+<li>The music system needs to behave the same way as SDL_Mixer: only one music at once, in a loop, and some way to fade before the next music is played</li>
+</ul>
 <p>For 1, I found some StackOverflow answers that weren&rsquo;t satisfying until I discovered that <code>AudioContext.createBufferSource</code> can just be called every time we need to play a sound and we only need the <code>AudioBuffer</code> instances for each sound to be preloaded.</p>
-<p>For 2, we can reuse the same flow for preloading but we also need to connect a <code>GainNode</code> to control the volume and store the sound instance so we can stop it when the next music starts. Conveniently, the <code>gain</code> property is an <code>AudioParam</code> instance which has a <code>linearRampToValueAtTime</code> method which we&rsquo;ll use to fade out the music.</p>
+<p>For 2, the same flow can be reused for preloading but then also connect a <code>GainNode</code> to control the volume and store the sound instance so it can be stopped when the next music starts. Conveniently, the <code>gain</code> property is an <code>AudioParam</code> instance which has a <code>linearRampToValueAtTime</code> method which is used to fade out the music.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><code><span class="lnt"> 1
@@ -402,8 +403,8 @@
 </span></code></pre></td></tr></table>
 </div>
 </div><h2 id="fix-gamedraw-loop">Fix game/draw loop</h2>
-<p>On platforms where the game runs a bit slower, it looks a bit jarring as the whole gameplay slows down to a crawl. The usual way I fix this is by using the method from <a href="https://gafferongames.com/post/fix_your_timestep/">Glenn Fiedler</a>. It&rsquo;s similar to what the original game did but original had a sleep timer which isn&rsquo;t very practical and doesn&rsquo;t really accomodate for slow platforms.</p>
-<p>The big change is splitting the update loop from the draw method. We can even do the game loop in JS to avoid having to pass frame times back and forth across the JS/WASM boundary.</p>
+<p>On platforms where the game runs a bit slower, it looks a bit jarring as the whole gameplay slows down to a crawl. The usual way I fix this is by using the method from <a href="https://gafferongames.com/post/fix_your_timestep/">Glenn Fiedler</a>. It&rsquo;s similar to what the original game did but original had a sleep timer which isn&rsquo;t very practical and doesn&rsquo;t really work in some contexts.</p>
+<p>The big change is splitting the update loop from the draw method. The game loop is now done in JS to avoid having to pass frame times back and forth across the JS/WASM boundary.</p>
 <p>It looks something like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -464,20 +465,192 @@
 </code></pre></td></tr></table>
 </div>
 </div><h2 id="loading-screen">Loading screen</h2>
-<p>With adding the audio, the transfer of <code>tt.wasm</code> is becoming a problem on first visit (it&rsquo;s cached afterwards). Before embedding the audio, the automatic compression in HTTP was doing an amazing job. However, with <code>.ogg</code> files it&rsquo;s not as efficient as those are already compressed. At the time of writing, it&rsquo;s a 5.49 MB transferred for a 7.66 MB total file size once decompressed. We&rsquo;ll need to find a solution and show a progress bar during loading.</p>
-<p>For this, I had the idea of using an embedded SVG document inside the index page to avoid multiple transfers and have a way of displaying the controls while it&rsquo;s loading. To get the SVG, I did a debug output of some of the vector art from the game into a SVG path syntax (for <code>d</code> attribute of a <code>path</code> element) and included that into the index page. That means the title is now visible even before we finish loading the WASM binary.</p>
-<p>With this, because all the static content is included in the index page, we can still show something if JavaScript is disabled. Then, if it&rsquo;s enabled, we can test for browser features we need and for optional ones. A message is displayed accordingly.</p>
-<p>If everything works, we can use the Fetch API to have an accurate progress bar of how the WASM download is doing. If compression is enabled server side the <code>Content-Length</code> header from the HTTP request isn&rsquo;t accurate is it&rsquo;s the compressed size. The solution I used here is to hardcode the WASM size in the JS code as it&rsquo;s unlikely to change drastically anyway.</p>
+<p>With adding the audio, the transfer of <code>tt.wasm</code> is becoming a problem on first visit (it&rsquo;s cached afterwards). Before embedding the audio, the server side compression in hTTP was doing an amazing job. However, with <code>.ogg</code> files it&rsquo;s not as efficient as those are already compressed. At the time of writing, it&rsquo;s a 5.49 MB transferred for a 7.66 MB total file size once decompressed. I&rsquo;ll need to find a solution and show a progress bar during loading.</p>
+<p>For this, I had the idea of using an embedded SVG document inside the index page to avoid multiple transfers and have a way of displaying the controls while it&rsquo;s loading. To get the SVG, I did a debug output of some of the vector art from the game into a SVG path syntax (the <code>d</code> attribute of a <code>path</code> element) and included that into the index page. That means the game title is now visible even before the loading the WASM binary is done.</p>
+<p>With this, because all the static content is included in the index page, it&rsquo;s possible to show something if JavaScript is disabled. Then, if it&rsquo;s enabled, we can test for browser features required and for optional ones. A message is displayed accordingly.</p>
+<p>If everything works, the Fetch API is used to report an accurate progress bar of how the WASM download is doing. If compression is enabled server side the <code>Content-Length</code> header from the HTTP request isn&rsquo;t accurate is it&rsquo;s the compressed size. The solution I used here is to hardcode the WASM size in the JS code as it&rsquo;s unlikely to change drastically anyway.</p>
 <video controls src="/media/articles/tt_loading.mp4"></video>
 <h2 id="saving-local-scoresreplays">Saving local scores/replays</h2>
+<p>The game save 2 types of files: a <code>tt.prf</code> file which contains high-scores and unlocked levels, replays as <code>last.rpl</code> and <code>error.rpl</code>. I&rsquo;m going to map the <code>std.file.read</code> and <code>std.file.write</code> functions to read/write with the LocalStorage API in JavaScript. The only trick here is that LocalStorage is a string key/value store, it maps string keys to string values. It&rsquo;s very simple to use for my binary data, I have to convert the files to/from a string. I tried using the <code>btoa</code>/<code>atob</code> calls in JavaScript but it expects well-formed strings which aren&rsquo;t going to work the data the game is writing as it can contain invalid UTF-8 sequences for example. So I just converted to a hex string, eg. <code>[104, 101, 108, 108, 111]</code> becomes <code>68656c6c6f</code> and vice-versa.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">bin2hex</span><span class="p">(</span><span class="nx">buf</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">buf</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">hexstr</span><span class="p">,</span> <span class="kr">byte</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">hexstr</span> <span class="o">+</span> <span class="p">(</span><span class="s1">&#39;0&#39;</span> <span class="o">+</span> <span class="p">(</span><span class="kr">byte</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">).</span><span class="nx">toString</span><span class="p">(</span><span class="mi">16</span><span class="p">)).</span><span class="nx">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">);</span>
+  <span class="p">},</span> <span class="s2">&#34;&#34;</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kd">function</span> <span class="nx">hex2bin</span><span class="p">(</span><span class="nx">hexstr</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">Uint8Array</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="nx">hexstr</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/../g</span><span class="p">).</span><span class="nx">reduce</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">bytes</span><span class="p">,</span> <span class="nx">hex</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">bytes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">hex</span><span class="p">,</span> <span class="mi">16</span><span class="p">));</span>
+    <span class="k">return</span> <span class="nx">bytes</span><span class="p">;</span>
+  <span class="p">},</span> <span class="p">[]));</span>
+<span class="p">}</span>
+
+<span class="c1">// ...
+</span><span class="c1"></span>
+<span class="nx">wasm_writeFile</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">nameptr</span><span class="p">,</span> <span class="nx">namelen</span><span class="p">,</span> <span class="nx">dataptr</span><span class="p">,</span> <span class="nx">datalen</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kr">const</span> <span class="nx">name</span> <span class="o">=</span> <span class="nx">decoder</span><span class="p">.</span><span class="nx">decode</span><span class="p">(</span><span class="k">new</span> <span class="nx">Uint8Array</span><span class="p">(</span><span class="nx">memory</span><span class="p">.</span><span class="nx">buffer</span><span class="p">,</span> <span class="nx">nameptr</span><span class="p">,</span> <span class="nx">namelen</span><span class="p">));</span>
+  <span class="kr">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Uint8Array</span><span class="p">(</span><span class="nx">memory</span><span class="p">.</span><span class="nx">buffer</span><span class="p">,</span> <span class="nx">dataptr</span><span class="p">,</span> <span class="nx">datalen</span><span class="p">);</span>
+  <span class="kr">const</span> <span class="nx">str</span> <span class="o">=</span> <span class="nx">bin2hex</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+  <span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">str</span><span class="p">);</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;saved &#34;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s2">&#34; with &#34;</span> <span class="o">+</span> <span class="nx">data</span><span class="p">.</span><span class="nx">length</span> <span class="o">+</span> <span class="s2">&#34; bytes&#34;</span><span class="p">);</span>
+<span class="p">},</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><p>Note the files are binary compatible with the original game. If you have a replay or high-scores, you can technically import them in the browser using the Dev Tools and have the online version of the game load them.</p>
 <h2 id="mobile-support">Mobile support</h2>
+<p>A lot of people nowadays just browse on mobile (hello you!), I thought it would be great if the game was somewhat playable on mobile. It&rsquo;s a lot of work to get it to behave close to a native app but I tried to do that.</p>
 <h3 id="fullscreen-mode">Fullscreen mode</h3>
+<p>This is easy, there is an API for it that&rsquo;s been around for a while. I just had to add a button.</p>
 <h3 id="on-screen-controls">On screen controls</h3>
+<p>A bit harder, but I didn&rsquo;t want to make it too complicated. The main element here is a SVG layer on top that has elements with <code>id</code> attribute set. Every time a touch event happens, the touched elements are checked and the <code>id</code> is mapped to the bitmask the game knows.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">uiMap</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">uiA</span><span class="o">:</span> <span class="mh">0x10</span><span class="p">,</span>
+  <span class="nx">uiB</span><span class="o">:</span> <span class="mh">0x20</span><span class="p">,</span>
+  <span class="nx">uiBack</span><span class="o">:</span> <span class="mh">0x40</span><span class="p">,</span>
+  <span class="nx">uiDirR</span><span class="o">:</span> <span class="mh">0x8</span><span class="p">,</span>
+  <span class="nx">uiDirBR</span><span class="o">:</span> <span class="mh">0xA</span><span class="p">,</span>
+  <span class="nx">uiDirB</span><span class="o">:</span> <span class="mh">0x2</span><span class="p">,</span>
+  <span class="nx">uiDirBL</span><span class="o">:</span> <span class="mh">0x6</span><span class="p">,</span>
+  <span class="nx">uiDirL</span><span class="o">:</span> <span class="mh">0x4</span><span class="p">,</span>
+  <span class="nx">uiDirTL</span><span class="o">:</span> <span class="mh">0x5</span><span class="p">,</span>
+  <span class="nx">uiDirT</span><span class="o">:</span> <span class="mh">0x1</span><span class="p">,</span>
+  <span class="nx">uiDirTR</span><span class="o">:</span> <span class="mh">0x9</span>
+<span class="p">};</span>
+<span class="kd">function</span> <span class="nx">uiID</span><span class="p">(</span><span class="nx">element</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">element</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">element</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">element</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">element</span><span class="p">.</span><span class="nx">parentNode</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">element</span><span class="p">.</span><span class="nx">parentNode</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kd">function</span> <span class="nx">registerTouchEvent</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">state</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">ids</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kr">const</span> <span class="nx">touch</span> <span class="k">of</span> <span class="nx">event</span><span class="p">.</span><span class="nx">touches</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kr">const</span> <span class="nx">element</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">elementFromPoint</span><span class="p">(</span><span class="nx">touch</span><span class="p">.</span><span class="nx">clientX</span><span class="p">,</span> <span class="nx">touch</span><span class="p">.</span><span class="nx">clientY</span><span class="p">);</span>
+      <span class="kr">const</span> <span class="nx">id</span> <span class="o">=</span> <span class="nx">uiID</span><span class="p">(</span><span class="nx">element</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">id</span> <span class="k">in</span> <span class="nx">uiMap</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">ids</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="nx">touchInputState</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nx">id</span> <span class="k">of</span> <span class="nx">ids</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">touchInputState</span> <span class="o">|=</span> <span class="nx">uiMap</span><span class="p">[</span><span class="nx">id</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="nx">updateInput</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">ids</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+    <span class="p">}</span>
+  <span class="p">},</span> <span class="kc">false</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="nx">registerTouchEvent</span><span class="p">(</span><span class="s2">&#34;touchstart&#34;</span><span class="p">);</span>
+<span class="nx">registerTouchEvent</span><span class="p">(</span><span class="s2">&#34;touchend&#34;</span><span class="p">);</span>
+<span class="nx">registerTouchEvent</span><span class="p">(</span><span class="s2">&#34;touchmove&#34;</span><span class="p">);</span>
+<span class="nx">registerTouchEvent</span><span class="p">(</span><span class="s2">&#34;touchcancel&#34;</span><span class="p">);</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="progressive-web-app-pwa-support">Progressive Web App (PWA) support</h3>
+<p>This mainly consisted of generating the <code>manifest.json</code> file to describe the application. A lot of tutorials I have found describing the setup of a PWA usually omitted to detail the ServiceWorker life cycle though. Every time the page loads, the <code>sw.js</code> file is checked for differences, and if there are any it&rsquo;ll load a new worker but only shut down the previous one when the page is closed and not when merely reloading (except when using Shift+F5). In the end, I added a simple way during the public deploy to add the git commit SHA in <code>sw.js</code> to reload it every time it changes and that also clears the cache. Otherwise files would still be in cache.</p>
+<p><img src="/media/articles/tt7.png" alt=""></p>
 <h2 id="wrapping-up-the-series">Wrapping up the series</h2>
+<p>It&rsquo;s been a long journey but it was a very good project personally. Some of things I had to learn and discover:</p>
+<ul>
+<li>Evolution of D as a language: I had to modify code from D v0.110 to work on the modern frontend D v2.093 (when I started the project it was the latest). This was great experience as I could see both evolution of language and standard library.</li>
+<li>Removing dependencies by writing my own parser for expressions and XML: this was fun and very satisfying once it was working.</li>
+<li>Porting from deprecated OpenGL to more modern API: this is close to my day job so it wasn&rsquo;t too bad, it&rsquo;s the usual thing of lowering the overhead of the CPU side by doing less things.</li>
+<li>Making a custom runtime for D was fun but painful at times: there is some progress being made here but it&rsquo;ll take a while before it becomes easier.</li>
+<li>Learning new(-ish) web technologies I hadn&rsquo;t touched before: WebAssembly, WebGL, WebAudio, LocalStorage, PWA</li>
+<li>Asking questions on the D forums was a great experience: the people are always helpful and everyone enjoys participating</li>
+</ul>
+<p>Finally, I don&rsquo;t think this is finished just yet as I&rsquo;m sure there&rsquo;ll be some feedback and issues found. Anyway, thanks for reading up to here. Enjoy the game!</p>
+<p>It&rsquo;s playable at <a href="https://torustrooper.xyz">https://torustrooper.xyz</a></p>
+<p>Code is available at <a href="https://github.com/speps/tt">https://github.com/speps/tt</a></p>
 
 	</div>
 </div>
-            <div id="footer"><p>2020-12-01 20:23:48 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
+            <div id="footer"><p>2020-12-16 14:52:31 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
         </div>
     </div>
 </body>

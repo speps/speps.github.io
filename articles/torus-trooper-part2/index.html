@@ -53,7 +53,7 @@
 <li><a href="/articles/torus-trooper-part3">Part 3 - Porting to WebAssembly</a></li>
 <li><a href="/articles/torus-trooper-part4">Part 4 - Final steps</a></li>
 </ul>
-<p>From part 1, we stopped after successfully compiling a new executable, but will it run?</p>
+<p>From part 1, I stopped after successfully compiling a new executable, but will it run?</p>
 <p>Answer is&hellip; NO!</p>
 <p>Alright, let&rsquo;s dig into it!</p>
 <h2 id="d1s-stdfilelistdir">D1&rsquo;s <code>std.file.listdir</code></h2>
@@ -433,7 +433,7 @@ abagames.tt.enemy*
 </code></pre></td></tr></table>
 </div>
 </div><h2 id="first-gameplay">First gameplay!</h2>
-<p>We can now run the game! However, not for long, or at least it&rsquo;s not very entertaining.</p>
+<p>I can now run the game! However, not for long, or at least it&rsquo;s not very entertaining.</p>
 <video controls src="/media/articles/tt_crash.mp4"></video>
 <p>Indeed it crashes whenever you destroy a big enemy&hellip; let&rsquo;s see the error:</p>
 <div class="highlight"><pre class="chroma"><code class="language-plaintext" data-lang="plaintext">object.Error@(0): Access Violation
@@ -512,7 +512,7 @@ abagames.tt.enemy*
      }
 </code></pre></td></tr></table>
 </div>
-</div><p>Of course, it&rsquo;s the <a href="/articles/torus-trooper-part2/#code-smell-using-static-state-for-non-static-code">code smell I preemptively tried to fix in part 1</a>&hellip;</p>
+</div><p>Of course, it&rsquo;s the <a href="#code-smell-using-static-state-for-non-static-code">code smell I preemptively tried to fix earlier</a>&hellip;</p>
 <p>I suspected my original fix might have had consequences down the line, at least this was easy to figure out. However, it shows you can&rsquo;t make assumptions about old code like this, everything has a purpose, don&rsquo;t fix it if it doesn&rsquo;t need fixing! My assumption here was that the <code>ShipShape</code> class had its <code>Rand</code> initialized the same way as the others but it hadn&rsquo;t&hellip;</p>
 <h2 id="wrapping-up-part-2">Wrapping up part 2</h2>
 <p>With this, the game is playable as far I could tell. Replays work, saves work and it behaves the same as the original executable!</p>
@@ -521,7 +521,7 @@ abagames.tt.enemy*
 
 	</div>
 </div>
-            <div id="footer"><p>2020-12-01 20:23:48 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
+            <div id="footer"><p>2020-12-16 14:52:31 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
         </div>
     </div>
 </body>
