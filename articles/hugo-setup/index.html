@@ -36,6 +36,7 @@
 		<div id="sideinfo">
 			<nav id="TableOfContents">
   <ul>
+    <li><a href="#disclaimer">Disclaimer</a></li>
     <li><a href="#have-your-hugo-website-ready">Have your Hugo website ready</a></li>
     <li><a href="#github-pages-setup">GitHub Pages setup</a></li>
     <li><a href="#travis-ci-setup">Travis CI setup</a>
@@ -51,7 +52,9 @@
 </nav>
 		</div>
 		
-		<p>This article aims to introduce and show how to generate your <a href="http://gohugo.io">Hugo</a> site on <a href="http://travis-ci.org">Travis CI</a> and then deploy it automatically to <a href="https://pages.github.com">GitHub Pages</a>.</p>
+		<h2 id="disclaimer">Disclaimer</h2>
+<p><strong>This article is now obsolete as TravisCI added severe limitations to their free tier. Use GitHub Actions which is <a href="https://github.com/speps/speps.github.io/blob/sources/.github/workflows/main.yml">what I used to replace the workflow</a> described here. Main difference with the usual tutorials is that I commit the <code>hugo</code> binary so I know what version is used and the website isn&rsquo;t broken by Hugo updates.</strong></p>
+<p>This article aims to introduce and show how to generate your <a href="http://gohugo.io">Hugo</a> site on <a href="http://travis-ci.org">Travis CI</a> and then deploy it automatically to <a href="https://pages.github.com">GitHub Pages</a>.</p>
 <h2 id="have-your-hugo-website-ready">Have your Hugo website ready</h2>
 <p>The first step is to have your Hugo website working locally at least. It should build without errors. The default output folder is <code>public</code>. NOTE: if you changed that using <code>publishdir</code> in your config file please change it in the following steps.</p>
 <p>For more information, please refer to <a href="https://gohugo.io/overview/quickstart/">Hugo&rsquo;s documentation</a>.</p>
@@ -171,7 +174,7 @@ git add hugo
 
 	</div>
 </div>
-            <div id="footer"><p>2020-11-18 17:40:46 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
+            <div id="footer"><p>2020-12-16 17:29:57 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
         </div>
     </div>
 </body>

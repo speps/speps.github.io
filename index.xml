@@ -61,8 +61,8 @@ D1&amp;rsquo;s std.file.listdir core.exception.RangeError@src\abagames\tt\barrag
       <pubDate>Sun, 24 Jan 2016 11:26:57 +0000</pubDate>
       
       <guid>http://speps.fr/articles/hugo-setup/</guid>
-      <description>This article aims to introduce and show how to generate your Hugo site on Travis CI and then deploy it automatically to GitHub Pages.
-Have your Hugo website ready The first step is to have your Hugo website working locally at least. It should build without errors. The default output folder is public. NOTE: if you changed that using publishdir in your config file please change it in the following steps.</description>
+      <description>Disclaimer This article is now obsolete as TravisCI added severe limitations to their free tier. Use GitHub Actions which is what I used to replace the workflow described here. Main difference with the usual tutorials is that I commit the hugo binary so I know what version is used and the website isn&amp;rsquo;t broken by Hugo updates.
+This article aims to introduce and show how to generate your Hugo site on Travis CI and then deploy it automatically to GitHub Pages.</description>
     </item>
     
     <item>
