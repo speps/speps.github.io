@@ -24,7 +24,7 @@ What made me remember this game is that :
 - Written in D, a language I didn't know at all while I was busy studying C++
 - It's awfully addictive!
 
-What better project than try to compile a **D v0.110** project in a modern version of D! So here we are...
+What better project than try to compile a **D v0.110** project in a modern version of D and possibly porting the game to WebAssembly+WebGL! So here we are...
 
 ## Switching from Ant to DUB
 
@@ -121,7 +121,7 @@ I did try a few searches without success so I asked on the D community forums an
 
 ## Replacing `char[]` with `string`
 
-D1 used to have `char[]` as the string type, and functions in `std.string` in Phobos to manipulate this type. D2 added a dedidcated `string` type instead of an alias. As a result, a lot of the code needs updating to deal with this. That includes the code in the custom bindings.
+D1 used to have `char[]` as the string type, and functions in `std.string` in Phobos to manipulate this type. D2 replaced this with an `alias string = immutable(char)[]`. As a result, a lot of the code needs updating to deal with this. That includes the code in the custom bindings.
 
 Most of the changes here are similar to this
 
@@ -463,6 +463,6 @@ The BulletML binding used `extern(C)` and that worked the same so no changes wer
 
 ## Wrapping up
 
-With all of this, we've managed to compile a new Windows executable! What amazed me is how little language changes were necessary. The biggest change was related to Phobos and deprecated library features.
+With all of this, I've managed to compile a new Windows executable! What amazed me is how little language changes were necessary. The biggest change was related to Phobos and deprecated library features.
 
 Running the game and seeing if it runs will be [part 2](/articles/torus-trooper-part2).

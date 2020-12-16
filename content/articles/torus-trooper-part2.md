@@ -10,7 +10,7 @@ See also
 * [Part 3 - Porting to WebAssembly](/articles/torus-trooper-part3)
 * [Part 4 - Final steps](/articles/torus-trooper-part4)
 
-From part 1, we stopped after successfully compiling a new executable, but will it run?
+From part 1, I stopped after successfully compiling a new executable, but will it run?
 
 Answer is... NO!
 
@@ -245,7 +245,7 @@ D1 had associative arrays that worked like C++'s `std::map` where you check for 
 
 ## First gameplay!
 
-We can now run the game! However, not for long, or at least it's not very entertaining.
+I can now run the game! However, not for long, or at least it's not very entertaining.
 
 {{< video src="/media/articles/tt_crash.mp4" >}}
 
@@ -297,7 +297,7 @@ index b240208..95e8d33 100644
      }
 ```
 
-Of course, it's the [code smell I preemptively tried to fix in part 1](/articles/torus-trooper-part2/#code-smell-using-static-state-for-non-static-code)...
+Of course, it's the [code smell I preemptively tried to fix earlier](#code-smell-using-static-state-for-non-static-code)...
 
 I suspected my original fix might have had consequences down the line, at least this was easy to figure out. However, it shows you can't make assumptions about old code like this, everything has a purpose, don't fix it if it doesn't need fixing! My assumption here was that the `ShipShape` class had its `Rand` initialized the same way as the others but it hadn't...
 

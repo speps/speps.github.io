@@ -12,7 +12,7 @@ See also
 
 ## Hooking up keyboard input
 
-Remember the interface we made earlier:
+Remember the interface described earlier:
 
 ```d
 public interface InputBackend {
@@ -43,7 +43,7 @@ public class InputBackendWASM : InputBackend {
 
 Very simple, the good thing is that the original code already used masks for gameplay inputs. I just had to add another bit for exit and another one for pause.
 
-From the JS side, we have `keydown`/`keyup` events that map the masks to the final value:
+From the JS side, there are `keydown`/`keyup` events that map the masks to the final value:
 
 ```js
 function maskInput(code, enable) {
@@ -82,11 +82,11 @@ window.addEventListener("keyup", function(event) {
 }, true);
 ```
 
-This works well enough, we can extend it later with more keys that map to the same input or make it customisable.
+This works well enough, it can be extended later with more keys that map to the same input or make it customisable.
 
 ## fmodf
 
-While doing the custom runtime, and because we're not using any C runtime stuff, it complained about an undefined `fmod` symbol at link time. It's a math function to compute the floating-point remainder of the operation x/y.
+While doing the custom runtime, and because it's not using any C runtime stuff, it complained about an undefined `fmod` symbol at link time. It's a math function to compute the floating-point remainder of the operation `x / y`.
 
 Unfortunately this doesn't have a JS `Math` equivalent like the other ones, but it works in JS with the `%` operator, so I just ended up using that:
 
@@ -107,7 +107,7 @@ private void createTorusShape(int n) {
 }
 ```
 
-However, during gameplay there are class instances that will live beyond the scope of a method and will need cleaning up once ununsed (eg. bullets or enemies). Ideally, we'd want the GC to take care of that for us but D doesn't really have a GC unless you use the `druntime` code. Best we can do do here is reuse memory as much as we can and identify which parts still need allocations.
+However, during gameplay there are class instances that will live beyond the scope of a method and will need cleaning up once ununsed (eg. bullets or enemies). Ideally, the GC would take care of that but D doesn't really have a GC unless you use the `druntime` code. Best here is to reuse memory as much as possible and identify which parts still need allocations.
 
 This is an area that probably needs more attention as it currently leaks memory but it's still possible to play through the game multiple times before it's an issue. Help would be appreciated on a solution, possibly making a very basic GC would be good but an easier way would just be to make a pool of most things that can be reused (some classes already did that but only for game stuff).
 
@@ -164,7 +164,7 @@ ubyte[] read(string path) {
 }
 ```
 
-Then we add a few new WASM exposed methods:
+Then add a few new WASM exposed methods:
 
 ```d
 extern (C) {
@@ -177,12 +177,12 @@ extern (C) {
 
 The main trick here was to make sure of 2 things:
 
-1. We can play the same sound effect multiple times in a row
-2. The music system needs to behave the same way as SDL_Mixer: only one music at once an, in a loop, and some way to fade before the next music is played
+* Playing the same sound effect multiple times in a row is possible
+* The music system needs to behave the same way as SDL_Mixer: only one music at once, in a loop, and some way to fade before the next music is played
 
 For 1, I found some StackOverflow answers that weren't satisfying until I discovered that `AudioContext.createBufferSource` can just be called every time we need to play a sound and we only need the `AudioBuffer` instances for each sound to be preloaded.
 
-For 2, we can reuse the same flow for preloading but we also need to connect a `GainNode` to control the volume and store the sound instance so we can stop it when the next music starts. Conveniently, the `gain` property is an `AudioParam` instance which has a `linearRampToValueAtTime` method which we'll use to fade out the music.
+For 2, the same flow can be reused for preloading but then also connect a `GainNode` to control the volume and store the sound instance so it can be stopped when the next music starts. Conveniently, the `gain` property is an `AudioParam` instance which has a `linearRampToValueAtTime` method which is used to fade out the music.
 
 ```js
     // ...
@@ -217,9 +217,9 @@ For 2, we can reuse the same flow for preloading but we also need to connect a `
 
 ## Fix game/draw loop
 
-On platforms where the game runs a bit slower, it looks a bit jarring as the whole gameplay slows down to a crawl. The usual way I fix this is by using the method from [Glenn Fiedler](https://gafferongames.com/post/fix_your_timestep/). It's similar to what the original game did but original had a sleep timer which isn't very practical and doesn't really accomodate for slow platforms.
+On platforms where the game runs a bit slower, it looks a bit jarring as the whole gameplay slows down to a crawl. The usual way I fix this is by using the method from [Glenn Fiedler](https://gafferongames.com/post/fix_your_timestep/). It's similar to what the original game did but original had a sleep timer which isn't very practical and doesn't really work in some contexts.
 
-The big change is splitting the update loop from the draw method. We can even do the game loop in JS to avoid having to pass frame times back and forth across the JS/WASM boundary.
+The big change is splitting the update loop from the draw method. The game loop is now done in JS to avoid having to pass frame times back and forth across the JS/WASM boundary.
 
 It looks something like this:
 
@@ -253,24 +253,129 @@ function loop(timestamp) {
 ```
 ## Loading screen
 
-With adding the audio, the transfer of `tt.wasm` is becoming a problem on first visit (it's cached afterwards). Before embedding the audio, the automatic compression in HTTP was doing an amazing job. However, with `.ogg` files it's not as efficient as those are already compressed. At the time of writing, it's a 5.49 MB transferred for a 7.66 MB total file size once decompressed. We'll need to find a solution and show a progress bar during loading.
+With adding the audio, the transfer of `tt.wasm` is becoming a problem on first visit (it's cached afterwards). Before embedding the audio, the server side compression in hTTP was doing an amazing job. However, with `.ogg` files it's not as efficient as those are already compressed. At the time of writing, it's a 5.49 MB transferred for a 7.66 MB total file size once decompressed. I'll need to find a solution and show a progress bar during loading.
 
-For this, I had the idea of using an embedded SVG document inside the index page to avoid multiple transfers and have a way of displaying the controls while it's loading. To get the SVG, I did a debug output of some of the vector art from the game into a SVG path syntax (for `d` attribute of a `path` element) and included that into the index page. That means the title is now visible even before we finish loading the WASM binary.
+For this, I had the idea of using an embedded SVG document inside the index page to avoid multiple transfers and have a way of displaying the controls while it's loading. To get the SVG, I did a debug output of some of the vector art from the game into a SVG path syntax (the `d` attribute of a `path` element) and included that into the index page. That means the game title is now visible even before the loading the WASM binary is done.
 
-With this, because all the static content is included in the index page, we can still show something if JavaScript is disabled. Then, if it's enabled, we can test for browser features we need and for optional ones. A message is displayed accordingly.
+With this, because all the static content is included in the index page, it's possible to show something if JavaScript is disabled. Then, if it's enabled, we can test for browser features required and for optional ones. A message is displayed accordingly.
 
-If everything works, we can use the Fetch API to have an accurate progress bar of how the WASM download is doing. If compression is enabled server side the `Content-Length` header from the HTTP request isn't accurate is it's the compressed size. The solution I used here is to hardcode the WASM size in the JS code as it's unlikely to change drastically anyway.
+If everything works, the Fetch API is used to report an accurate progress bar of how the WASM download is doing. If compression is enabled server side the `Content-Length` header from the HTTP request isn't accurate is it's the compressed size. The solution I used here is to hardcode the WASM size in the JS code as it's unlikely to change drastically anyway.
 
 {{< video src="/media/articles/tt_loading.mp4" >}}
 
 ## Saving local scores/replays
 
+The game save 2 types of files: a `tt.prf` file which contains high-scores and unlocked levels, replays as `last.rpl` and `error.rpl`. I'm going to map the `std.file.read` and `std.file.write` functions to read/write with the LocalStorage API in JavaScript. The only trick here is that LocalStorage is a string key/value store, it maps string keys to string values. It's very simple to use for my binary data, I have to convert the files to/from a string. I tried using the `btoa`/`atob` calls in JavaScript but it expects well-formed strings which aren't going to work the data the game is writing as it can contain invalid UTF-8 sequences for example. So I just converted to a hex string, eg. `[104, 101, 108, 108, 111]` becomes `68656c6c6f` and vice-versa.
+
+```js
+function bin2hex(buf) {
+  return buf.reduce(function(hexstr, byte) {
+    return hexstr + ('0' + (byte & 0xFF).toString(16)).slice(-2);
+  }, "");
+}
+function hex2bin(hexstr) {
+  return Uint8Array.from(hexstr.match(/../g).reduce(function(bytes, hex) {
+    bytes.push(parseInt(hex, 16));
+    return bytes;
+  }, []));
+}
+
+// ...
+
+wasm_writeFile: function(nameptr, namelen, dataptr, datalen) {
+  const name = decoder.decode(new Uint8Array(memory.buffer, nameptr, namelen));
+  const data = new Uint8Array(memory.buffer, dataptr, datalen);
+  const str = bin2hex(data);
+  localStorage.setItem(name, str);
+  console.log("saved " + name + " with " + data.length + " bytes");
+},
+
+```
+
+Note the files are binary compatible with the original game. If you have a replay or high-scores, you can technically import them in the browser using the Dev Tools and have the online version of the game load them.
+
 ## Mobile support
+
+A lot of people nowadays just browse on mobile (hello you!), I thought it would be great if the game was somewhat playable on mobile. It's a lot of work to get it to behave close to a native app but I tried to do that.
 
 ### Fullscreen mode
 
+This is easy, there is an API for it that's been around for a while. I just had to add a button.
+
 ### On screen controls
+
+A bit harder, but I didn't want to make it too complicated. The main element here is a SVG layer on top that has elements with `id` attribute set. Every time a touch event happens, the touched elements are checked and the `id` is mapped to the bitmask the game knows.
+
+```js
+const uiMap = {
+  uiA: 0x10,
+  uiB: 0x20,
+  uiBack: 0x40,
+  uiDirR: 0x8,
+  uiDirBR: 0xA,
+  uiDirB: 0x2,
+  uiDirBL: 0x6,
+  uiDirL: 0x4,
+  uiDirTL: 0x5,
+  uiDirT: 0x1,
+  uiDirTR: 0x9
+};
+function uiID(element) {
+  if (element) {
+    if (element.id) {
+      return element.id;
+    }
+    if (element.parentNode) {
+      return element.parentNode.id;
+    }
+  }
+  return null;
+}
+function registerTouchEvent(name, state) {
+  window.addEventListener(name, function(event) {
+    var ids = [];
+    for (const touch of event.touches) {
+      const element = document.elementFromPoint(touch.clientX, touch.clientY);
+      const id = uiID(element);
+      if (id in uiMap) {
+        ids.push(id);
+      }
+    }
+    touchInputState = 0;
+    for (id of ids) {
+      touchInputState |= uiMap[id];
+    }
+    updateInput();
+    if (ids.length > 0) {
+      event.preventDefault();
+    }
+  }, false);
+}
+registerTouchEvent("touchstart");
+registerTouchEvent("touchend");
+registerTouchEvent("touchmove");
+registerTouchEvent("touchcancel");
+```
+
+### Progressive Web App (PWA) support
+
+This mainly consisted of generating the `manifest.json` file to describe the application. A lot of tutorials I have found describing the setup of a PWA usually omitted to detail the ServiceWorker life cycle though. Every time the page loads, the `sw.js` file is checked for differences, and if there are any it'll load a new worker but only shut down the previous one when the page is closed and not when merely reloading (except when using Shift+F5). In the end, I added a simple way during the public deploy to add the git commit SHA in `sw.js` to reload it every time it changes and that also clears the cache. Otherwise files would still be in cache.
+
+![](/media/articles/tt7.png)
 
 ## Wrapping up the series
 
+It's been a long journey but it was a very good project personally. Some of things I had to learn and discover:
 
+* Evolution of D as a language: I had to modify code from D v0.110 to work on the modern frontend D v2.093 (when I started the project it was the latest). This was great experience as I could see both evolution of language and standard library.
+* Removing dependencies by writing my own parser for expressions and XML: this was fun and very satisfying once it was working.
+* Porting from deprecated OpenGL to more modern API: this is close to my day job so it wasn't too bad, it's the usual thing of lowering the overhead of the CPU side by doing less things.
+* Making a custom runtime for D was fun but painful at times: there is some progress being made here but it'll take a while before it becomes easier.
+* Learning new(-ish) web technologies I hadn't touched before: WebAssembly, WebGL, WebAudio, LocalStorage, PWA
+* Asking questions on the D forums was a great experience: the people are always helpful and everyone enjoys participating
+
+Finally, I don't think this is finished just yet as I'm sure there'll be some feedback and issues found. Anyway, thanks for reading up to here. Enjoy the game!
+
+It's playable at https://torustrooper.xyz
+
+Code is available at https://github.com/speps/tt

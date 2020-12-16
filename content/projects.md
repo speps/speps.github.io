@@ -5,6 +5,11 @@ title = "Projects"
 
 # Active Projects
 
+* [Torus Trooper](https://tt.speps.fr), a reboot of an old game I liked and found the source code of
+	* [Part 1 - Compiling a new executable](/articles/torus-trooper-part1)
+	* [Part 2 - Running the game for the first time](/articles/torus-trooper-part2)
+	* [Part 3 - Porting to WebAssembly](/articles/torus-trooper-part3)
+	* [Part 4 - Final steps](/articles/torus-trooper-part4)
 * [LibTessDotNet](https://github.com/speps/LibTessDotNet), C# port of the GLU tessellator
 * [XInput.NET](https://github.com/speps/XInputDotNet), XInput plugin for Unity
 

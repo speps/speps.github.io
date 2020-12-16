@@ -28,7 +28,7 @@ I could even open the original Visual C++ project in Visual Studio 2019 without 
 
 ### Reading the original code
 
-The original C++ BulletML code was an interesting read. It used TinyXML to parse XML, which is an old C++ library that came as a .cpp/.h files for easy integration. The BulletML data also allows expressions that specify the behaviour of the bullets. This expression parser was written using a YACC grammar, most likely the example grammar from YACC modified to allow for defining variables.
+The original C++ BulletML code was an interesting read. It used TinyXML to parse XML, which is an old C++ library that came as a .h/.cpp files for easy integration. The BulletML data also allows expressions that specify the behaviour of the bullets. This expression parser was written using a YACC grammar, from what I could tell it's close to the example grammar from YACC modified to allow for defining variables.
 
 The main part of the original code is actually the runner code. The runner is what evaluates the behaviours defined in XML (and parsed into runtime structures).
 
@@ -50,7 +50,7 @@ At first, I just used [dxml](https://code.dlang.org/packages/dxml) and it was fi
 
 Finally, I decided I would just reuse the lexer base code from the expression parser and made it output XML events like SAX parser but all at once as an array. I only needed to parse XML files, and they were quite simple anyway so it worked out perfectly.
 
-I was finally able to load the BulletML XML files without any dependencies, no DUB package or .dll/.lib from the original code.
+I was finally able to load the BulletML XML files without any dependencies, no external DUB package or .dll/.lib from the original code.
 
 ## Modern OpenGL
 
@@ -236,7 +236,7 @@ static class GL
 }
 ```
 
-Using this, all OpenGL calls now go through these methods. From here, you'll need to:
+Using this, all OpenGL calls now go through these methods. From here, I'll need to:
 
 * Record what `glBegin`/`glVertex`/`glEnd` receive
 * Record the matrix stack
@@ -250,10 +250,10 @@ Doing it this way works but has some drawbacks:
 However, it's not too difficult once this is in place:
 
 * Apply the model-view matrix from the stack when you record the calls to `glVertex`, that's so one buffer can store vertices from multiple `glBegin`/`glEnd` pairs
-* When recording vertices, map the primitive type to triangles and lines buckets, that helps with performance as we can push more of the same data into the buffers. We map `GL_TRIANGLE_STRIP` to normal triangles, and we can also support `GL_QUADS` quite easily. We also map `GL_LINE_STRIP`/`GL_LINE_LOOP` to `GL_LINES`.
+* When recording vertices, map the primitive type to triangles and lines buckets, that helps with performance as I can push more of the same data into the buffers. We map `GL_TRIANGLE_STRIP` to normal triangles, and we can also support `GL_QUADS` quite easily. I also map `GL_LINE_STRIP`/`GL_LINE_LOOP` to `GL_LINES`.
 * Render the primitives recorded so far whenever the state changes like `glBlendFunc` or the projection matrix changes
 
-It's now a lot faster as we don't have to upload to the GPU as often and the number of draw calls is significantly lower. However, we now have to do some matrix math CPU side in our own code. We're back to the steady 60 FPS we had back in immediate mode but the code now conforms to a more recent OpenGL API closer to what WebGL would expect.
+It's now a lot faster as I don't have to upload to the GPU as often and the number of draw calls is significantly lower. However, I now have to do some matrix math CPU side in our own code. It's back to the steady 60 FPS we had back in immediate mode but the code now conforms to a more recent OpenGL API closer to what WebGL would expect.
 
 Note that to simplify the porting effort, it's usually good to skip parts that will be an issue. Removing some code paths with less used features helps to reduce the amount of code that needs porting. For example, the title screen has a logo of the game loaded from a `.bmp` file. However, it also features text displayed as LCD style letters so I replaced the image with those letters and now nothing has to load images, removing some OpenGL, SDL and IO code.
 
@@ -263,7 +263,7 @@ One of the things that helps with cross platform development is some kind of abs
 
 ### Input
 
-The `Pad` class handles reading keyboard values using `SDL_GetKeyboardState`. It's also inherited by `RecordablePad` which handles doing the replays by recording the inputs. This design is okay but to be able to replace the backend of how inputs are fed into it, I modified `Pad` to receive a `Input` interface like this:
+The `Pad` class handles reading keyboard values using `SDL_GetKeyboardState`. It's also inherited by `RecordablePad` which handles doing the replays by recording the inputs. This design is okay but to be able to replace the backend of how inputs are fed into it, I modified `Pad` to receive a `InputBackend` interface like this:
 
 ```d
 public interface InputBackend {
@@ -318,17 +318,17 @@ private:
 }
 ```
 
-And an instance of `InputBackendSDL` passed where we create the `RecordablePad` instance.
+And an instance of `InputBackendSDL` passed where the `RecordablePad` instance is created.
 
 Note again that I've simplified the code to not support reversing the buttons and removed joystick support. These can be added later in a better way. I feel like it's important to get some progress instead of being stuck on details for now.
 
 ### Window management
 
-SDL is used for initializing the window and creating the OpenGL context. It's not difficult to isolate this the original code. Most of the SDL calls are done in the `Screen3D` class. For WebAssembly, we won't need a window as render directly to a HTML5 canvas element, so we'll stub most methods here.
+SDL is used for initializing the window and creating the OpenGL context. It's not difficult to isolate this the original code. Most of the SDL calls are done in the `Screen3D` class. For WebAssembly, there's no need for a window as render directly to a HTML5 canvas element, so we'll stub most methods here.
 
 ### File system
 
-Given the small amount of files required by the game to be loaded on startup (and remember I removed images from that original list), we can embed these files. D has a handy feature equivalent to C's `#include`. It's using the call `import(fileName)` to load a file to a byte array which is embedded into the executable.
+Given the small amount of files required by the game to be loaded on startup (and remember I removed images from that original list), it's possible to embed these files. D has a handy feature equivalent to C's `#include`. It's using the call `import(fileName)` to load a file to a byte array which is embedded into the executable.
 
 ```d
 string readText(string path) {
@@ -387,7 +387,7 @@ While doing this I found it helpful to have a version of the game that ran with 
 
 ## WebGL / WebAssembly
 
-After I got everything to compile, I had to sort out the WebAssembly/JavaScript side. That wasn't too hard but I only found at this point that I wasn't exporting symbols apart from `_start`. That was easily solved by adding `--export=dynamic`. I took care of only using WebGL 1.0 compatible calls in the new OpenGL I wrote so the interface for this wasn't too difficult, the only issue I had was with converting IDs used by OpenGL to/from JS Objects used by WebGL. I got confused by `getUniformLocation` which returns an object but `getAttribLocation` returns an index.
+After I got everything to compile, I had to sort out the WebAssembly/JavaScript side. That wasn't too hard but I only found at this point that I wasn't exporting symbols apart from `_start`. That was easily solved by adding `--export=dynamic`. I took care of only using WebGL 1.0 compatible calls in the new OpenGL code I wrote so the interface for this wasn't too difficult, the only issue I had was with converting IDs used by OpenGL to/from JS Objects used by WebGL. I got confused by `getUniformLocation` which returns an object but `getAttribLocation` returns an index.
 
 I will also note that I didn't want to implement my own math functions so those are redirected to the JS Math ones and it works for now.
 
