@@ -465,7 +465,7 @@
 </code></pre></td></tr></table>
 </div>
 </div><h2 id="loading-screen">Loading screen</h2>
-<p>With adding the audio, the transfer of <code>tt.wasm</code> is becoming a problem on first visit (it&rsquo;s cached afterwards). Before embedding the audio, the server side compression in hTTP was doing an amazing job. However, with <code>.ogg</code> files it&rsquo;s not as efficient as those are already compressed. At the time of writing, it&rsquo;s a 5.49 MB transferred for a 7.66 MB total file size once decompressed. I&rsquo;ll need to find a solution and show a progress bar during loading.</p>
+<p>With adding the audio, the transfer of <code>tt.wasm</code> is becoming a problem on first visit (it&rsquo;s cached afterwards). Before embedding the audio, the server side compression in HTTP was doing an amazing job. However, with <code>.ogg</code> files it&rsquo;s not as efficient as those are already compressed. At the time of writing, it&rsquo;s a 5.49 MB transferred for a 7.66 MB total file size once decompressed. I&rsquo;ll need to find a solution and show a progress bar during loading.</p>
 <p>For this, I had the idea of using an embedded SVG document inside the index page to avoid multiple transfers and have a way of displaying the controls while it&rsquo;s loading. To get the SVG, I did a debug output of some of the vector art from the game into a SVG path syntax (the <code>d</code> attribute of a <code>path</code> element) and included that into the index page. That means the game title is now visible even before the loading the WASM binary is done.</p>
 <p>With this, because all the static content is included in the index page, it&rsquo;s possible to show something if JavaScript is disabled. Then, if it&rsquo;s enabled, we can test for browser features required and for optional ones. A message is displayed accordingly.</p>
 <p>If everything works, the Fetch API is used to report an accurate progress bar of how the WASM download is doing. If compression is enabled server side the <code>Content-Length</code> header from the HTTP request isn&rsquo;t accurate is it&rsquo;s the compressed size. The solution I used here is to hardcode the WASM size in the JS code as it&rsquo;s unlikely to change drastically anyway.</p>
@@ -650,7 +650,7 @@
 
 	</div>
 </div>
-            <div id="footer"><p>2020-12-16 14:52:31 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
+            <div id="footer"><p>2020-12-17 13:08:26 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
         </div>
     </div>
 </body>
