@@ -253,7 +253,7 @@ function loop(timestamp) {
 ```
 ## Loading screen
 
-With adding the audio, the transfer of `tt.wasm` is becoming a problem on first visit (it's cached afterwards). Before embedding the audio, the server side compression in hTTP was doing an amazing job. However, with `.ogg` files it's not as efficient as those are already compressed. At the time of writing, it's a 5.49 MB transferred for a 7.66 MB total file size once decompressed. I'll need to find a solution and show a progress bar during loading.
+With adding the audio, the transfer of `tt.wasm` is becoming a problem on first visit (it's cached afterwards). Before embedding the audio, the server side compression in HTTP was doing an amazing job. However, with `.ogg` files it's not as efficient as those are already compressed. At the time of writing, it's a 5.49 MB transferred for a 7.66 MB total file size once decompressed. I'll need to find a solution and show a progress bar during loading.
 
 For this, I had the idea of using an embedded SVG document inside the index page to avoid multiple transfers and have a way of displaying the controls while it's loading. To get the SVG, I did a debug output of some of the vector art from the game into a SVG path syntax (the `d` attribute of a `path` element) and included that into the index page. That means the game title is now visible even before the loading the WASM binary is done.
 
