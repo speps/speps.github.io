@@ -1,0 +1,7 @@
+<div class="applet">
+	<canvas id="app-{{ .Get "id" }}" width="{{ .Get "w" }}" height="{{ .Get "h" }}"></canvas>
+	<script type="text/javascript">
+		var canvas_id = "app-" + "{{ .Get "id" }}";
+	</script>
+	<script src="{{ .Get "src" }}"></script>
+</div>

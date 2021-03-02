@@ -1,6 +1,6 @@
 baseurl = "http://speps.fr/"
 languageCode = "en-us"
-title = "speps.fr - Rémi Gillig"
+title = "speps.fr"
 theme = "speps"
 pygmentsUseClasses = true
 

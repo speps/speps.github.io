@@ -149,12 +149,13 @@ body, html
     color: #000;
 }
 
-#content img, #content video
+#content img, #content video, #content figure
 {
     max-width: 80%;
     height: auto;
     margin: 0 auto;
     display: block;
+    text-align: center;
 }
 
 #content a
@@ -205,19 +206,56 @@ body, html
     font-family: "Consolas", "Monaco", "Menlo", "Courier New", Courier, monospace;
 }
 
-#content code
+#content p > code
 {
-    font-weight: 400;
+    font-weight: 600;
+    background-color: #eee;
 }
 
 #content .highlight > code {
     font-weight: 100;
 }
 
+#content figure {
+    margin: 0.5em auto;
+}
+
+#content figure img {
+    margin: 0;
+    max-width: 100%;
+    display: inline;
+}
+
+#content figure figcaption {
+    margin: 0;
+    max-width: 100%;
+    display: inline-block;
+    padding: 10px;
+    background-color: #eee;
+}
+
 #content ul
 {
     margin-left: 2em;
     list-style-type: square;
+}
+
+#content blockquote {
+    width: 80%;
+    margin: 0 auto;
+    background-color: #eee;
+    border-left: 4px solid #ccc;
+    padding: 0.5em 20px;
+}
+
+#content .applet {
+    text-align: center;
+    margin: 0.5em 0px;
+}
+
+#content .applet > canvas {
+    display: inline;
+    border: 1px solid #ccc;
 }
 
 #content .highlight
