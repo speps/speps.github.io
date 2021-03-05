@@ -1,4 +1,5 @@
 +++
+tags = ["articles"]
 date = "2016-01-24T11:26:57Z"
 title = "Setup Hugo with Travis CI and GitHub Pages"
 toc = true

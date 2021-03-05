@@ -1,4 +1,5 @@
 +++
+tags = ["articles"]
 date = "2013-08-10T21:31:30Z"
 title = "Debugging a DirectX memory leak"
 +++

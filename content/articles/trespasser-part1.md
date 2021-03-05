@@ -1,7 +1,7 @@
 +++
+tags = ["articles"]
 date = "2021-01-21T13:31:42Z"
-title = "Trespasser - C++ archeology and oxidization - Part 1 Loading Data"
-draft = true
+title = "Trespasser - C++ archeology and oxidization - Part 1 Loading Scene Data"
 +++
 
 This series will be about the video game Jurassic Park Trespasser. My goal is to be able to play the game by rewriting its source code in Rust based on the original C++ code base. Hopefully discovering interesting things along the way.
@@ -10,7 +10,7 @@ This series will be about the video game Jurassic Park Trespasser. My goal is to
 
 Not sure why I like this game, I only played it properly once, never finished it but I was amazed by the technical aspects of it. Even with all the technical issues, I'm sure all the fans will agree that being chased by a clumsy raptor while trying to wrangle a rifle with one hand is an experience that only this game can give.
 
-For this project, I decided to go back to Rust after trying it for Advent of Code a few years ago and failing to grasp its concepts in the short allocated time for the puzzles. This time around, I have time to read the documentation and understand what I'm doing wrong. It also helps that the tools have immensily improved like the LSP server for VS Code which is great for writing in a language you don't know well enough yet. It also seemed like an appropriate language, being in its infancy (relatively speaking), similar to what C++ was like when the game was created originally. The game was developed was compilers that didn't understand the standard very well yet and lots of workarounds had to be added.
+For this project, I decided to go back to Rust after trying it for Advent of Code a few years ago and failing to grasp its concepts in the short allocated time for the puzzles. This time around, I have time to read the documentation and understand what I'm doing wrong. It also helps that the tools have immensily improved like the LSP server for VS Code which is great for writing in a language you don't know well enough yet. The game was developed with compilers that didn't understand the standard very well yet and lots of workarounds had to be added.
 
 For more background on the game, I would recommend these links:
 
@@ -91,7 +91,7 @@ public:
 };
 ```
 
-Note that we've actually been dealing with what's called a GROFF file structure in .SCN files. A GROFF structure is organized like this:
+Note that we've actually been dealing with what's called a GROFF file structure in `.SCN` files. A GROFF structure is organized like this:
 
 ```cpp
 // Definition of the file header structure.
@@ -146,7 +146,7 @@ The number of GROFF files and the length of their names is hardcoded, in this ca
 
 ### GRF files
 
-As expected `BE.GRF` is a GROFF file. However, when opening it in a hex editor, it doesn't start with `BE BA CE 0A`, but it starts with `SZDD` in ASCII. A quick search shows that it's the compression format used by the DOS utility named `COMPRESS.EXE` and is quite well-known, and contemporary with the game. It's also easy to read/write with this type of compression using `LZOpen`/`LZRead` Windows APIs which is what the game used at runtime.
+As expected `BE.GRF` is a GROFF file. However, when opening it in a hex editor, it doesn't start with `BE BA CE 0A`, but it starts with `SZDD` in ASCII. A quick search shows that it's the compression format used by the DOS utility named `COMPRESS.EXE` as well as the `LZOpen`/`LZRead` Windows APIs which is what the game used at runtime.
 
 I used [this page](https://www.cabextract.org.uk/libmspack/doc/szdd_kwaj_format.html) as a reference to implement my own decompressor which implements the Rust `Read` trait and can be chained with the other parsers if needed. Here is the decompressor pseudo-code from the page:
 
@@ -314,6 +314,21 @@ These files are an "image directory". It contains just a list of descriptors for
 ```cpp
 //**********************************************************************************************
 //
+struct SDirectoryFileHeader
+{
+    uint32  u4Version;
+    uint32  u4BumpMapBitDepth;          // number of bits in the bump maps ithin the swap file
+    uint32  u4RasterChunkOffset;        // file offset from start of file to first Raster chunk
+    uint32  u4RasterChunkCount;         // number of raster chunks
+    uint32  u4PaletteOffset;            // offset to the palettes
+    uint32  u4PaletteCount;             // number of palettes
+    uint32  u4PageableOffset;           // Offset of the first byte that can be dynamically paged
+    uint32  u4NonPageableCount;         // Number of bytes from the start of the swap file that 
+                                        // cannot be paged. This can be less than u4PageableOffset
+};
+
+//**********************************************************************************************
+//
 struct SDirectoryFileChunk
 {
     uint32  u4Size;                     // size of this chunk (offset to next chunk)
@@ -330,7 +345,6 @@ struct SDirectoryFileChunk
     uint64  u8HashValue;                // ID of the raster
 };
 
-
 //**********************************************************************************************
 //
 struct SDirectoryPaletteChunk
@@ -345,7 +359,7 @@ struct SDirectoryPaletteChunk
 };
 ```
 
-You'll notice that textures can be paletted which is quite common for space saving in games back then.
+Some members point to offsets into the next file format we'll investigate. You'll also notice that textures can be paletted which is quite common for space saving in games back then. 
 
 ### SPZ files
 
@@ -358,17 +372,21 @@ And that's also a compressed format! The uncompressed size is about 54.5MB. Howe
 * The start position inside the decompression window is different
 * The window buffer is initialized to 0 instead of space characters
 
-Looking at the `SDirectoryFileChunk` structure above, the value in `u4VMOffset` is actually an offset from the beginning of the uncompressed data from the `.SPZ` files. Because compressed data can't be addressed this way, the original game would decompress the `.SPZ` files on demand and write out a `.SWP` file with the uncompressed data, and it's that one that would be read for each texture.
+Looking at the `SDirectoryFileChunk` structure above, the value in `u4VMOffset` is actually an offset from the beginning of the uncompressed data from the `.SPZ` files. Because compressed data can't be addressed this way, the original game would decompress the `.SPZ` files on demand and write out a `.SWP` file with the uncompressed data to the hard disk, and it's that one that would be read for each texture.
 
 However, for us, it's now just easier to load and decompress the whole file in memory. We can then fetch the data using the `u4VMOffset` value into a `[u8]` in Rust.
 
+The game supports [mipmaps](https://en.wikipedia.org/wiki/Mipmap) for textures. Each mipmap is hashed into a `u64` value and the bottom 32 bits are shared between all the mips.
+
+{{< figure src="/media/articles/jpt9.png" title="Example of a mipmap chain extracted from the game (256x256 to 8x8, zoomed 4x)" >}}
+
 ## Terrain
 
-As explained earlier, the terrain data is constructed from a point cloud to start with, during authoring time exported to a `.TRI` file from 3DSMax. This is then compressed into a quad-tree with wavelet transform coefficients at each vertex. Vertices are shared between the quad tree nodes. At runtime, this data is saved into a `.WTD` file which has a small header and a list of every node, for each descendant node (all 4) a bit is stored to know if it has data and children to read.
+The terrain data is constructed from a point cloud to start with, during authoring time exported to a `.TRR` file from 3DSMax. This is then compressed into a quad-tree with wavelet transform coefficients at each vertex. Vertices are shared between the quad tree nodes. For runtime, this data is saved into a `.WTD` file which has a small header and a list of every node, for each descendant node (a node is always subdivided into 4 at a time when required) a bit is stored to know if it has data and children to read.
 
-The way this file is read is slightly different than other ones in that it loads the file data as an array of `u32`. Reads are done by specifying how many bits are needed, the twist is that these bits are read higher to lower from each `u32`. So, when looking at the file in a hex editor it doesn't make much sense as you are mixing little-endian `u32` values but they bits are reversed.
+The way this file is read is slightly different than other ones in that it loads the file data as an array of `u32`. Reads are done by specifying how many bits are needed, the twist is that these bits are read higher to lower from each `u32`. So, when looking at the file in a hex editor it doesn't make much sense as you are mixing little-endian `u32` values but their bytes are reversed. For example, writing 8 bytes from 0 to 7 gives `03 02 01 00 07 06 05 04` instead of the usual `00 01 02 03 04 05 06 07`. With more complicated data, it was confusing at first.
 
-From the C++ code, here are some interesting bits regarding the quad-tree:
+From the C++ code, here are some interesting bits regarding the quad-tree code:
 
 ```cpp
     //**********************************************************************************************
@@ -449,7 +467,7 @@ From https://en.wikipedia.org/wiki/Cohen-Daubechies-Feauveau_wavelet#Numbering
 
 > The same wavelet may therefore be referred to as "CDF 9/7" (based on the filter sizes) or "biorthogonal 4, 4" (based on the vanishing moments). Similarly, the same wavelet may therefore be referred to as "CDF 5/3" (based on the filter sizes) or "biorthogonal 2, 2" (based on the vanishing moments).
 
-In our case, the transform is also called "CDF 5/3", and from the same wikipedia page, we can confirm that it's a lossless transform:
+In our case, the transform is also called "CDF 5/3", and from the same Wikipedia page, we can confirm that it's a lossless transform:
 
 > The JPEG 2000 compression standard uses the biorthogonal LeGall-Tabatabai (LGT) 5/3 wavelet (developed by D. Le Gall and Ali J. Tabatabai) for lossless compression and a CDF 9/7 wavelet for lossy compression.
 
@@ -459,4 +477,90 @@ I found a very interesting article and it helped me a lot to understand the basi
 
 > So when you use a Wavelet Transform the signal is deconstructed using the same wavelet at different scales, rather than the same sin() wave at different frequencies. As there are hundreds of different wavelets, there are hundreds of different transforms that are possible and therefore hundreds of different domains. However each domain has ‘scale’ on the x-axis rather than ‘frequency’, and provides better resolution in the time domain by being limited.
 
-{{< canvas id="wavelet" w="1200" h="800" src="/media/articles/jpt-wavelet.js" >}}
+When searching for examples of a Discrete Wavelet Transform online, one of the reference materials often found is the [`dwt53.c` example from Grégoire Pau](https://gist.github.com/speps/572469989ac552df3d844a18a895bb15). I ported it to JavaScript to make this visualization below.
+
+{{< canvas id="wavelet" w="1026" h="1282" src="/media/articles/jpt_wavelet.js" >}}
+
+The main take away I got from this is that with each transform, the original signal gets compressed into approximation coefficients and detail coefficients. The approximation coefficients once the transform is applied enough times, will have only one value left. The detail coefficients end up with values that make them more compressible and you're able to compress the data more efficiently. For the terrain quad-tree nodes, that property is used to use less and less bits to store the wavelet coefficients depending on the subdivision level.
+
+The Wikipedia example with an image shows that quite clearly:
+
+[![](/media/articles/jpt6.png)](https://commons.wikimedia.org/wiki/File:Jpeg2000_2-level_wavelet_transform-lichtenstein.png)
+
+After this interlude on wavelets, we can dig into parsing the `BE.WTD` file. Here is its header after parsing the file in Rust:
+
+```plaintext {hl_lines=[5,6,7]}
+TransformedDataHeader {
+    version: 1001,
+    num_quad_nodes: 17365,
+    num_quad_vertices: 14490,
+    coef_root: Coef(
+        15898,
+    ),
+    conversions: Mapping {
+        quad_extents: IRectangle {
+            start: IVector2 {
+                x: 0,
+                y: 0,
+            },
+            size: IVector2 {
+                x: 8192,
+                y: 8192,
+            },
+        },
+        world_extents: FRectangle {
+            start: FVector2 {
+                x: -2816.0,
+                y: -1792.0,
+            },
+            size: FVector2 {
+                x: 2048.0,
+                y: 2048.0,
+            },
+        },
+        quad_to_world: FTransLinear2 {
+            x: FTransLinear {
+                scale: 0.25,
+                offset: -2816.0,
+            },
+            y: FTransLinear {
+                scale: 0.25,
+                offset: -1792.0,
+            },
+        },
+        world_to_quad: FTransLinear2 {
+            x: FTransLinear {
+                scale: 4.0,
+                offset: 11264.0,
+            },
+            y: FTransLinear {
+                scale: 4.0,
+                offset: 7168.0,
+            },
+        },
+        world_to_coef: 292.69296,
+        coef_to_world: 0.0034165496,
+        coef_to_quad: 0.013666199,
+    },
+}
+```
+
+As you can see in the highlighted lines above, it contains the root coefficient, which is the one wavelet coefficient I was talking about. It also contains scales to transform to/from quad-tree coordinates and also to/from wavelet coefficients and world coordinates. That's how the world Z value of each terrain vertex is obtained mesh from the integer wavelet coefficients.
+
+For ease of porting for now, I decided to subdivide the quad-tree to the maximum possible to get the full resolution of the tree. In the original code, it would compute the best subdivision factor for each quad depending on the desired pixel density. Once I get to porting gameplay features, I'll be able to reproduce that behaviour and query the player position, camera position, etc. to compute the original parameters to subdivide.
+
+Finally, we can obtain a mesh of the fully subdivided terrain from the Rust code.
+
+![](/media/articles/jpt7.png)
+![](/media/articles/jpt8.png)
+
+## Conclusion
+
+We have been able to read all the scene files that were available to us:
+
+* `BE.SCN`: references the `.GRF` files and contains some other basic scene information
+* `BE.GRF`: contains most of the scene data like entities, meshes, animations, triggers, etc.
+* `BE.PID`+`BE.SPZ`: contains all the texture data, used as streaming format that would be temporarily expanded on the hard disk
+* `BE.WTD`: wavelet compressed terrain data stored as quad-tree
+
+Just from these files, we are able to reproduce a lot of the scene data. Glueing this data together to produce textures meshes placed on the terrain will be the next step in this series. See you soon!

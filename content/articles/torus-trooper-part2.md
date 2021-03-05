@@ -1,4 +1,5 @@
 +++
+tags = ["articles"]
 date = "2020-07-19T22:23:30Z"
 title = "Torus Trooper - Rebooting a 15 year-old game written in D - Part 2 Running"
 +++
