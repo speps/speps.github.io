@@ -206,14 +206,15 @@ body, html
     font-family: "Consolas", "Monaco", "Menlo", "Courier New", Courier, monospace;
 }
 
-#content p > code
+#content code
 {
     font-weight: 600;
     background-color: #eee;
 }
 
-#content .highlight > code {
+#content .highlight code {
     font-weight: 100;
+    background-color: transparent;
 }
 
 #content figure {
@@ -255,7 +256,6 @@ body, html
 
 #content .applet > canvas {
     display: inline;
-    border: 1px solid #ccc;
 }
 
 #content .highlight

@@ -6,10 +6,19 @@
     <description>Recent content in Tags on speps.fr</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 15 Jan 2016 16:01:45 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 21 Jan 2021 13:31:42 +0000</lastBuildDate>
     
 	<atom:link href="http://speps.fr/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>articles</title>
+      <link>http://speps.fr/tags/articles/</link>
+      <pubDate>Thu, 21 Jan 2021 13:31:42 +0000</pubDate>
+      
+      <guid>http://speps.fr/tags/articles/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>profile</title>
