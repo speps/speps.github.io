@@ -563,4 +563,4 @@ We have been able to read all the scene files that were available to us:
 * `BE.PID`+`BE.SPZ`: contains all the texture data, used as streaming format that would be temporarily expanded on the hard disk
 * `BE.WTD`: wavelet compressed terrain data stored as quad-tree
 
-Just from these files, we are able to reproduce a lot of the scene data. Glueing this data together to produce textures meshes placed on the terrain will be the next step in this series. See you soon!
+Just from these files, we are able to reproduce a lot of the scene data. Glueing this data together to produce textured meshes placed on the terrain will be the next step in this series. See you soon!
