@@ -6,10 +6,10 @@ tags= ["profile"]
 
 <img src="/media/myself.jpg" alt="Me!" style="float:right;padding:0 0 0.7em 0.7em;"/>
 
-My name is **Rémi Gillig**, I am a video game tools software engineer.
+My name is **Rémi Gillig**, I am a video game Graphics programmer.
 
-I like C++, C# and making tools for everyone. It has a great impact on the projects and usually involves a number of other disciplines.
+I like C++, C# and everything rendering related. Putting stuff on the screen and getting the best our of the talented art teams is so satisfying!
 
-I am also interested in procedural generation and rendering and I like to follow the advances in these areas through SIGGRAPH and GDC talks, lectures and research papers.
+I like to follow the advances in this area through SIGGRAPH and GDC talks, lectures and research papers.
 
-I'm currently working at Rare Ltd. (UK) as a Senior Software Engineer. Whatever projects appear on this blog are NOT affiliated with my current employer.
+I'm currently working at Firesprite Ltd. (UK) as a Lead Software Engineer. Whatever projects appear on this blog are NOT affiliated with my current employer.
