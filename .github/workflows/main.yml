@@ -38,5 +38,5 @@ jobs:
           server: ftp.cluster117.hosting.ovh.net
           username: spepsfraxc
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./web/
+          local-dir: $GITHUB_WORKSPACE/master/
           server-dir: ./www/
