@@ -6,3 +6,7 @@ $_ENV
 $_SERVER
 <?php print_r($_SERVER); ?>
 </pre>
+<pre>
+php://input
+<?php print(htmlspecialchars(file_get_contents("php://input"))); ?>
+</pre>
