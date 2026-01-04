@@ -1,0 +1,3 @@
+RewriteEngine On
+RewriteRule ^pub/(.*)$ https://github.com/speps/speps.github.io/releases/download/binaries/$1 [L]
+RewriteRule ^apis/([a-z]+)$ apis/$1.php [L]
