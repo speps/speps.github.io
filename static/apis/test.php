@@ -8,5 +8,11 @@ $_SERVER
 </pre>
 <pre>
 php://input
-<?php print(htmlspecialchars(file_get_contents("php://input"))); ?>
+<?php
+$input = file_get_contents("php://input");
+if (strlen($input) > 0) {
+    $data = json_decode($input);
+    print_r($data);
+}
+?>
 </pre>
