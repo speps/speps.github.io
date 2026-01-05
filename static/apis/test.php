@@ -17,13 +17,14 @@ if (strlen($input) > 0) {
 ?>
 </pre>
 <pre>
-FFI
+exec
 <?php
-// create FFI object, loading libc and exporting function printf()
-$ffi = FFI::cdef(
-    "int printf(const char *format, ...);", // this is a regular C declaration
-    "libc.so.6");
-// call C's printf()
-$ffi->printf("Hello %s!\n", "world");
+// outputs the username that owns the running php/httpd process
+// (on a system with the "whoami" executable in the path)
+$output=null;
+$retval=null;
+exec('./qjs', $output, $retval);
+echo "Returned with status $retval and output:\n";
+print_r($output);
 ?>
 </pre>
