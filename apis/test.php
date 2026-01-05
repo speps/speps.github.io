@@ -23,7 +23,7 @@ exec
 // (on a system with the "whoami" executable in the path)
 $output=null;
 $retval=null;
-exec('./qjs', $output, $retval);
+exec('./qjs -e \'console.log("hello world")\'', $output, $retval);
 echo "Returned with status $retval and output:\n";
 print_r($output);
 ?>
