@@ -1,12 +1,18 @@
 baseurl = "http://speps.fr/"
-languageCode = "en-us"
+locale = "en-gb"
 title = "speps.fr"
 theme = "speps"
 pygmentsUseClasses = true
 
 [markup]
+	[markup.goldmark.renderer]
+		unsafe = true
 	[markup.highlight]
 		lineNos = true
 
 [taxonomies]
 tag = "tags"
+
+[author]
+email = "remigillig@gmail.com"
+name = "Remi Gillig"
