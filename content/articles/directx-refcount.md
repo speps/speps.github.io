@@ -2,6 +2,7 @@
 tags = ["articles"]
 date = "2013-08-10T21:31:30Z"
 title = "Debugging a DirectX memory leak"
+toc = false
 +++
 
 **NOTE from 2026: this seems quite obvious now, but I never really dug into how the ref count was working before, so it was a revelation at the time. Keeping the article for posterity to remind myself how much I learned since.**
