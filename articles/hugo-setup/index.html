@@ -29,7 +29,6 @@
                 </ul>
                 <div id="social"><a href="http://www.linkedin.com/in/remigillig"><img src="/images/linkedin.png"/></a></div>
                 <div id="social">&nbsp;</div>
-                <div id="social"><a href="http://twitter.com/remigillig"><img src="/images/twitter.png"/></a></div>
             </div>
 <div id="content">
 	<div id="page">
@@ -76,11 +75,11 @@
 <p>Then you need to encrypt it so you can use on Travis CI, <a href="https://docs.travis-ci.com/user/encryption-keys/">follow those instructions</a> and then run this command :</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash">travis encrypt <span class="nv">GIT_DEPLOY_REPO</span><span class="o">=</span>https://GENERATED_TOKEN@github.com/username/reponame.git
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">travis encrypt <span class="nv">GIT_DEPLOY_REPO</span><span class="o">=</span>https://GENERATED_TOKEN@github.com/username/reponame.git
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>Replace <code>GENERATED_TOKEN</code> with the generated token earlier and <code>username</code> by your GitHub username and <code>reponame</code> by the repository name.</p>
 <h3 id="setup-travisyml">Setup .travis.yml</h3>
@@ -88,7 +87,7 @@
 <p>The contents of .travis.yml should be as follows, <strong>note instructions inlined</strong> :</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -108,25 +107,25 @@
 </span><span class="lnt">18
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">env</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="k">global</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span>- <span class="k">secure</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;...&#34;</span><span class="w"> </span><span class="c"># replace by the output from travis encrypt done earlier</span><span class="w">
-</span><span class="w">    </span>- GIT_DEPLOY_DIR=public<span class="w"> </span><span class="c"># this is the default output dir of Hugo</span><span class="w">
-</span><span class="w">    </span>- GIT_DEPLOY_BRANCH=master<span class="w"> </span><span class="c"># this is the target branch, replace by gh-pages for Project Pages</span><span class="w">
-</span><span class="w">    </span>- GIT_DEPLOY_USERNAME=<span class="s2">&#34;Travis CI&#34;</span><span class="w"> </span><span class="c"># dummy name</span><span class="w">
-</span><span class="w">    </span>- GIT_DEPLOY_EMAIL=user@example.com<span class="w"> </span><span class="c"># replace by your email</span><span class="w">
-</span><span class="w"></span><span class="k">branches</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span><span class="k">only</span><span class="p">:</span><span class="w">
-</span><span class="w">    </span>- sources<span class="w"> </span><span class="c"># replace by master for Project Pages</span><span class="w">
-</span><span class="w">
-</span><span class="w"></span><span class="k">install</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span>- rm<span class="w"> </span>-rf<span class="w"> </span>public<span class="w"> </span>||<span class="w"> </span>exit<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="c"># cleanup previous run</span><span class="w">
-</span><span class="w"></span><span class="k">script</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span>- binaries/hugo<span class="w"> </span><span class="c"># generate!</span><span class="w">
-</span><span class="w"></span><span class="k">after_success</span><span class="p">:</span><span class="w">
-</span><span class="w">  </span>- cp<span class="w"> </span>.travis.yml<span class="w"> </span>public<span class="w"> </span><span class="c"># all branches need this file</span><span class="w">
-</span><span class="w">  </span>- bash<span class="w"> </span>deploy.sh<span class="w"> </span><span class="c"># run the deploy script</span><span class="w">
-</span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">env</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">global</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">secure</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;...&#34;</span><span class="w"> </span><span class="c"># replace by the output from travis encrypt done earlier</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="l">GIT_DEPLOY_DIR=public</span><span class="w"> </span><span class="c"># this is the default output dir of Hugo</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="l">GIT_DEPLOY_BRANCH=master</span><span class="w"> </span><span class="c"># this is the target branch, replace by gh-pages for Project Pages</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="l">GIT_DEPLOY_USERNAME=&#34;Travis CI&#34;</span><span class="w"> </span><span class="c"># dummy name</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="l">GIT_DEPLOY_EMAIL=user@example.com</span><span class="w"> </span><span class="c"># replace by your email</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">branches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">only</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="l">sources</span><span class="w"> </span><span class="c"># replace by master for Project Pages</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">install</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">rm -rf public || exit 0</span><span class="w"> </span><span class="c"># cleanup previous run</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">script</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">binaries/hugo</span><span class="w"> </span><span class="c"># generate!</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nt">after_success</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">cp .travis.yml public</span><span class="w"> </span><span class="c"># all branches need this file</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">bash deploy.sh</span><span class="w"> </span><span class="c"># run the deploy script</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>NOTE the <a href="https://github.com/speps/speps.github.io/blob/sources/.travis.yml">latest version of <code>.travis.yml</code> will always be at my <code>sources</code> branch</a>.</p>
 <h3 id="cross-compiling-hugo">Cross compiling Hugo</h3>
@@ -134,19 +133,19 @@
 <p>Run from your root folder those following commands, line by line :</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-sh" data-lang="sh">mkdir binaries
-<span class="nb">cd</span> binaries
-env <span class="nv">GOPATH</span><span class="o">=</span><span class="s2">&#34;`pwd`&#34;</span> go get -v github.com/spf13/hugo
-env <span class="nv">GOPATH</span><span class="o">=</span><span class="s2">&#34;`pwd`&#34;</span> <span class="nv">GOOS</span><span class="o">=</span>linux <span class="nv">GOARCH</span><span class="o">=</span>amd64 go build -v github.com/spf13/hugo
-git add hugo
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">mkdir binaries
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> binaries
+</span></span><span class="line"><span class="cl">env <span class="nv">GOPATH</span><span class="o">=</span><span class="s2">&#34;`pwd`&#34;</span> go get -v github.com/spf13/hugo
+</span></span><span class="line"><span class="cl">env <span class="nv">GOPATH</span><span class="o">=</span><span class="s2">&#34;`pwd`&#34;</span> <span class="nv">GOOS</span><span class="o">=</span>linux <span class="nv">GOARCH</span><span class="o">=</span>amd64 go build -v github.com/spf13/hugo
+</span></span><span class="line"><span class="cl">git add hugo
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>This will add the <code>hugo</code> binary compiled for a Travis VM to Git&rsquo;s index. Don&rsquo;t forget to commit it.</p>
 <h2 id="wrapping-up">Wrapping up</h2>
@@ -176,7 +175,7 @@ git add hugo
 
 	</div>
 </div>
-            <div id="footer"><p>2026-01-05 16:50:23 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
+            <div id="footer"><p>2026-07-08 11:17:47 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
         </div>
     </div>
 </body>

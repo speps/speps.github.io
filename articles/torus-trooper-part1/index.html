@@ -29,7 +29,6 @@
                 </ul>
                 <div id="social"><a href="http://www.linkedin.com/in/remigillig"><img src="/images/linkedin.png"/></a></div>
                 <div id="social">&nbsp;</div>
-                <div id="social"><a href="http://twitter.com/remigillig"><img src="/images/twitter.png"/></a></div>
             </div>
 <div id="content">
 	<div id="page">
@@ -75,7 +74,7 @@
 <p>The game used Ant and its <code>build.xml</code> file to generate the executable, resources, etc. Since then, D added DUB as a build system / package manager so let&rsquo;s use that!</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -91,43 +90,43 @@
 </span><span class="lnt">14
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span>
-	<span class="nt">&#34;authors&#34;</span><span class="p">:</span> <span class="p">[</span>
-		<span class="s2">&#34;Kenta Cho&#34;</span><span class="p">,</span>
-		<span class="s2">&#34;Remi Gillig&#34;</span>
-	<span class="p">],</span>
-	<span class="nt">&#34;copyright&#34;</span><span class="p">:</span> <span class="s2">&#34;Copyright © 2004 - Kenta Cho, 2020 - Remi Gillig&#34;</span><span class="p">,</span>
-	<span class="nt">&#34;description&#34;</span><span class="p">:</span> <span class="s2">&#34;Torus Trooper (Reboot)&#34;</span><span class="p">,</span>
-	<span class="nt">&#34;license&#34;</span><span class="p">:</span> <span class="s2">&#34;BSD 2-clause&#34;</span><span class="p">,</span>
-	<span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;tt&#34;</span><span class="p">,</span>
-	<span class="nt">&#34;targetType&#34;</span><span class="p">:</span> <span class="s2">&#34;executable&#34;</span><span class="p">,</span>
-	<span class="nt">&#34;sourcePaths&#34;</span><span class="p">:</span> <span class="p">[</span>
-		<span class="s2">&#34;src&#34;</span>
-	<span class="p">]</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;authors&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">		<span class="s2">&#34;Kenta Cho&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="s2">&#34;Remi Gillig&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">],</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;copyright&#34;</span><span class="p">:</span> <span class="s2">&#34;Copyright © 2004 - Kenta Cho, 2020 - Remi Gillig&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;description&#34;</span><span class="p">:</span> <span class="s2">&#34;Torus Trooper (Reboot)&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;license&#34;</span><span class="p">:</span> <span class="s2">&#34;BSD 2-clause&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;tt&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;targetType&#34;</span><span class="p">:</span> <span class="s2">&#34;executable&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;sourcePaths&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">		<span class="s2">&#34;src&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>With this initial <code>dub.json</code> file, I was set to run the <code>dub</code> command&hellip;</p>
-<div class="highlight"><pre class="chroma"><code class="language-plaintext" data-lang="plaintext">Performing &#34;debug&#34; build using C:\D\dmd2\windows\bin64\dmd.exe for x86.
-tt ~master: building configuration &#34;application&#34;...
-src\abagames\tt\barrage.d(95,33): Error: instead of C-style syntax, use D-style BulletMLParserTinyXML*[char[]][char[]] parser
-src\abagames\tt\barrage.d(122,28): Error: instead of C-style syntax, use D-style BulletMLParserTinyXML*[] pl
-src\abagames\tt\barrage.d(130,14): Error: instead of C-style syntax, use D-style BulletMLParserTinyXML*[char[]] pa
-src\abagames\tt\boot.d(51,12): Error: instead of C-style syntax, use D-style char[4096] exe
-src\abagames\tt\tunnel.d(300,14): Error: template argument expected following !
-src\abagames\tt\tunnel.d(322,14): Error: template argument expected following !
-src\abagames\util\rand.d(115,6): Error: instead of C-style syntax, use D-style uint[N] state
-src\abagames\util\rand.d(140,20): Error: instead of C-style syntax, use D-style uint[] init_key
-src\abagames\util\sdl\luminous.d(21,10): Error: instead of C-style syntax, use D-style GLuint[LUMINOUS_TEXTURE_WIDTH_MAX * LUMINOUS_TEXTURE_HEIGHT_MAX * 4 * (uint).sizeof] td
-src\abagames\util\sdl\luminous.d(83,17): Error: instead of C-style syntax, use D-style float[2][2] lmOfs
-C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
-</code></pre></div><p>Alright let&rsquo;s start and get this to compile!</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">Performing &#34;debug&#34; build using C:\D\dmd2\windows\bin64\dmd.exe for x86.
+</span></span><span class="line"><span class="cl">tt ~master: building configuration &#34;application&#34;...
+</span></span><span class="line"><span class="cl">src\abagames\tt\barrage.d(95,33): Error: instead of C-style syntax, use D-style BulletMLParserTinyXML*[char[]][char[]] parser
+</span></span><span class="line"><span class="cl">src\abagames\tt\barrage.d(122,28): Error: instead of C-style syntax, use D-style BulletMLParserTinyXML*[] pl
+</span></span><span class="line"><span class="cl">src\abagames\tt\barrage.d(130,14): Error: instead of C-style syntax, use D-style BulletMLParserTinyXML*[char[]] pa
+</span></span><span class="line"><span class="cl">src\abagames\tt\boot.d(51,12): Error: instead of C-style syntax, use D-style char[4096] exe
+</span></span><span class="line"><span class="cl">src\abagames\tt\tunnel.d(300,14): Error: template argument expected following !
+</span></span><span class="line"><span class="cl">src\abagames\tt\tunnel.d(322,14): Error: template argument expected following !
+</span></span><span class="line"><span class="cl">src\abagames\util\rand.d(115,6): Error: instead of C-style syntax, use D-style uint[N] state
+</span></span><span class="line"><span class="cl">src\abagames\util\rand.d(140,20): Error: instead of C-style syntax, use D-style uint[] init_key
+</span></span><span class="line"><span class="cl">src\abagames\util\sdl\luminous.d(21,10): Error: instead of C-style syntax, use D-style GLuint[LUMINOUS_TEXTURE_WIDTH_MAX * LUMINOUS_TEXTURE_HEIGHT_MAX * 4 * (uint).sizeof] td
+</span></span><span class="line"><span class="cl">src\abagames\util\sdl\luminous.d(83,17): Error: instead of C-style syntax, use D-style float[2][2] lmOfs
+</span></span><span class="line"><span class="cl">C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
+</span></span></code></pre></div><p>Alright let&rsquo;s start and get this to compile!</p>
 <h2 id="c-style-syntax-errors">C-style syntax errors</h2>
 <p>This is one is easy to fix, the suggestion from the compiler works, I just replaced every instance of this error with the suggestion.</p>
 <p>Here is an example:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -137,21 +136,21 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gu">@@ -42,7 +43,7 @@ struct SDL_AudioSpec {
-</span><span class="gu"></span>     Once the callback returns, the buffer will no longer be valid.
-     Stereo samples are stored in a LRLRLR ordering.
-  */
-<span class="gd">- void (*callback)(void *userdata, Uint8 *stream, int len);
-</span><span class="gd"></span><span class="gi">+ void function(void *userdata, Uint8 *stream, int len) callback;
-</span><span class="gi"></span>  void  *userdata;
- }
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl"><span class="gu">@@ -42,7 +43,7 @@ struct SDL_AudioSpec {
+</span></span></span><span class="line"><span class="cl">     Once the callback returns, the buffer will no longer be valid.
+</span></span><span class="line"><span class="cl">     Stereo samples are stored in a LRLRLR ordering.
+</span></span><span class="line"><span class="cl">  */
+</span></span><span class="line"><span class="cl"><span class="gd">- void (*callback)(void *userdata, Uint8 *stream, int len);
+</span></span></span><span class="line"><span class="cl"><span class="gi">+ void function(void *userdata, Uint8 *stream, int len) callback;
+</span></span></span><span class="line"><span class="cl">  void  *userdata;
+</span></span><span class="line"><span class="cl"> }
+</span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="error-template-argument-expected-following-">Error: template argument expected following !</h2>
 <p>This is an interesting one, here is one of the files where this error triggers:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -174,46 +173,46 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </span><span class="lnt">21
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-d" data-lang="d">  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">calcIndex</span><span class="o">(</span><span class="k">in</span> <span class="kt">float</span> <span class="n">z</span><span class="o">,</span> <span class="k">out</span> <span class="kt">int</span> <span class="n">idx</span><span class="o">,</span> <span class="k">out</span> <span class="kt">float</span> <span class="n">ofs</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">idx</span> <span class="o">=</span> <span class="n">slice</span><span class="o">.</span><span class="na">length</span> <span class="o">+</span> <span class="mi">99999</span><span class="o">;</span>
-    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">slice</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
-      <span class="k">if</span> <span class="o">(</span><span class="n">z</span> <span class="o">&lt;</span> <span class="n">slice</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">depth</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">idx</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
-        <span class="n">ofs</span> <span class="o">=</span> <span class="o">(</span><span class="n">z</span> <span class="o">-</span> <span class="n">slice</span><span class="o">[</span><span class="n">idx</span><span class="o">].</span><span class="na">depth</span><span class="o">)</span> <span class="o">/</span> <span class="o">(</span><span class="n">slice</span><span class="o">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="o">].</span><span class="na">depth</span> <span class="o">-</span> <span class="n">slice</span><span class="o">[</span><span class="n">idx</span><span class="o">].</span><span class="na">depth</span><span class="o">);</span>
-        <span class="k">break</span><span class="o">;</span>
-      <span class="o">}</span>
-    <span class="o">}</span>
-    <span class="k">if</span> <span class="o">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
-      <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-      <span class="n">ofs</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">slice</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
-      <span class="n">idx</span> <span class="o">=</span> <span class="n">slice</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">2</span><span class="o">;</span>
-      <span class="n">ofs</span> <span class="o">=</span> <span class="mf">0.99</span><span class="o">;</span>
-    <span class="o">}</span>
-<span class="hl">    <span class="k">if</span> <span class="o">(</span><span class="n">ofs</span> <span class="o">!&gt;=</span> <span class="mi">0</span><span class="o">)</span> <span class="c1">// ERROR HERE
-</span></span><span class="c1"></span>      <span class="n">ofs</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-    <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">ofs</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="o">)</span>
-      <span class="n">ofs</span> <span class="o">=</span> <span class="mf">0.99</span><span class="o">;</span>
-  <span class="o">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-d" data-lang="d"><span class="line"><span class="cl">  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">calcIndex</span><span class="o">(</span><span class="k">in</span> <span class="kt">float</span> <span class="n">z</span><span class="o">,</span> <span class="k">out</span> <span class="kt">int</span> <span class="n">idx</span><span class="o">,</span> <span class="k">out</span> <span class="kt">float</span> <span class="n">ofs</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">idx</span> <span class="o">=</span> <span class="n">slice</span><span class="o">.</span><span class="na">length</span> <span class="o">+</span> <span class="mi">99999</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">slice</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="o">(</span><span class="n">z</span> <span class="o">&lt;</span> <span class="n">slice</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">depth</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">idx</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ofs</span> <span class="o">=</span> <span class="o">(</span><span class="n">z</span> <span class="o">-</span> <span class="n">slice</span><span class="o">[</span><span class="n">idx</span><span class="o">].</span><span class="na">depth</span><span class="o">)</span> <span class="o">/</span> <span class="o">(</span><span class="n">slice</span><span class="o">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="o">].</span><span class="na">depth</span> <span class="o">-</span> <span class="n">slice</span><span class="o">[</span><span class="n">idx</span><span class="o">].</span><span class="na">depth</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">break</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">      <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">(</span><span class="n">idx</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">      <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">      <span class="n">ofs</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">slice</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">      <span class="n">idx</span> <span class="o">=</span> <span class="n">slice</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">2</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">      <span class="n">ofs</span> <span class="o">=</span> <span class="mf">0.99</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line hl"><span class="cl">    <span class="k">if</span> <span class="o">(</span><span class="n">ofs</span> <span class="o">!&gt;=</span> <span class="mi">0</span><span class="o">)</span> <span class="c1">// ERROR HERE
+</span></span></span><span class="line"><span class="cl">      <span class="n">ofs</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">ofs</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">      <span class="n">ofs</span> <span class="o">=</span> <span class="mf">0.99</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>I did try a few searches without success so I asked on the D community forums and a few people guessed right, it&rsquo;s of course a <code>not &gt;=</code>, equivalent to <code>&lt;</code>. However, <a href="https://forum.dlang.org/post/rec3d1$toc$1@digitalmars.com">thanks to Walter Bright</a>, I got a link to the <a href="https://www.digitalmars.com/ctg/ctgNumerics.html#comparisons">original documentation from Digital Mars</a>. The subtle difference with <code>!&gt;=</code> is that it will also return <code>true</code> if any operands are <code>NaN</code>. Suggested fix seems to have worked:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">17
+<pre tabindex="0" class="chroma"><code><span class="lnt">17
 </span><span class="lnt">18
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-d" data-lang="d">    <span class="k">if</span> <span class="o">(</span><span class="n">std</span><span class="o">.</span><span class="na">math</span><span class="o">.</span><span class="na">isNaN</span><span class="o">(</span><span class="n">ofs</span><span class="o">)</span> <span class="o">||</span> <span class="n">ofs</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>
-      <span class="n">ofs</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-d" data-lang="d"><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">(</span><span class="n">std</span><span class="o">.</span><span class="na">math</span><span class="o">.</span><span class="na">isNaN</span><span class="o">(</span><span class="n">ofs</span><span class="o">)</span> <span class="o">||</span> <span class="n">ofs</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">      <span class="n">ofs</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="replacing-char-with-string">Replacing <code>char[]</code> with <code>string</code></h2>
 <p>D1 used to have <code>char[]</code> as the string type, and functions in <code>std.string</code> in Phobos to manipulate this type. D2 replaced this with an <code>alias string = immutable(char)[]</code>. As a result, a lot of the code needs updating to deal with this. That includes the code in the custom bindings.</p>
 <p>Most of the changes here are similar to this</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -240,38 +239,38 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </span><span class="lnt">25
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gu">@@ -92,24 +91,24 @@ public class Barrage {
-</span><span class="gu"></span>  */
- public class BarrageManager {
-  private:
-<span class="gd">-  static BulletMLParserTinyXML *parser[char[]][char[]];
-</span><span class="gd">-  static const char[] BARRAGE_DIR_NAME = &#34;barrage&#34;;
-</span><span class="gd"></span><span class="gi">+  static BulletMLParserTinyXML*[string][string] parser;
-</span><span class="gi">+  static const string BARRAGE_DIR_NAME = &#34;barrage&#34;;
-</span><span class="gi"></span> 
-   public static void load() {
-<span class="gd">-    char[][] dirs = listdir(BARRAGE_DIR_NAME);
-</span><span class="gd">-    foreach (char[] dirName; dirs) {
-</span><span class="gd">-      char[][] files = listdir(BARRAGE_DIR_NAME ~ &#34;/&#34; ~ dirName);
-</span><span class="gd">-      foreach (char[] fileName; files) {
-</span><span class="gd">-        if (getExt(fileName) != &#34;xml&#34;)
-</span><span class="gd"></span><span class="gi">+    string[] dirs = listdir(BARRAGE_DIR_NAME);
-</span><span class="gi">+    foreach (string dirName; dirs) {
-</span><span class="gi">+      string[] files = listdir(BARRAGE_DIR_NAME ~ &#34;/&#34; ~ dirName);
-</span><span class="gi">+      foreach (string fileName; files) {
-</span><span class="gi">+        if (fileName.extension != &#34;.xml&#34;)
-</span><span class="gi"></span>           continue;
-         parser[dirName][fileName] = getInstance(dirName, fileName);
-       }
-     }
-   }
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl"><span class="gu">@@ -92,24 +91,24 @@ public class Barrage {
+</span></span></span><span class="line"><span class="cl">  */
+</span></span><span class="line"><span class="cl"> public class BarrageManager {
+</span></span><span class="line"><span class="cl">  private:
+</span></span><span class="line"><span class="cl"><span class="gd">-  static BulletMLParserTinyXML *parser[char[]][char[]];
+</span></span></span><span class="line"><span class="cl"><span class="gd">-  static const char[] BARRAGE_DIR_NAME = &#34;barrage&#34;;
+</span></span></span><span class="line"><span class="cl"><span class="gi">+  static BulletMLParserTinyXML*[string][string] parser;
+</span></span></span><span class="line"><span class="cl"><span class="gi">+  static const string BARRAGE_DIR_NAME = &#34;barrage&#34;;
+</span></span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">   public static void load() {
+</span></span><span class="line"><span class="cl"><span class="gd">-    char[][] dirs = listdir(BARRAGE_DIR_NAME);
+</span></span></span><span class="line"><span class="cl"><span class="gd">-    foreach (char[] dirName; dirs) {
+</span></span></span><span class="line"><span class="cl"><span class="gd">-      char[][] files = listdir(BARRAGE_DIR_NAME ~ &#34;/&#34; ~ dirName);
+</span></span></span><span class="line"><span class="cl"><span class="gd">-      foreach (char[] fileName; files) {
+</span></span></span><span class="line"><span class="cl"><span class="gd">-        if (getExt(fileName) != &#34;xml&#34;)
+</span></span></span><span class="line"><span class="cl"><span class="gi">+    string[] dirs = listdir(BARRAGE_DIR_NAME);
+</span></span></span><span class="line"><span class="cl"><span class="gi">+    foreach (string dirName; dirs) {
+</span></span></span><span class="line"><span class="cl"><span class="gi">+      string[] files = listdir(BARRAGE_DIR_NAME ~ &#34;/&#34; ~ dirName);
+</span></span></span><span class="line"><span class="cl"><span class="gi">+      foreach (string fileName; files) {
+</span></span></span><span class="line"><span class="cl"><span class="gi">+        if (fileName.extension != &#34;.xml&#34;)
+</span></span></span><span class="line"><span class="cl">           continue;
+</span></span><span class="line"><span class="cl">         parser[dirName][fileName] = getInstance(dirName, fileName);
+</span></span><span class="line"><span class="cl">       }
+</span></span><span class="line"><span class="cl">     }
+</span></span><span class="line"><span class="cl">   }
+</span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="converting-value-to-string">Converting value to string</h2>
 <p>D1 used to have <code>std.string.toString</code> to convert a value to a <code>char[]</code> value. This functionality was replaced by <code>std.conv.to!string</code>.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -290,34 +289,34 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </span><span class="lnt">17
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gu">@@ -5,6 +5,7 @@
-</span><span class="gu"></span>  */
- module abagames.tt.shot;
- 
-<span class="gi">+private import std.conv;
-</span><span class="gi"></span> private import std.math;
- private import std.string;
- private import opengl;
-<span class="gu">@@ -179,7 +180,7 @@ public class Shot: Actor {
-</span><span class="gu"></span>       else if (sc &gt;= 2000)
-         size = 0.7;
-       size *= (1 + multiplier * 0.01f);
-<span class="gd">-      fl.set(&#34;X&#34; ~ std.string.toString(multiplier), pos, size * pos.y,
-</span><span class="gd"></span><span class="gi">+      fl.set(&#34;X&#34; ~ to!string(multiplier), pos, size * pos.y,
-</span><span class="gi"></span>              cast(int) (30 + multiplier * 0.3f));
-     }
-     if (chargeShot) {
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl"><span class="gu">@@ -5,6 +5,7 @@
+</span></span></span><span class="line"><span class="cl">  */
+</span></span><span class="line"><span class="cl"> module abagames.tt.shot;
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="gi">+private import std.conv;
+</span></span></span><span class="line"><span class="cl"> private import std.math;
+</span></span><span class="line"><span class="cl"> private import std.string;
+</span></span><span class="line"><span class="cl"> private import opengl;
+</span></span><span class="line"><span class="cl"><span class="gu">@@ -179,7 +180,7 @@ public class Shot: Actor {
+</span></span></span><span class="line"><span class="cl">       else if (sc &gt;= 2000)
+</span></span><span class="line"><span class="cl">         size = 0.7;
+</span></span><span class="line"><span class="cl">       size *= (1 + multiplier * 0.01f);
+</span></span><span class="line"><span class="cl"><span class="gd">-      fl.set(&#34;X&#34; ~ std.string.toString(multiplier), pos, size * pos.y,
+</span></span></span><span class="line"><span class="cl"><span class="gi">+      fl.set(&#34;X&#34; ~ to!string(multiplier), pos, size * pos.y,
+</span></span></span><span class="line"><span class="cl">              cast(int) (30 + multiplier * 0.3f));
+</span></span><span class="line"><span class="cl">     }
+</span></span><span class="line"><span class="cl">     if (chargeShot) {
+</span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="passing-strings-to-c">Passing strings to C</h2>
 <p>The usual way to pass strings to C seems to have been to just to use <code>std.string.toStringz</code>. However, back in D1 it used to return char* :</p>
-<pre><code>char* toStringz(char[] s);
+<pre tabindex="0"><code>char* toStringz(char[] s);
 </code></pre><p>This worked well for the C bindings but with D2, it now returns:</p>
-<pre><code>immutable(char)* toStringz(scope return string s) pure nothrow @trusted;
+<pre tabindex="0"><code>immutable(char)* toStringz(scope return string s) pure nothrow @trusted;
 </code></pre><p>Again, the fix is quite straightforward. For example, the bindings weren&rsquo;t written with this in mind so they need fixing:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -325,13 +324,13 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gu">@@ -81,7 +81,7 @@ struct SDL_RWops {
-</span><span class="gu"></span> 
- /* Functions to create SDL_RWops structures from various data sources */
- 
-<span class="gd">-SDL_RWops * SDL_RWFromFile(char *file, char *mode);
-</span><span class="gd"></span><span class="gi">+SDL_RWops * SDL_RWFromFile(const char *file, const char *mode);
-</span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl"><span class="gu">@@ -81,7 +81,7 @@ struct SDL_RWops {
+</span></span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"> /* Functions to create SDL_RWops structures from various data sources */
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="gd">-SDL_RWops * SDL_RWFromFile(char *file, char *mode);
+</span></span></span><span class="line"><span class="cl"><span class="gi">+SDL_RWops * SDL_RWFromFile(const char *file, const char *mode);
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="simple-substitution">Simple substitution</h2>
 <ul>
@@ -339,7 +338,7 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </ul>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -353,26 +352,26 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gu">@@ -28,10 +28,10 @@ import SDL_types;
-</span><span class="gu"></span> 
- extern(C):
- 
-<span class="gd">-typedef int (*_seek_func_t)(SDL_RWops *context, int offset, int whence);
-</span><span class="gd">-typedef int (*_read_func_t)(SDL_RWops *context, void *ptr, int size, int maxnum);
-</span><span class="gd">-typedef int (*_write_func_t)(SDL_RWops *context, void *ptr, int size, int num);
-</span><span class="gd">-typedef int (*_close_func_t)(SDL_RWops *context);
-</span><span class="gd"></span><span class="gi">+alias int function(SDL_RWops *context, int offset, int whence) _seek_func_t;
-</span><span class="gi">+alias int function(SDL_RWops *context, void *ptr, int size, int maxnum) _read_func_t;
-</span><span class="gi">+alias int function(SDL_RWops *context, void *ptr, int size, int num) _write_func_t;
-</span><span class="gi">+alias int function(SDL_RWops *context) _close_func_t;
-</span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl"><span class="gu">@@ -28,10 +28,10 @@ import SDL_types;
+</span></span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"> extern(C):
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="gd">-typedef int (*_seek_func_t)(SDL_RWops *context, int offset, int whence);
+</span></span></span><span class="line"><span class="cl"><span class="gd">-typedef int (*_read_func_t)(SDL_RWops *context, void *ptr, int size, int maxnum);
+</span></span></span><span class="line"><span class="cl"><span class="gd">-typedef int (*_write_func_t)(SDL_RWops *context, void *ptr, int size, int num);
+</span></span></span><span class="line"><span class="cl"><span class="gd">-typedef int (*_close_func_t)(SDL_RWops *context);
+</span></span></span><span class="line"><span class="cl"><span class="gi">+alias int function(SDL_RWops *context, int offset, int whence) _seek_func_t;
+</span></span></span><span class="line"><span class="cl"><span class="gi">+alias int function(SDL_RWops *context, void *ptr, int size, int maxnum) _read_func_t;
+</span></span></span><span class="line"><span class="cl"><span class="gi">+alias int function(SDL_RWops *context, void *ptr, int size, int num) _write_func_t;
+</span></span></span><span class="line"><span class="cl"><span class="gi">+alias int function(SDL_RWops *context) _close_func_t;
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><ul>
 <li><code>inout</code> → <code>ref</code>: this made sense for all instances where <code>inout</code> was used</li>
 </ul>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -382,22 +381,22 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gu">@@ -59,7 +59,7 @@ public class PrefData {
-</span><span class="gu"></span> 
-   public this() {
-     gradeData = new GradeData[Ship.GRADE_NUM];
-<span class="gd">-    foreach (inout GradeData gd; gradeData)
-</span><span class="gd"></span><span class="gi">+    foreach (ref GradeData gd; gradeData)
-</span><span class="gi"></span>       gd = new GradeData;
-   }
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl"><span class="gu">@@ -59,7 +59,7 @@ public class PrefData {
+</span></span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">   public this() {
+</span></span><span class="line"><span class="cl">     gradeData = new GradeData[Ship.GRADE_NUM];
+</span></span><span class="line"><span class="cl"><span class="gd">-    foreach (inout GradeData gd; gradeData)
+</span></span></span><span class="line"><span class="cl"><span class="gi">+    foreach (ref GradeData gd; gradeData)
+</span></span></span><span class="line"><span class="cl">       gd = new GradeData;
+</span></span><span class="line"><span class="cl">   }
+</span></span></code></pre></td></tr></table>
 </div>
 </div><ul>
 <li><code>auto T</code> → <code>auto</code>: it seems the original author specified auto along with the type which isn&rsquo;t allowed anymore</li>
 </ul>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -424,39 +423,39 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </span><span class="lnt">25
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gu">@@ -631,9 +631,9 @@ public class BulletShape: Drawable {
-</span><span class="gu"></span>   }
- 
-   private void createSquareShape(bool wireShape) {
-<span class="gd">-    auto Vector3 cp = new Vector3;
-</span><span class="gd">-    auto Vector3[] p = new Vector3[4];
-</span><span class="gd">-    auto Vector3[] np = new Vector3[4];
-</span><span class="gd"></span><span class="gi">+    auto cp = new Vector3;
-</span><span class="gi">+    auto p = new Vector3[4];
-</span><span class="gi">+    auto np = new Vector3[4];
-</span><span class="gi"></span>     static const float[][][] POINT_DAT = [
-       [[-1, -1, 1], [1, -1, 1], [1, 1, 1], [-1, 1, 1], ],
-       [[-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1], ],
-<span class="gu">@@ -642,9 +642,9 @@ public class BulletShape: Drawable {
-</span><span class="gu"></span>       [[1, -1, -1], [1, -1, 1], [1, 1, 1], [1, 1, -1], ],
-       [[-1, -1, -1], [-1, -1, 1], [-1, 1, 1], [-1, 1, -1], ],
-     ];
-<span class="gd">-    foreach (inout Vector3 ip; p)
-</span><span class="gd"></span><span class="gi">+    foreach (ref Vector3 ip; p)
-</span><span class="gi"></span>       ip = new Vector3;
-<span class="gd">-    foreach (inout Vector3 inp; np)
-</span><span class="gd"></span><span class="gi">+    foreach (ref Vector3 inp; np)
-</span><span class="gi"></span>       inp = new Vector3;
-     for (int i = 0; i &lt; 6; i++) {
-       cp.x = cp.y = cp.z = 0;
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl"><span class="gu">@@ -631,9 +631,9 @@ public class BulletShape: Drawable {
+</span></span></span><span class="line"><span class="cl">   }
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">   private void createSquareShape(bool wireShape) {
+</span></span><span class="line"><span class="cl"><span class="gd">-    auto Vector3 cp = new Vector3;
+</span></span></span><span class="line"><span class="cl"><span class="gd">-    auto Vector3[] p = new Vector3[4];
+</span></span></span><span class="line"><span class="cl"><span class="gd">-    auto Vector3[] np = new Vector3[4];
+</span></span></span><span class="line"><span class="cl"><span class="gi">+    auto cp = new Vector3;
+</span></span></span><span class="line"><span class="cl"><span class="gi">+    auto p = new Vector3[4];
+</span></span></span><span class="line"><span class="cl"><span class="gi">+    auto np = new Vector3[4];
+</span></span></span><span class="line"><span class="cl">     static const float[][][] POINT_DAT = [
+</span></span><span class="line"><span class="cl">       [[-1, -1, 1], [1, -1, 1], [1, 1, 1], [-1, 1, 1], ],
+</span></span><span class="line"><span class="cl">       [[-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1], ],
+</span></span><span class="line"><span class="cl"><span class="gu">@@ -642,9 +642,9 @@ public class BulletShape: Drawable {
+</span></span></span><span class="line"><span class="cl">       [[1, -1, -1], [1, -1, 1], [1, 1, 1], [1, 1, -1], ],
+</span></span><span class="line"><span class="cl">       [[-1, -1, -1], [-1, -1, 1], [-1, 1, 1], [-1, 1, -1], ],
+</span></span><span class="line"><span class="cl">     ];
+</span></span><span class="line"><span class="cl"><span class="gd">-    foreach (inout Vector3 ip; p)
+</span></span></span><span class="line"><span class="cl"><span class="gi">+    foreach (ref Vector3 ip; p)
+</span></span></span><span class="line"><span class="cl">       ip = new Vector3;
+</span></span><span class="line"><span class="cl"><span class="gd">-    foreach (inout Vector3 inp; np)
+</span></span></span><span class="line"><span class="cl"><span class="gi">+    foreach (ref Vector3 inp; np)
+</span></span></span><span class="line"><span class="cl">       inp = new Vector3;
+</span></span><span class="line"><span class="cl">     for (int i = 0; i &lt; 6; i++) {
+</span></span><span class="line"><span class="cl">       cp.x = cp.y = cp.z = 0;
+</span></span></code></pre></td></tr></table>
 </div>
 </div><ul>
 <li><code>getExt</code> → <code>.extension</code>: behaviour is different but it&rsquo;s easy enough to fix, it now includes the dot</li>
 </ul>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -473,29 +472,29 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </span><span class="lnt">15
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gu">@@ -44,10 +45,10 @@ public class SoundManager: abagames.util.sdl.sound.SoundManager {
-</span><span class="gu"></span> 
-   private static Music[] loadMusics() {
-     Music[] musics;
-<span class="gd">-    char[][] files = listdir(Music.dir);
-</span><span class="gd">-    foreach (char[] fileName; files) {
-</span><span class="gd">-      char[] ext = getExt(fileName);
-</span><span class="gd">-      if (ext != &#34;ogg&#34; &amp;&amp; ext != &#34;wav&#34;)
-</span><span class="gd"></span><span class="gi">+    string[] files = listdir(Music.dir);
-</span><span class="gi">+    foreach (string fileName; files) {
-</span><span class="gi">+      string ext = fileName.extension;
-</span><span class="gi">+      if (ext != &#34;.ogg&#34; &amp;&amp; ext != &#34;.wav&#34;)
-</span><span class="gi"></span>         continue;
-       Music music = new Music();
-       music.load(fileName);
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl"><span class="gu">@@ -44,10 +45,10 @@ public class SoundManager: abagames.util.sdl.sound.SoundManager {
+</span></span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">   private static Music[] loadMusics() {
+</span></span><span class="line"><span class="cl">     Music[] musics;
+</span></span><span class="line"><span class="cl"><span class="gd">-    char[][] files = listdir(Music.dir);
+</span></span></span><span class="line"><span class="cl"><span class="gd">-    foreach (char[] fileName; files) {
+</span></span></span><span class="line"><span class="cl"><span class="gd">-      char[] ext = getExt(fileName);
+</span></span></span><span class="line"><span class="cl"><span class="gd">-      if (ext != &#34;ogg&#34; &amp;&amp; ext != &#34;wav&#34;)
+</span></span></span><span class="line"><span class="cl"><span class="gi">+    string[] files = listdir(Music.dir);
+</span></span></span><span class="line"><span class="cl"><span class="gi">+    foreach (string fileName; files) {
+</span></span></span><span class="line"><span class="cl"><span class="gi">+      string ext = fileName.extension;
+</span></span></span><span class="line"><span class="cl"><span class="gi">+      if (ext != &#34;.ogg&#34; &amp;&amp; ext != &#34;.wav&#34;)
+</span></span></span><span class="line"><span class="cl">         continue;
+</span></span><span class="line"><span class="cl">       Music music = new Music();
+</span></span><span class="line"><span class="cl">       music.load(fileName);
+</span></span></code></pre></td></tr></table>
 </div>
 </div><ul>
 <li><code>catch(Object)</code> → <code>catch(Throwable)</code>: you could throw any <code>Object</code> before, you have to use Throwable now</li>
 </ul>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -512,29 +511,29 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </span><span class="lnt">15
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gu">@@ -83,20 +84,20 @@ public int boot(char[][] args) {
-</span><span class="gu"></span>   }
-   try {
-     mainLoop.loop();
-<span class="gd">-  } catch (Object o) {
-</span><span class="gd"></span><span class="gi">+  } catch (Throwable t) {
-</span><span class="gi"></span>     try {
-       gameManager.saveErrorReplay();
-<span class="gd">-    } catch (Object o1) {}
-</span><span class="gd">-    throw o;
-</span><span class="gd"></span><span class="gi">+    } catch (Throwable) {}
-</span><span class="gi">+    throw t;
-</span><span class="gi"></span>   }
-   return EXIT_SUCCESS;
- }
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl"><span class="gu">@@ -83,20 +84,20 @@ public int boot(char[][] args) {
+</span></span></span><span class="line"><span class="cl">   }
+</span></span><span class="line"><span class="cl">   try {
+</span></span><span class="line"><span class="cl">     mainLoop.loop();
+</span></span><span class="line"><span class="cl"><span class="gd">-  } catch (Object o) {
+</span></span></span><span class="line"><span class="cl"><span class="gi">+  } catch (Throwable t) {
+</span></span></span><span class="line"><span class="cl">     try {
+</span></span><span class="line"><span class="cl">       gameManager.saveErrorReplay();
+</span></span><span class="line"><span class="cl"><span class="gd">-    } catch (Object o1) {}
+</span></span></span><span class="line"><span class="cl"><span class="gd">-    throw o;
+</span></span></span><span class="line"><span class="cl"><span class="gi">+    } catch (Throwable) {}
+</span></span></span><span class="line"><span class="cl"><span class="gi">+    throw t;
+</span></span></span><span class="line"><span class="cl">   }
+</span></span><span class="line"><span class="cl">   return EXIT_SUCCESS;
+</span></span><span class="line"><span class="cl"> }
+</span></span></code></pre></td></tr></table>
 </div>
 </div><ul>
 <li><code>bit</code> → <code>SDL_bool</code>: the <code>bit</code> type was used back in D1, it behaved like a <code>bool</code> but used one bit instead so you could make bitfields easily, it was mostly used in the SDL bindings so I replaced it with <code>SDL_bool</code></li>
 </ul>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -558,36 +557,36 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </span><span class="lnt">22
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gu">@@ -132,7 +133,7 @@ const uint SDL_SRCALPHA	= 0x00010000;	/* Blit uses source alpha blending */
-</span><span class="gu"></span> const uint SDL_PREALLOC	= 0x01000000;	/* Surface uses preallocated memory */
- 
- /* Evaluates to true if the surface needs to be locked before access */
-<span class="gd">-bit SDL_MUSTLOCK(SDL_Surface *surface)
-</span><span class="gd"></span><span class="gi">+SDL_bool SDL_MUSTLOCK(SDL_Surface *surface)
-</span><span class="gi"></span> {
- 	return surface.offset || ((surface.flags &amp;
- 		(SDL_HWSURFACE | SDL_ASYNCBLIT | SDL_RLEACCEL)) != 0);
-<span class="gu">@@ -184,13 +185,7 @@ struct SDL_Overlay {
-</span><span class="gu"></span> 	void /*private_yuvhwdata*/ *hwdata;
- 
- 	/* Special flags */
-<span class="gd">-	union
-</span><span class="gd">-	{
-</span><span class="gd">-		bit hw_overlay;
-</span><span class="gd">-		Uint32 _dummy;
-</span><span class="gd">-	}
-</span><span class="gd">-//		Uint32 hw_overlay :1;	/* Flag: This overlay hardware accelerated? */
-</span><span class="gd">-//		Uint32 UnusedBits :31;
-</span><span class="gd"></span><span class="gi">+	Uint32 flags;
-</span><span class="gi"></span> }
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl"><span class="gu">@@ -132,7 +133,7 @@ const uint SDL_SRCALPHA	= 0x00010000;	/* Blit uses source alpha blending */
+</span></span></span><span class="line"><span class="cl"> const uint SDL_PREALLOC	= 0x01000000;	/* Surface uses preallocated memory */
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"> /* Evaluates to true if the surface needs to be locked before access */
+</span></span><span class="line"><span class="cl"><span class="gd">-bit SDL_MUSTLOCK(SDL_Surface *surface)
+</span></span></span><span class="line"><span class="cl"><span class="gi">+SDL_bool SDL_MUSTLOCK(SDL_Surface *surface)
+</span></span></span><span class="line"><span class="cl"> {
+</span></span><span class="line"><span class="cl"> 	return surface.offset || ((surface.flags &amp;
+</span></span><span class="line"><span class="cl"> 		(SDL_HWSURFACE | SDL_ASYNCBLIT | SDL_RLEACCEL)) != 0);
+</span></span><span class="line"><span class="cl"><span class="gu">@@ -184,13 +185,7 @@ struct SDL_Overlay {
+</span></span></span><span class="line"><span class="cl"> 	void /*private_yuvhwdata*/ *hwdata;
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"> 	/* Special flags */
+</span></span><span class="line"><span class="cl"><span class="gd">-	union
+</span></span></span><span class="line"><span class="cl"><span class="gd">-	{
+</span></span></span><span class="line"><span class="cl"><span class="gd">-		bit hw_overlay;
+</span></span></span><span class="line"><span class="cl"><span class="gd">-		Uint32 _dummy;
+</span></span></span><span class="line"><span class="cl"><span class="gd">-	}
+</span></span></span><span class="line"><span class="cl"><span class="gd">-//		Uint32 hw_overlay :1;	/* Flag: This overlay hardware accelerated? */
+</span></span></span><span class="line"><span class="cl"><span class="gd">-//		Uint32 UnusedBits :31;
+</span></span></span><span class="line"><span class="cl"><span class="gi">+	Uint32 flags;
+</span></span></span><span class="line"><span class="cl"> }
+</span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="phobos">Phobos</h2>
 <p>The old code did use <code>std.stream</code>, from what I read this was deprecated in favor of splitting it into a more modular design. However, to transition old code someone rescued the deprecated code and made it into a DUB package called <a href="https://code.dlang.org/packages/undead"><code>undead</code></a>.</p>
 <p>This was very useful at the start to get the code to compile. However, I wanted to get rid of this dependency as it didn&rsquo;t feel right to keep old code instead of relying on the modern D equivalent. In D1, <code>std.stream.File.read</code> could read binary data into values. I&rsquo;ve changed it to use <code>std.file.read</code> and <code>std.bitmanip.read</code>. It&rsquo;s also important to make sure you specify the endian, the D1 code was implementation-specific regarding the format of types other than byte sized ones. On Windows it was little-endian. That means replays and highscores saves are now compatible with the original executable!</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -643,68 +642,68 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </span><span class="lnt">54
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gu">@@ -5,7 +5,10 @@
-</span><span class="gu"></span>  */
- module abagames.tt.replay;
- 
-<span class="gd">-private import undead.stream;
-</span><span class="gd"></span><span class="gi">+import std.file;
-</span><span class="gi">+import std.array;
-</span><span class="gi">+import std.bitmanip;
-</span><span class="gi">+
-</span><span class="gi"></span> private import abagames.util.sdl.recordablepad;
- 
- /**
-<span class="gu">@@ -22,28 +25,24 @@ public class ReplayData {
-</span><span class="gu"></span>  private:
- 
-   public void save(string fileName) {
-<span class="gd">-    auto fd = new File;
-</span><span class="gd">-    fd.create(dir ~ &#34;/&#34; ~ fileName);
-</span><span class="gd">-    fd.write(VERSION_NUM);
-</span><span class="gd">-    fd.write(level);
-</span><span class="gd">-    fd.write(grade);
-</span><span class="gd">-    fd.write(seed);
-</span><span class="gd">-    padRecord.save(fd);
-</span><span class="gd">-    fd.close();
-</span><span class="gd"></span><span class="gi">+    auto buffer = appender!(ubyte[]);
-</span><span class="gi">+    buffer.append!(int, Endian.littleEndian)(VERSION_NUM);
-</span><span class="gi">+    buffer.append!(float, Endian.littleEndian)(level);
-</span><span class="gi">+    buffer.append!(int, Endian.littleEndian)(grade);
-</span><span class="gi">+    buffer.append!(long, Endian.littleEndian)(seed);
-</span><span class="gi">+    padRecord.save(buffer);
-</span><span class="gi">+    std.file.write(dir ~ &#34;/&#34; ~ fileName, buffer[]);
-</span><span class="gi"></span>   }
- 
-   public void load(string fileName) {
-<span class="gd">-    auto fd = new File;
-</span><span class="gd">-    fd.open(dir ~ &#34;/&#34; ~ fileName);
-</span><span class="gd">-    int ver;
-</span><span class="gd">-    fd.read(ver);
-</span><span class="gd"></span><span class="gi">+    auto buffer = cast(ubyte[])std.file.read(dir ~ &#34;/&#34; ~ fileName);
-</span><span class="gi">+    int ver = buffer.read!(int, Endian.littleEndian);
-</span><span class="gi"></span>     if (ver != VERSION_NUM)
-       throw new Error(&#34;Wrong version num&#34;);
-<span class="gd">-    fd.read(level);
-</span><span class="gd">-    fd.read(grade);
-</span><span class="gd">-    fd.read(seed);
-</span><span class="gd"></span><span class="gi">+    level = buffer.read!(float, Endian.littleEndian);
-</span><span class="gi">+    grade = buffer.read!(int, Endian.littleEndian);
-</span><span class="gi">+    seed = buffer.read!(long, Endian.littleEndian);
-</span><span class="gi"></span>     padRecord = new PadRecord;
-<span class="gd">-    padRecord.load(fd);
-</span><span class="gd">-    fd.close();
-</span><span class="gd"></span><span class="gi">+    padRecord.load(buffer);
-</span><span class="gi"></span>   }
- }
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl"><span class="gu">@@ -5,7 +5,10 @@
+</span></span></span><span class="line"><span class="cl">  */
+</span></span><span class="line"><span class="cl"> module abagames.tt.replay;
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="gd">-private import undead.stream;
+</span></span></span><span class="line"><span class="cl"><span class="gi">+import std.file;
+</span></span></span><span class="line"><span class="cl"><span class="gi">+import std.array;
+</span></span></span><span class="line"><span class="cl"><span class="gi">+import std.bitmanip;
+</span></span></span><span class="line"><span class="cl"><span class="gi">+
+</span></span></span><span class="line"><span class="cl"> private import abagames.util.sdl.recordablepad;
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"> /**
+</span></span><span class="line"><span class="cl"><span class="gu">@@ -22,28 +25,24 @@ public class ReplayData {
+</span></span></span><span class="line"><span class="cl">  private:
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">   public void save(string fileName) {
+</span></span><span class="line"><span class="cl"><span class="gd">-    auto fd = new File;
+</span></span></span><span class="line"><span class="cl"><span class="gd">-    fd.create(dir ~ &#34;/&#34; ~ fileName);
+</span></span></span><span class="line"><span class="cl"><span class="gd">-    fd.write(VERSION_NUM);
+</span></span></span><span class="line"><span class="cl"><span class="gd">-    fd.write(level);
+</span></span></span><span class="line"><span class="cl"><span class="gd">-    fd.write(grade);
+</span></span></span><span class="line"><span class="cl"><span class="gd">-    fd.write(seed);
+</span></span></span><span class="line"><span class="cl"><span class="gd">-    padRecord.save(fd);
+</span></span></span><span class="line"><span class="cl"><span class="gd">-    fd.close();
+</span></span></span><span class="line"><span class="cl"><span class="gi">+    auto buffer = appender!(ubyte[]);
+</span></span></span><span class="line"><span class="cl"><span class="gi">+    buffer.append!(int, Endian.littleEndian)(VERSION_NUM);
+</span></span></span><span class="line"><span class="cl"><span class="gi">+    buffer.append!(float, Endian.littleEndian)(level);
+</span></span></span><span class="line"><span class="cl"><span class="gi">+    buffer.append!(int, Endian.littleEndian)(grade);
+</span></span></span><span class="line"><span class="cl"><span class="gi">+    buffer.append!(long, Endian.littleEndian)(seed);
+</span></span></span><span class="line"><span class="cl"><span class="gi">+    padRecord.save(buffer);
+</span></span></span><span class="line"><span class="cl"><span class="gi">+    std.file.write(dir ~ &#34;/&#34; ~ fileName, buffer[]);
+</span></span></span><span class="line"><span class="cl">   }
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">   public void load(string fileName) {
+</span></span><span class="line"><span class="cl"><span class="gd">-    auto fd = new File;
+</span></span></span><span class="line"><span class="cl"><span class="gd">-    fd.open(dir ~ &#34;/&#34; ~ fileName);
+</span></span></span><span class="line"><span class="cl"><span class="gd">-    int ver;
+</span></span></span><span class="line"><span class="cl"><span class="gd">-    fd.read(ver);
+</span></span></span><span class="line"><span class="cl"><span class="gi">+    auto buffer = cast(ubyte[])std.file.read(dir ~ &#34;/&#34; ~ fileName);
+</span></span></span><span class="line"><span class="cl"><span class="gi">+    int ver = buffer.read!(int, Endian.littleEndian);
+</span></span></span><span class="line"><span class="cl">     if (ver != VERSION_NUM)
+</span></span><span class="line"><span class="cl">       throw new Error(&#34;Wrong version num&#34;);
+</span></span><span class="line"><span class="cl"><span class="gd">-    fd.read(level);
+</span></span></span><span class="line"><span class="cl"><span class="gd">-    fd.read(grade);
+</span></span></span><span class="line"><span class="cl"><span class="gd">-    fd.read(seed);
+</span></span></span><span class="line"><span class="cl"><span class="gi">+    level = buffer.read!(float, Endian.littleEndian);
+</span></span></span><span class="line"><span class="cl"><span class="gi">+    grade = buffer.read!(int, Endian.littleEndian);
+</span></span></span><span class="line"><span class="cl"><span class="gi">+    seed = buffer.read!(long, Endian.littleEndian);
+</span></span></span><span class="line"><span class="cl">     padRecord = new PadRecord;
+</span></span><span class="line"><span class="cl"><span class="gd">-    padRecord.load(fd);
+</span></span></span><span class="line"><span class="cl"><span class="gd">-    fd.close();
+</span></span></span><span class="line"><span class="cl"><span class="gi">+    padRecord.load(buffer);
+</span></span></span><span class="line"><span class="cl">   }
+</span></span><span class="line"><span class="cl"> }
+</span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="operator-overloading">Operator overloading</h2>
 <p>There is a <code>Vector</code> type in the codebase and naturally it used operator overloading. The syntax for this has changed though.</p>
 <p>Before:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -725,31 +724,31 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </span><span class="lnt">19
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-d" data-lang="d">  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">opAddAssign</span><span class="o">(</span><span class="n">Vector</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">x</span> <span class="o">+=</span> <span class="n">v</span><span class="o">.</span><span class="na">x</span><span class="o">;</span>
-    <span class="n">y</span> <span class="o">+=</span> <span class="n">v</span><span class="o">.</span><span class="na">y</span><span class="o">;</span>
-  <span class="o">}</span>
-
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">opSubAssign</span><span class="o">(</span><span class="n">Vector</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">x</span> <span class="o">-=</span> <span class="n">v</span><span class="o">.</span><span class="na">x</span><span class="o">;</span>
-    <span class="n">y</span> <span class="o">-=</span> <span class="n">v</span><span class="o">.</span><span class="na">y</span><span class="o">;</span>
-  <span class="o">}</span>
-
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">opMulAssign</span><span class="o">(</span><span class="kt">float</span> <span class="n">a</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">x</span> <span class="o">*=</span> <span class="n">a</span><span class="o">;</span>
-    <span class="n">y</span> <span class="o">*=</span> <span class="n">a</span><span class="o">;</span>
-  <span class="o">}</span>
-
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">opDivAssign</span><span class="o">(</span><span class="kt">float</span> <span class="n">a</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">x</span> <span class="o">/=</span> <span class="n">a</span><span class="o">;</span>
-    <span class="n">y</span> <span class="o">/=</span> <span class="n">a</span><span class="o">;</span>
-  <span class="o">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-d" data-lang="d"><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">opAddAssign</span><span class="o">(</span><span class="n">Vector</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">x</span> <span class="o">+=</span> <span class="n">v</span><span class="o">.</span><span class="na">x</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">y</span> <span class="o">+=</span> <span class="n">v</span><span class="o">.</span><span class="na">y</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">opSubAssign</span><span class="o">(</span><span class="n">Vector</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">x</span> <span class="o">-=</span> <span class="n">v</span><span class="o">.</span><span class="na">x</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">y</span> <span class="o">-=</span> <span class="n">v</span><span class="o">.</span><span class="na">y</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">opMulAssign</span><span class="o">(</span><span class="kt">float</span> <span class="n">a</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">x</span> <span class="o">*=</span> <span class="n">a</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">y</span> <span class="o">*=</span> <span class="n">a</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">opDivAssign</span><span class="o">(</span><span class="kt">float</span> <span class="n">a</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">x</span> <span class="o">/=</span> <span class="n">a</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">y</span> <span class="o">/=</span> <span class="n">a</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>After:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -760,16 +759,16 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-d" data-lang="d">  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">opOpAssign</span><span class="o">(</span><span class="kt">string</span> <span class="n">op</span><span class="o">)(</span><span class="n">Vector</span> <span class="n">v</span><span class="o">)</span> <span class="k">if</span> <span class="o">(</span><span class="n">op</span> <span class="o">==</span> <span class="s">&#34;+&#34;</span> <span class="o">||</span> <span class="n">op</span> <span class="o">==</span> <span class="s">&#34;-&#34;</span><span class="o">)</span> <span class="o">{</span>
-    <span class="k">mixin</span><span class="o">(</span><span class="s">&#34;x&#34;</span> <span class="o">~</span> <span class="n">op</span> <span class="o">~</span> <span class="s">&#34;=v.x;&#34;</span><span class="o">);</span>
-    <span class="k">mixin</span><span class="o">(</span><span class="s">&#34;y&#34;</span> <span class="o">~</span> <span class="n">op</span> <span class="o">~</span> <span class="s">&#34;=v.y;&#34;</span><span class="o">);</span>
-  <span class="o">}</span>
-
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">opOpAssign</span><span class="o">(</span><span class="kt">string</span> <span class="n">op</span><span class="o">)(</span><span class="kt">float</span> <span class="n">a</span><span class="o">)</span> <span class="k">if</span> <span class="o">(</span><span class="n">op</span> <span class="o">==</span> <span class="s">&#34;*&#34;</span> <span class="o">||</span> <span class="n">op</span> <span class="o">==</span> <span class="s">&#34;/&#34;</span><span class="o">)</span> <span class="o">{</span>
-    <span class="k">mixin</span><span class="o">(</span><span class="s">&#34;x&#34;</span> <span class="o">~</span> <span class="n">op</span> <span class="o">~</span> <span class="s">&#34;=a;&#34;</span><span class="o">);</span>
-    <span class="k">mixin</span><span class="o">(</span><span class="s">&#34;y&#34;</span> <span class="o">~</span> <span class="n">op</span> <span class="o">~</span> <span class="s">&#34;=a;&#34;</span><span class="o">);</span>
-  <span class="o">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-d" data-lang="d"><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">opOpAssign</span><span class="o">(</span><span class="nb">string</span> <span class="n">op</span><span class="o">)(</span><span class="n">Vector</span> <span class="n">v</span><span class="o">)</span> <span class="k">if</span> <span class="o">(</span><span class="n">op</span> <span class="o">==</span> <span class="s">&#34;+&#34;</span> <span class="o">||</span> <span class="n">op</span> <span class="o">==</span> <span class="s">&#34;-&#34;</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">mixin</span><span class="o">(</span><span class="s">&#34;x&#34;</span> <span class="o">~</span> <span class="n">op</span> <span class="o">~</span> <span class="s">&#34;=v.x;&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">mixin</span><span class="o">(</span><span class="s">&#34;y&#34;</span> <span class="o">~</span> <span class="n">op</span> <span class="o">~</span> <span class="s">&#34;=v.y;&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">opOpAssign</span><span class="o">(</span><span class="nb">string</span> <span class="n">op</span><span class="o">)(</span><span class="kt">float</span> <span class="n">a</span><span class="o">)</span> <span class="k">if</span> <span class="o">(</span><span class="n">op</span> <span class="o">==</span> <span class="s">&#34;*&#34;</span> <span class="o">||</span> <span class="n">op</span> <span class="o">==</span> <span class="s">&#34;/&#34;</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">mixin</span><span class="o">(</span><span class="s">&#34;x&#34;</span> <span class="o">~</span> <span class="n">op</span> <span class="o">~</span> <span class="s">&#34;=a;&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">mixin</span><span class="o">(</span><span class="s">&#34;y&#34;</span> <span class="o">~</span> <span class="n">op</span> <span class="o">~</span> <span class="s">&#34;=a;&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>This also shows the use of <code>mixin</code> to generate compile time code.</p>
 <h2 id="linking-existing-libraries">Linking existing libraries</h2>
@@ -777,7 +776,7 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 <p>The changes required are mostly related to how the extern code was defined. For now, because I was only trying to produce a Windows version, I replaced uses of <code>version(Win32)</code> (which is now <code>version(Windows)</code>) with just <code>extern(Windows)</code> unconditionally.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -791,19 +790,19 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gu">@@ -1,10 +1,4 @@
-</span><span class="gu"></span><span class="gd">-version (Win32) {
-</span><span class="gd">-	private import std.c.windows.windows;
-</span><span class="gd">-	extern(Windows):
-</span><span class="gd">-}
-</span><span class="gd">-version (linux) {
-</span><span class="gd">-	extern(C):
-</span><span class="gd">-}
-</span><span class="gd"></span><span class="gi">+extern(Windows):
-</span><span class="gi"></span> 
- alias uint GLenum;
- alias ubyte GLboolean;
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl"><span class="gu">@@ -1,10 +1,4 @@
+</span></span></span><span class="line"><span class="cl"><span class="gd">-version (Win32) {
+</span></span></span><span class="line"><span class="cl"><span class="gd">-	private import std.c.windows.windows;
+</span></span></span><span class="line"><span class="cl"><span class="gd">-	extern(Windows):
+</span></span></span><span class="line"><span class="cl"><span class="gd">-}
+</span></span></span><span class="line"><span class="cl"><span class="gd">-version (linux) {
+</span></span></span><span class="line"><span class="cl"><span class="gd">-	extern(C):
+</span></span></span><span class="line"><span class="cl"><span class="gd">-}
+</span></span></span><span class="line"><span class="cl"><span class="gi">+extern(Windows):
+</span></span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"> alias uint GLenum;
+</span></span><span class="line"><span class="cl"> alias ubyte GLboolean;
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>The BulletML binding used <code>extern(C)</code> and that worked the same so no changes were done.</p>
 <h2 id="wrapping-up">Wrapping up</h2>
@@ -812,7 +811,7 @@ C:\D\dmd2\windows\bin64\dmd.exe failed with exit code 1.
 
 	</div>
 </div>
-            <div id="footer"><p>2026-01-05 16:50:23 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
+            <div id="footer"><p>2026-07-08 11:17:47 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
         </div>
     </div>
 </body>

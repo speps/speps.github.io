@@ -29,7 +29,6 @@
                 </ul>
                 <div id="social"><a href="http://www.linkedin.com/in/remigillig"><img src="/images/linkedin.png"/></a></div>
                 <div id="social">&nbsp;</div>
-                <div id="social"><a href="http://twitter.com/remigillig"><img src="/images/twitter.png"/></a></div>
             </div>
 <div id="content">
 	<div id="page">
@@ -101,7 +100,7 @@
 <p>Here is what the interface looks like:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">  1
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
 </span><span class="lnt">  2
 </span><span class="lnt">  3
 </span><span class="lnt">  4
@@ -274,178 +273,178 @@
 </span><span class="lnt">171
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-d" data-lang="d"><span class="kd">static</span> <span class="kd">class</span> <span class="nc">GL</span>
-<span class="o">{</span>
-  <span class="kd">alias</span> <span class="n">Matrix</span> <span class="o">=</span> <span class="kt">float</span><span class="o">[</span><span class="mi">16</span><span class="o">];</span>
-  <span class="kd">static</span> <span class="kd">const</span> <span class="n">Matrix</span> <span class="n">Identity</span> <span class="o">=</span> <span class="o">[</span>
-    <span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span>
-    <span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span>
-    <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span>
-    <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span>
-  <span class="o">];</span>
-  <span class="kd">enum</span> <span class="n">MatrixMode</span> <span class="o">{</span>
-    <span class="n">ModelView</span><span class="o">,</span>
-    <span class="n">Projection</span><span class="o">,</span>
-  <span class="o">}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">normalize</span><span class="o">(</span><span class="n">ref</span> <span class="kt">float</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
-    <span class="kt">float</span> <span class="n">r</span><span class="o">;</span>
-
-    <span class="n">r</span> <span class="o">=</span> <span class="n">sqrt</span><span class="o">(</span><span class="n">v</span><span class="o">[</span><span class="mi">0</span><span class="o">]*</span><span class="n">v</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">+</span> <span class="n">v</span><span class="o">[</span><span class="mi">1</span><span class="o">]*</span><span class="n">v</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">+</span> <span class="n">v</span><span class="o">[</span><span class="mi">2</span><span class="o">]*</span><span class="n">v</span><span class="o">[</span><span class="mi">2</span><span class="o">]);</span>
-    <span class="k">if</span> <span class="o">(</span><span class="n">r</span> <span class="o">==</span> <span class="mf">0.0</span><span class="o">)</span> <span class="k">return</span><span class="o">;</span>
-
-    <span class="n">v</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">/=</span> <span class="n">r</span><span class="o">;</span>
-    <span class="n">v</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">/=</span> <span class="n">r</span><span class="o">;</span>
-    <span class="n">v</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">/=</span> <span class="n">r</span><span class="o">;</span>
-  <span class="o">}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">cross</span><span class="o">(</span><span class="kt">float</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span> <span class="n">v1</span><span class="o">,</span> <span class="kt">float</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span> <span class="n">v2</span><span class="o">,</span> <span class="k">out</span> <span class="kt">float</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span> <span class="n">result</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">result</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">v1</span><span class="o">[</span><span class="mi">1</span><span class="o">]*</span><span class="n">v2</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">-</span> <span class="n">v1</span><span class="o">[</span><span class="mi">2</span><span class="o">]*</span><span class="n">v2</span><span class="o">[</span><span class="mi">1</span><span class="o">];</span>
-    <span class="n">result</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">v1</span><span class="o">[</span><span class="mi">2</span><span class="o">]*</span><span class="n">v2</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">-</span> <span class="n">v1</span><span class="o">[</span><span class="mi">0</span><span class="o">]*</span><span class="n">v2</span><span class="o">[</span><span class="mi">2</span><span class="o">];</span>
-    <span class="n">result</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">=</span> <span class="n">v1</span><span class="o">[</span><span class="mi">0</span><span class="o">]*</span><span class="n">v2</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">-</span> <span class="n">v1</span><span class="o">[</span><span class="mi">1</span><span class="o">]*</span><span class="n">v2</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
-  <span class="o">}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">()</span> <span class="o">{}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">matrixMode</span><span class="o">(</span><span class="n">MatrixMode</span> <span class="n">mode</span><span class="o">)</span> <span class="o">{</span>
-    <span class="k">if</span> <span class="o">(</span><span class="n">mode</span> <span class="o">==</span> <span class="n">MatrixMode</span><span class="o">.</span><span class="na">Projection</span><span class="o">)</span> <span class="o">{</span>
-      <span class="n">glMatrixMode</span><span class="o">(</span><span class="n">GL_PROJECTION</span><span class="o">);</span>
-    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">mode</span> <span class="o">==</span> <span class="n">MatrixMode</span><span class="o">.</span><span class="na">ModelView</span><span class="o">)</span> <span class="o">{</span>
-      <span class="n">glMatrixMode</span><span class="o">(</span><span class="n">GL_MODELVIEW</span><span class="o">);</span>
-    <span class="o">}</span>
-  <span class="o">}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">loadIdentity</span><span class="o">()</span> <span class="o">{</span>
-    <span class="n">glLoadIdentity</span><span class="o">();</span>
-  <span class="o">}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">pushMatrix</span><span class="o">()</span> <span class="o">{</span>
-    <span class="n">glPushMatrix</span><span class="o">();</span>
-  <span class="o">}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">popMatrix</span><span class="o">()</span> <span class="o">{</span>
-    <span class="n">glPopMatrix</span><span class="o">();</span>
-  <span class="o">}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">multMatrix</span><span class="o">(</span><span class="n">Matrix</span> <span class="n">m</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">glMultMatrixf</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="na">ptr</span><span class="o">);</span>
-  <span class="o">}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">translate</span><span class="o">(</span><span class="kt">float</span> <span class="n">x</span><span class="o">,</span> <span class="kt">float</span> <span class="n">y</span><span class="o">,</span> <span class="kt">float</span> <span class="n">z</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">glTranslatef</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">z</span><span class="o">);</span>
-  <span class="o">}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">translate</span><span class="o">(</span><span class="n">Vector3</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">translate</span><span class="o">(</span><span class="n">v</span><span class="o">.</span><span class="na">x</span><span class="o">,</span> <span class="n">v</span><span class="o">.</span><span class="na">y</span><span class="o">,</span> <span class="n">v</span><span class="o">.</span><span class="na">z</span><span class="o">);</span>
-  <span class="o">}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">rotate</span><span class="o">(</span><span class="kt">float</span> <span class="n">angle</span><span class="o">,</span> <span class="kt">float</span> <span class="n">x</span><span class="o">,</span> <span class="kt">float</span> <span class="n">y</span><span class="o">,</span> <span class="kt">float</span> <span class="n">z</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">glRotatef</span><span class="o">(</span><span class="n">angle</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">z</span><span class="o">);</span>
-  <span class="o">}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">scale</span><span class="o">(</span><span class="kt">float</span> <span class="n">x</span><span class="o">,</span> <span class="kt">float</span> <span class="n">y</span><span class="o">,</span> <span class="kt">float</span> <span class="n">z</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">glScalef</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">z</span><span class="o">);</span>
-  <span class="o">}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">ortho</span><span class="o">(</span><span class="kt">float</span> <span class="n">left</span><span class="o">,</span> <span class="kt">float</span> <span class="n">right</span><span class="o">,</span> <span class="kt">float</span> <span class="n">bottom</span><span class="o">,</span> <span class="kt">float</span> <span class="n">top</span><span class="o">,</span> <span class="kt">float</span> <span class="n">near</span><span class="o">,</span> <span class="kt">float</span> <span class="n">far</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">glOrtho</span><span class="o">(</span><span class="n">left</span><span class="o">,</span> <span class="n">right</span><span class="o">,</span> <span class="n">bottom</span><span class="o">,</span> <span class="n">top</span><span class="o">,</span> <span class="n">near</span><span class="o">,</span> <span class="n">far</span><span class="o">);</span>
-  <span class="o">}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">frustum</span><span class="o">(</span><span class="kt">float</span> <span class="n">left</span><span class="o">,</span> <span class="kt">float</span> <span class="n">right</span><span class="o">,</span> <span class="kt">float</span> <span class="n">bottom</span><span class="o">,</span> <span class="kt">float</span> <span class="n">top</span><span class="o">,</span> <span class="kt">float</span> <span class="n">near</span><span class="o">,</span> <span class="kt">float</span> <span class="n">far</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">glFrustum</span><span class="o">(</span><span class="n">left</span><span class="o">,</span> <span class="n">right</span><span class="o">,</span> <span class="n">bottom</span><span class="o">,</span> <span class="n">top</span><span class="o">,</span> <span class="n">near</span><span class="o">,</span> <span class="n">far</span><span class="o">);</span>
-  <span class="o">}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">lookAt</span><span class="o">(</span><span class="kt">float</span> <span class="n">eyex</span><span class="o">,</span> <span class="kt">float</span> <span class="n">eyey</span><span class="o">,</span> <span class="kt">float</span> <span class="n">eyez</span><span class="o">,</span> <span class="kt">float</span> <span class="n">centerx</span><span class="o">,</span> <span class="kt">float</span> <span class="n">centery</span><span class="o">,</span> <span class="kt">float</span> <span class="n">centerz</span><span class="o">,</span> <span class="kt">float</span> <span class="n">upx</span><span class="o">,</span> <span class="kt">float</span> <span class="n">upy</span><span class="o">,</span> <span class="kt">float</span> <span class="n">upz</span><span class="o">)</span> <span class="o">{</span>
-    <span class="kt">int</span> <span class="n">i</span><span class="o">;</span>
-    <span class="kt">float</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span> <span class="n">forward</span><span class="o">,</span> <span class="n">side</span><span class="o">,</span> <span class="n">up</span><span class="o">;</span>
-
-    <span class="n">forward</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">centerx</span> <span class="o">-</span> <span class="n">eyex</span><span class="o">;</span>
-    <span class="n">forward</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">centery</span> <span class="o">-</span> <span class="n">eyey</span><span class="o">;</span>
-    <span class="n">forward</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">=</span> <span class="n">centerz</span> <span class="o">-</span> <span class="n">eyez</span><span class="o">;</span>
-
-    <span class="n">up</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">upx</span><span class="o">;</span>
-    <span class="n">up</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">upy</span><span class="o">;</span>
-    <span class="n">up</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">=</span> <span class="n">upz</span><span class="o">;</span>
-
-    <span class="n">normalize</span><span class="o">(</span><span class="n">forward</span><span class="o">);</span>
-
-    <span class="cm">/* Side = forward x up */</span>
-    <span class="n">cross</span><span class="o">(</span><span class="n">forward</span><span class="o">,</span> <span class="n">up</span><span class="o">,</span> <span class="n">side</span><span class="o">);</span>
-    <span class="n">normalize</span><span class="o">(</span><span class="n">side</span><span class="o">);</span>
-
-    <span class="cm">/* Recompute up as: up = side x forward */</span>
-    <span class="n">cross</span><span class="o">(</span><span class="n">side</span><span class="o">,</span> <span class="n">forward</span><span class="o">,</span> <span class="n">up</span><span class="o">);</span>
-
-    <span class="n">Matrix</span> <span class="n">m</span> <span class="o">=</span> <span class="n">Identity</span><span class="o">[];</span>
-
-    <span class="n">m</span><span class="o">[</span><span class="mi">0</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">side</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
-    <span class="n">m</span><span class="o">[</span><span class="mi">0</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">side</span><span class="o">[</span><span class="mi">1</span><span class="o">];</span>
-    <span class="n">m</span><span class="o">[</span><span class="mi">0</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">2</span><span class="o">]</span> <span class="o">=</span> <span class="n">side</span><span class="o">[</span><span class="mi">2</span><span class="o">];</span>
-
-    <span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">up</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
-    <span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">up</span><span class="o">[</span><span class="mi">1</span><span class="o">];</span>
-    <span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">2</span><span class="o">]</span> <span class="o">=</span> <span class="n">up</span><span class="o">[</span><span class="mi">2</span><span class="o">];</span>
-
-    <span class="n">m</span><span class="o">[</span><span class="mi">2</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">forward</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
-    <span class="n">m</span><span class="o">[</span><span class="mi">2</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">forward</span><span class="o">[</span><span class="mi">1</span><span class="o">];</span>
-    <span class="n">m</span><span class="o">[</span><span class="mi">2</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">2</span><span class="o">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">forward</span><span class="o">[</span><span class="mi">2</span><span class="o">];</span>
-
-    <span class="n">GL</span><span class="o">.</span><span class="na">multMatrix</span><span class="o">(</span><span class="n">m</span><span class="o">);</span>
-    <span class="n">GL</span><span class="o">.</span><span class="na">translate</span><span class="o">(-</span><span class="n">eyex</span><span class="o">,</span> <span class="o">-</span><span class="n">eyey</span><span class="o">,</span> <span class="o">-</span><span class="n">eyez</span><span class="o">);</span>
-  <span class="o">}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">vertex</span><span class="o">(</span><span class="kt">float</span> <span class="n">x</span><span class="o">,</span> <span class="kt">float</span> <span class="n">y</span><span class="o">,</span> <span class="kt">float</span> <span class="n">z</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">glVertex3f</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">z</span><span class="o">);</span>
-  <span class="o">}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">vertex</span><span class="o">(</span><span class="n">Vector3</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">vertex</span><span class="o">(</span><span class="n">v</span><span class="o">.</span><span class="na">x</span><span class="o">,</span> <span class="n">v</span><span class="o">.</span><span class="na">y</span><span class="o">,</span> <span class="n">v</span><span class="o">.</span><span class="na">z</span><span class="o">);</span>
-  <span class="o">}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">color</span><span class="o">(</span><span class="kt">float</span> <span class="n">r</span><span class="o">,</span> <span class="kt">float</span> <span class="n">g</span><span class="o">,</span> <span class="kt">float</span> <span class="n">b</span><span class="o">,</span> <span class="kt">float</span> <span class="n">a</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">glColor4f</span><span class="o">(</span><span class="n">r</span><span class="o">,</span> <span class="n">g</span><span class="o">,</span> <span class="n">b</span><span class="o">,</span> <span class="n">a</span><span class="o">);</span>
-  <span class="o">}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">viewport</span><span class="o">(</span><span class="kt">int</span> <span class="n">left</span><span class="o">,</span> <span class="kt">int</span> <span class="n">right</span><span class="o">,</span> <span class="kt">int</span> <span class="n">width</span><span class="o">,</span> <span class="kt">int</span> <span class="n">height</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">glViewport</span><span class="o">(</span><span class="n">left</span><span class="o">,</span> <span class="n">right</span><span class="o">,</span> <span class="n">width</span><span class="o">,</span> <span class="n">height</span><span class="o">);</span>
-  <span class="o">}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">clearColor</span><span class="o">(</span><span class="kt">float</span> <span class="n">r</span><span class="o">,</span> <span class="kt">float</span> <span class="n">g</span><span class="o">,</span> <span class="kt">float</span> <span class="n">b</span><span class="o">,</span> <span class="kt">float</span> <span class="n">a</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">glClearColor</span><span class="o">(</span><span class="n">r</span><span class="o">,</span> <span class="n">g</span><span class="o">,</span> <span class="n">b</span><span class="o">,</span> <span class="n">a</span><span class="o">);</span>
-  <span class="o">}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">clear</span><span class="o">(</span><span class="n">GLbitfield</span> <span class="n">flag</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">glClear</span><span class="o">(</span><span class="n">flag</span><span class="o">);</span>
-  <span class="o">}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">blendFunc</span><span class="o">(</span><span class="n">GLenum</span> <span class="n">src</span><span class="o">,</span> <span class="n">GLenum</span> <span class="n">dest</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">glBlendFunc</span><span class="o">(</span><span class="n">src</span><span class="o">,</span> <span class="n">dest</span><span class="o">);</span>
-  <span class="o">}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">enable</span><span class="o">(</span><span class="n">GLenum</span> <span class="n">flag</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">glEnable</span><span class="o">(</span><span class="n">flag</span><span class="o">);</span>
-  <span class="o">}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">disable</span><span class="o">(</span><span class="n">GLenum</span> <span class="n">flag</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">glDisable</span><span class="o">(</span><span class="n">flag</span><span class="o">);</span>
-  <span class="o">}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">lineWidth</span><span class="o">(</span><span class="kt">float</span> <span class="n">w</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">glLineWidth</span><span class="o">(</span><span class="n">w</span><span class="o">);</span>
-  <span class="o">}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">frameStart</span><span class="o">()</span> <span class="o">{}</span>
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">frameEnd</span><span class="o">()</span> <span class="o">{}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">begin</span><span class="o">(</span><span class="kt">int</span> <span class="n">primitiveType</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">glBegin</span><span class="o">(</span><span class="n">primitiveType</span><span class="o">);</span>
-  <span class="o">}</span>
-
-  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">end</span><span class="o">()</span> <span class="o">{</span>
-    <span class="n">glEnd</span><span class="o">();</span>
-  <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-d" data-lang="d"><span class="line"><span class="cl"><span class="kd">static</span> <span class="kd">class</span> <span class="nc">GL</span>
+</span></span><span class="line"><span class="cl"><span class="o">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">alias</span> <span class="n">Matrix</span> <span class="o">=</span> <span class="kt">float</span><span class="o">[</span><span class="mi">16</span><span class="o">];</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kd">const</span> <span class="n">Matrix</span> <span class="n">Identity</span> <span class="o">=</span> <span class="o">[</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span>
+</span></span><span class="line"><span class="cl">    <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">,</span>
+</span></span><span class="line"><span class="cl">  <span class="o">];</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">enum</span> <span class="n">MatrixMode</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ModelView</span><span class="o">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Projection</span><span class="o">,</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">normalize</span><span class="o">(</span><span class="kd">ref</span> <span class="kt">float</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">float</span> <span class="n">r</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">r</span> <span class="o">=</span> <span class="n">sqrt</span><span class="o">(</span><span class="n">v</span><span class="o">[</span><span class="mi">0</span><span class="o">]*</span><span class="n">v</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">+</span> <span class="n">v</span><span class="o">[</span><span class="mi">1</span><span class="o">]*</span><span class="n">v</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">+</span> <span class="n">v</span><span class="o">[</span><span class="mi">2</span><span class="o">]*</span><span class="n">v</span><span class="o">[</span><span class="mi">2</span><span class="o">]);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">(</span><span class="n">r</span> <span class="o">==</span> <span class="mf">0.0</span><span class="o">)</span> <span class="k">return</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">v</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">/=</span> <span class="n">r</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">v</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">/=</span> <span class="n">r</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">v</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">/=</span> <span class="n">r</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">cross</span><span class="o">(</span><span class="kt">float</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span> <span class="n">v1</span><span class="o">,</span> <span class="kt">float</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span> <span class="n">v2</span><span class="o">,</span> <span class="k">out</span> <span class="kt">float</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span> <span class="n">result</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">result</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">v1</span><span class="o">[</span><span class="mi">1</span><span class="o">]*</span><span class="n">v2</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">-</span> <span class="n">v1</span><span class="o">[</span><span class="mi">2</span><span class="o">]*</span><span class="n">v2</span><span class="o">[</span><span class="mi">1</span><span class="o">];</span>
+</span></span><span class="line"><span class="cl">    <span class="n">result</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">v1</span><span class="o">[</span><span class="mi">2</span><span class="o">]*</span><span class="n">v2</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">-</span> <span class="n">v1</span><span class="o">[</span><span class="mi">0</span><span class="o">]*</span><span class="n">v2</span><span class="o">[</span><span class="mi">2</span><span class="o">];</span>
+</span></span><span class="line"><span class="cl">    <span class="n">result</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">=</span> <span class="n">v1</span><span class="o">[</span><span class="mi">0</span><span class="o">]*</span><span class="n">v2</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">-</span> <span class="n">v1</span><span class="o">[</span><span class="mi">1</span><span class="o">]*</span><span class="n">v2</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">()</span> <span class="o">{}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">matrixMode</span><span class="o">(</span><span class="n">MatrixMode</span> <span class="n">mode</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">(</span><span class="n">mode</span> <span class="o">==</span> <span class="n">MatrixMode</span><span class="o">.</span><span class="na">Projection</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">      <span class="n">glMatrixMode</span><span class="o">(</span><span class="n">GL_PROJECTION</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">mode</span> <span class="o">==</span> <span class="n">MatrixMode</span><span class="o">.</span><span class="na">ModelView</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">      <span class="n">glMatrixMode</span><span class="o">(</span><span class="n">GL_MODELVIEW</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">loadIdentity</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">glLoadIdentity</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">pushMatrix</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">glPushMatrix</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">popMatrix</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">glPopMatrix</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">multMatrix</span><span class="o">(</span><span class="n">Matrix</span> <span class="n">m</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">glMultMatrixf</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="na">ptr</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">translate</span><span class="o">(</span><span class="kt">float</span> <span class="n">x</span><span class="o">,</span> <span class="kt">float</span> <span class="n">y</span><span class="o">,</span> <span class="kt">float</span> <span class="n">z</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">glTranslatef</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">z</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">translate</span><span class="o">(</span><span class="n">Vector3</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">translate</span><span class="o">(</span><span class="n">v</span><span class="o">.</span><span class="na">x</span><span class="o">,</span> <span class="n">v</span><span class="o">.</span><span class="na">y</span><span class="o">,</span> <span class="n">v</span><span class="o">.</span><span class="na">z</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">rotate</span><span class="o">(</span><span class="kt">float</span> <span class="n">angle</span><span class="o">,</span> <span class="kt">float</span> <span class="n">x</span><span class="o">,</span> <span class="kt">float</span> <span class="n">y</span><span class="o">,</span> <span class="kt">float</span> <span class="n">z</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">glRotatef</span><span class="o">(</span><span class="n">angle</span><span class="o">,</span> <span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">z</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">scale</span><span class="o">(</span><span class="kt">float</span> <span class="n">x</span><span class="o">,</span> <span class="kt">float</span> <span class="n">y</span><span class="o">,</span> <span class="kt">float</span> <span class="n">z</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">glScalef</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">z</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">ortho</span><span class="o">(</span><span class="kt">float</span> <span class="n">left</span><span class="o">,</span> <span class="kt">float</span> <span class="n">right</span><span class="o">,</span> <span class="kt">float</span> <span class="n">bottom</span><span class="o">,</span> <span class="kt">float</span> <span class="n">top</span><span class="o">,</span> <span class="kt">float</span> <span class="n">near</span><span class="o">,</span> <span class="kt">float</span> <span class="n">far</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">glOrtho</span><span class="o">(</span><span class="n">left</span><span class="o">,</span> <span class="n">right</span><span class="o">,</span> <span class="n">bottom</span><span class="o">,</span> <span class="n">top</span><span class="o">,</span> <span class="n">near</span><span class="o">,</span> <span class="n">far</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">frustum</span><span class="o">(</span><span class="kt">float</span> <span class="n">left</span><span class="o">,</span> <span class="kt">float</span> <span class="n">right</span><span class="o">,</span> <span class="kt">float</span> <span class="n">bottom</span><span class="o">,</span> <span class="kt">float</span> <span class="n">top</span><span class="o">,</span> <span class="kt">float</span> <span class="n">near</span><span class="o">,</span> <span class="kt">float</span> <span class="n">far</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">glFrustum</span><span class="o">(</span><span class="n">left</span><span class="o">,</span> <span class="n">right</span><span class="o">,</span> <span class="n">bottom</span><span class="o">,</span> <span class="n">top</span><span class="o">,</span> <span class="n">near</span><span class="o">,</span> <span class="n">far</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">lookAt</span><span class="o">(</span><span class="kt">float</span> <span class="n">eyex</span><span class="o">,</span> <span class="kt">float</span> <span class="n">eyey</span><span class="o">,</span> <span class="kt">float</span> <span class="n">eyez</span><span class="o">,</span> <span class="kt">float</span> <span class="n">centerx</span><span class="o">,</span> <span class="kt">float</span> <span class="n">centery</span><span class="o">,</span> <span class="kt">float</span> <span class="n">centerz</span><span class="o">,</span> <span class="kt">float</span> <span class="n">upx</span><span class="o">,</span> <span class="kt">float</span> <span class="n">upy</span><span class="o">,</span> <span class="kt">float</span> <span class="n">upz</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">i</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">float</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span> <span class="n">forward</span><span class="o">,</span> <span class="n">side</span><span class="o">,</span> <span class="n">up</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">forward</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">centerx</span> <span class="o">-</span> <span class="n">eyex</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">forward</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">centery</span> <span class="o">-</span> <span class="n">eyey</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">forward</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">=</span> <span class="n">centerz</span> <span class="o">-</span> <span class="n">eyez</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">up</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">upx</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">up</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">upy</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">up</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">=</span> <span class="n">upz</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">normalize</span><span class="o">(</span><span class="n">forward</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="cm">/* Side = forward x up */</span>
+</span></span><span class="line"><span class="cl">    <span class="n">cross</span><span class="o">(</span><span class="n">forward</span><span class="o">,</span> <span class="n">up</span><span class="o">,</span> <span class="n">side</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">normalize</span><span class="o">(</span><span class="n">side</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="cm">/* Recompute up as: up = side x forward */</span>
+</span></span><span class="line"><span class="cl">    <span class="n">cross</span><span class="o">(</span><span class="n">side</span><span class="o">,</span> <span class="n">forward</span><span class="o">,</span> <span class="n">up</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">Matrix</span> <span class="n">m</span> <span class="o">=</span> <span class="n">Identity</span><span class="o">[];</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">m</span><span class="o">[</span><span class="mi">0</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">side</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+</span></span><span class="line"><span class="cl">    <span class="n">m</span><span class="o">[</span><span class="mi">0</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">side</span><span class="o">[</span><span class="mi">1</span><span class="o">];</span>
+</span></span><span class="line"><span class="cl">    <span class="n">m</span><span class="o">[</span><span class="mi">0</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">2</span><span class="o">]</span> <span class="o">=</span> <span class="n">side</span><span class="o">[</span><span class="mi">2</span><span class="o">];</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">up</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+</span></span><span class="line"><span class="cl">    <span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">up</span><span class="o">[</span><span class="mi">1</span><span class="o">];</span>
+</span></span><span class="line"><span class="cl">    <span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">2</span><span class="o">]</span> <span class="o">=</span> <span class="n">up</span><span class="o">[</span><span class="mi">2</span><span class="o">];</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">m</span><span class="o">[</span><span class="mi">2</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">forward</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+</span></span><span class="line"><span class="cl">    <span class="n">m</span><span class="o">[</span><span class="mi">2</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">forward</span><span class="o">[</span><span class="mi">1</span><span class="o">];</span>
+</span></span><span class="line"><span class="cl">    <span class="n">m</span><span class="o">[</span><span class="mi">2</span><span class="o">+</span><span class="mi">4</span><span class="o">*</span><span class="mi">2</span><span class="o">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">forward</span><span class="o">[</span><span class="mi">2</span><span class="o">];</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">GL</span><span class="o">.</span><span class="na">multMatrix</span><span class="o">(</span><span class="n">m</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">GL</span><span class="o">.</span><span class="na">translate</span><span class="o">(-</span><span class="n">eyex</span><span class="o">,</span> <span class="o">-</span><span class="n">eyey</span><span class="o">,</span> <span class="o">-</span><span class="n">eyez</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">vertex</span><span class="o">(</span><span class="kt">float</span> <span class="n">x</span><span class="o">,</span> <span class="kt">float</span> <span class="n">y</span><span class="o">,</span> <span class="kt">float</span> <span class="n">z</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">glVertex3f</span><span class="o">(</span><span class="n">x</span><span class="o">,</span> <span class="n">y</span><span class="o">,</span> <span class="n">z</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">vertex</span><span class="o">(</span><span class="n">Vector3</span> <span class="n">v</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">vertex</span><span class="o">(</span><span class="n">v</span><span class="o">.</span><span class="na">x</span><span class="o">,</span> <span class="n">v</span><span class="o">.</span><span class="na">y</span><span class="o">,</span> <span class="n">v</span><span class="o">.</span><span class="na">z</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">color</span><span class="o">(</span><span class="kt">float</span> <span class="n">r</span><span class="o">,</span> <span class="kt">float</span> <span class="n">g</span><span class="o">,</span> <span class="kt">float</span> <span class="n">b</span><span class="o">,</span> <span class="kt">float</span> <span class="n">a</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">glColor4f</span><span class="o">(</span><span class="n">r</span><span class="o">,</span> <span class="n">g</span><span class="o">,</span> <span class="n">b</span><span class="o">,</span> <span class="n">a</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">viewport</span><span class="o">(</span><span class="kt">int</span> <span class="n">left</span><span class="o">,</span> <span class="kt">int</span> <span class="n">right</span><span class="o">,</span> <span class="kt">int</span> <span class="n">width</span><span class="o">,</span> <span class="kt">int</span> <span class="n">height</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">glViewport</span><span class="o">(</span><span class="n">left</span><span class="o">,</span> <span class="n">right</span><span class="o">,</span> <span class="n">width</span><span class="o">,</span> <span class="n">height</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">clearColor</span><span class="o">(</span><span class="kt">float</span> <span class="n">r</span><span class="o">,</span> <span class="kt">float</span> <span class="n">g</span><span class="o">,</span> <span class="kt">float</span> <span class="n">b</span><span class="o">,</span> <span class="kt">float</span> <span class="n">a</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">glClearColor</span><span class="o">(</span><span class="n">r</span><span class="o">,</span> <span class="n">g</span><span class="o">,</span> <span class="n">b</span><span class="o">,</span> <span class="n">a</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">clear</span><span class="o">(</span><span class="n">GLbitfield</span> <span class="n">flag</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">glClear</span><span class="o">(</span><span class="n">flag</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">blendFunc</span><span class="o">(</span><span class="n">GLenum</span> <span class="n">src</span><span class="o">,</span> <span class="n">GLenum</span> <span class="n">dest</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">glBlendFunc</span><span class="o">(</span><span class="n">src</span><span class="o">,</span> <span class="n">dest</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">enable</span><span class="o">(</span><span class="n">GLenum</span> <span class="n">flag</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">glEnable</span><span class="o">(</span><span class="n">flag</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">disable</span><span class="o">(</span><span class="n">GLenum</span> <span class="n">flag</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">glDisable</span><span class="o">(</span><span class="n">flag</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">lineWidth</span><span class="o">(</span><span class="kt">float</span> <span class="n">w</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">glLineWidth</span><span class="o">(</span><span class="n">w</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">frameStart</span><span class="o">()</span> <span class="o">{}</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">frameEnd</span><span class="o">()</span> <span class="o">{}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">begin</span><span class="o">(</span><span class="kt">int</span> <span class="n">primitiveType</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">glBegin</span><span class="o">(</span><span class="n">primitiveType</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kt">void</span> <span class="nf">end</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">glEnd</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>Using this, all OpenGL calls now go through these methods. From here, I&rsquo;ll need to:</p>
 <ul>
@@ -472,7 +471,7 @@
 <p>The <code>Pad</code> class handles reading keyboard values using <code>SDL_GetKeyboardState</code>. It&rsquo;s also inherited by <code>RecordablePad</code> which handles doing the replays by recording the inputs. This design is okay but to be able to replace the backend of how inputs are fed into it, I modified <code>Pad</code> to receive a <code>InputBackend</code> interface like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -481,19 +480,19 @@
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-d" data-lang="d"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">InputBackend</span> <span class="o">{</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">();</span>
-  <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getDirState</span><span class="o">();</span>
-  <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getButtonState</span><span class="o">();</span>
-  <span class="kd">public</span> <span class="kt">bool</span> <span class="nf">getExitState</span><span class="o">();</span>
-  <span class="kd">public</span> <span class="kt">bool</span> <span class="nf">getPauseState</span><span class="o">();</span>
-<span class="o">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-d" data-lang="d"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">InputBackend</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getDirState</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getButtonState</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kt">bool</span> <span class="nf">getExitState</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kt">bool</span> <span class="nf">getPauseState</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>Then, the code from <code>Pad</code> can now be moved into <code>InputBackendSDL</code>:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -533,45 +532,45 @@
 </span><span class="lnt">38
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-d" data-lang="d"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">InputBackendSDL</span> <span class="o">:</span> <span class="n">InputBackend</span> <span class="o">{</span>
-<span class="kd">private</span><span class="o">:</span>
-  <span class="n">Uint8</span> <span class="o">*</span><span class="n">keys</span><span class="o">;</span>
-
-  <span class="kd">public</span> <span class="kd">override</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">()</span> <span class="o">{</span>
-    <span class="n">keys</span> <span class="o">=</span> <span class="n">SDL_GetKeyboardState</span><span class="o">(</span><span class="kc">null</span><span class="o">);</span>
-  <span class="o">}</span>
-
-  <span class="kd">public</span> <span class="kd">override</span> <span class="kt">int</span> <span class="nf">getDirState</span><span class="o">()</span> <span class="o">{</span>
-    <span class="kt">int</span> <span class="n">dir</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-    <span class="k">if</span> <span class="o">(</span><span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_RIGHT</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_KP_6</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_D</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span><span class="o">)</span>
-      <span class="n">dir</span> <span class="o">|=</span> <span class="n">Input</span><span class="o">.</span><span class="na">Dir</span><span class="o">.</span><span class="na">RIGHT</span><span class="o">;</span>
-    <span class="k">if</span> <span class="o">(</span><span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_LEFT</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_KP_4</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_A</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span><span class="o">)</span>
-      <span class="n">dir</span> <span class="o">|=</span> <span class="n">Input</span><span class="o">.</span><span class="na">Dir</span><span class="o">.</span><span class="na">LEFT</span><span class="o">;</span>
-    <span class="k">if</span> <span class="o">(</span><span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_DOWN</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_KP_2</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_S</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span><span class="o">)</span>
-      <span class="n">dir</span> <span class="o">|=</span> <span class="n">Input</span><span class="o">.</span><span class="na">Dir</span><span class="o">.</span><span class="na">DOWN</span><span class="o">;</span>
-    <span class="k">if</span> <span class="o">(</span><span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_UP</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span>  <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_KP_8</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_W</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span><span class="o">)</span>
-      <span class="n">dir</span> <span class="o">|=</span> <span class="n">Input</span><span class="o">.</span><span class="na">Dir</span><span class="o">.</span><span class="na">UP</span><span class="o">;</span>
-    <span class="k">return</span> <span class="n">dir</span><span class="o">;</span>
-  <span class="o">}</span>
-
-  <span class="kd">public</span> <span class="kd">override</span> <span class="kt">int</span> <span class="nf">getButtonState</span><span class="o">()</span> <span class="o">{</span>
-    <span class="kt">int</span> <span class="n">btn</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-    <span class="k">if</span> <span class="o">(</span><span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_Z</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_PERIOD</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_LCTRL</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span><span class="o">)</span>
-      <span class="n">btn</span> <span class="o">|=</span> <span class="n">Input</span><span class="o">.</span><span class="na">Button</span><span class="o">.</span><span class="na">A</span><span class="o">;</span>
-    <span class="k">if</span> <span class="o">(</span><span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_X</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_SLASH</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_LALT</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_LSHIFT</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span><span class="o">)</span>
-      <span class="n">btn</span> <span class="o">|=</span> <span class="n">Input</span><span class="o">.</span><span class="na">Button</span><span class="o">.</span><span class="na">B</span><span class="o">;</span>
-    <span class="k">return</span> <span class="n">btn</span><span class="o">;</span>
-  <span class="o">}</span>
-
-  <span class="kd">public</span> <span class="kd">override</span> <span class="kt">bool</span> <span class="nf">getExitState</span><span class="o">()</span> <span class="o">{</span>
-    <span class="k">return</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_ESCAPE</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span><span class="o">;</span>
-  <span class="o">}</span>
-
-  <span class="kd">public</span> <span class="kd">override</span> <span class="kt">bool</span> <span class="nf">getPauseState</span><span class="o">()</span> <span class="o">{</span>
-    <span class="k">return</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_P</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span><span class="o">;</span>
-  <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-d" data-lang="d"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">InputBackendSDL</span> <span class="o">:</span> <span class="n">InputBackend</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl"><span class="kd">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">  <span class="n">Uint8</span> <span class="o">*</span><span class="n">keys</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kd">override</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">keys</span> <span class="o">=</span> <span class="n">SDL_GetKeyboardState</span><span class="o">(</span><span class="kc">null</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kd">override</span> <span class="kt">int</span> <span class="nf">getDirState</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">dir</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">(</span><span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_RIGHT</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_KP_6</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_D</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">      <span class="n">dir</span> <span class="o">|=</span> <span class="n">Input</span><span class="o">.</span><span class="na">Dir</span><span class="o">.</span><span class="na">RIGHT</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">(</span><span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_LEFT</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_KP_4</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_A</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">      <span class="n">dir</span> <span class="o">|=</span> <span class="n">Input</span><span class="o">.</span><span class="na">Dir</span><span class="o">.</span><span class="na">LEFT</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">(</span><span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_DOWN</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_KP_2</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_S</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">      <span class="n">dir</span> <span class="o">|=</span> <span class="n">Input</span><span class="o">.</span><span class="na">Dir</span><span class="o">.</span><span class="na">DOWN</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">(</span><span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_UP</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span>  <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_KP_8</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_W</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">      <span class="n">dir</span> <span class="o">|=</span> <span class="n">Input</span><span class="o">.</span><span class="na">Dir</span><span class="o">.</span><span class="na">UP</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">dir</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kd">override</span> <span class="kt">int</span> <span class="nf">getButtonState</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">btn</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">(</span><span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_Z</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_PERIOD</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_LCTRL</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">      <span class="n">btn</span> <span class="o">|=</span> <span class="n">Input</span><span class="o">.</span><span class="na">Button</span><span class="o">.</span><span class="na">A</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">(</span><span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_X</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_SLASH</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_LALT</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span> <span class="o">||</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_LSHIFT</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">      <span class="n">btn</span> <span class="o">|=</span> <span class="n">Input</span><span class="o">.</span><span class="na">Button</span><span class="o">.</span><span class="na">B</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">btn</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kd">override</span> <span class="kt">bool</span> <span class="nf">getExitState</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_ESCAPE</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kd">override</span> <span class="kt">bool</span> <span class="nf">getPauseState</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">keys</span><span class="o">[</span><span class="n">SDL_SCANCODE_P</span><span class="o">]</span> <span class="o">==</span> <span class="n">SDL_PRESSED</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>And an instance of <code>InputBackendSDL</code> passed where the <code>RecordablePad</code> instance is created.</p>
 <p>Note again that I&rsquo;ve simplified the code to not support reversing the buttons and removed joystick support. These can be added later in a better way. I feel like it&rsquo;s important to get some progress instead of being stuck on details for now.</p>
@@ -581,7 +580,7 @@
 <p>Given the small amount of files required by the game to be loaded on startup (and remember I removed images from that original list), it&rsquo;s possible to embed these files. D has a handy feature equivalent to C&rsquo;s <code>#include</code>. It&rsquo;s using the call <code>import(fileName)</code> to load a file to a byte array which is embedded into the executable.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -614,38 +613,38 @@
 </span><span class="lnt">31
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-d" data-lang="d"><span class="kt">string</span> <span class="nf">readText</span><span class="o">(</span><span class="kt">string</span> <span class="n">path</span><span class="o">)</span> <span class="o">{</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/basic/straight.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/basic/straight.xml&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/35way.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/35way.xml&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/alt_nway.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/alt_nway.xml&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/alt_sideshot.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/alt_sideshot.xml&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/backword_spread.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/backword_spread.xml&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/clow_rocket.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/clow_rocket.xml&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/diamondnway.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/diamondnway.xml&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/fast_aim.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/fast_aim.xml&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/forward_1way.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/forward_1way.xml&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/grow.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/grow.xml&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/grow3way.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/grow3way.xml&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/nway.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/nway.xml&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/random_fire.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/random_fire.xml&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/spread2blt.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/spread2blt.xml&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/squirt.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/squirt.xml&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/0to1.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/0to1.xml&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/accel.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/accel.xml&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/accelshot.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/accelshot.xml&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/bar.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/bar.xml&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/divide.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/divide.xml&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/fast.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/fast.xml&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/fire_slowshot.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/fire_slowshot.xml&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/slide.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/slide.xml&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/slowdown.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/slowdown.xml&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/speed_rnd.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/speed_rnd.xml&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/twin.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/twin.xml&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/wedge_half.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/wedge_half.xml&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/wide.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/wide.xml&#34;</span><span class="o">);</span>
-  <span class="k">assert</span><span class="o">(</span><span class="kc">false</span><span class="o">,</span> <span class="s">&#34;unknown file: &#34;</span> <span class="o">~</span> <span class="n">path</span><span class="o">);</span>
-<span class="o">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-d" data-lang="d"><span class="line"><span class="cl"><span class="nb">string</span> <span class="nf">readText</span><span class="o">(</span><span class="nb">string</span> <span class="n">path</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/basic/straight.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/basic/straight.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/35way.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/35way.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/alt_nway.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/alt_nway.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/alt_sideshot.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/alt_sideshot.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/backword_spread.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/backword_spread.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/clow_rocket.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/clow_rocket.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/diamondnway.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/diamondnway.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/fast_aim.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/fast_aim.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/forward_1way.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/forward_1way.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/grow.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/grow.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/grow3way.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/grow3way.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/nway.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/nway.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/random_fire.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/random_fire.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/spread2blt.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/spread2blt.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/middle/squirt.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/middle/squirt.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/0to1.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/0to1.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/accel.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/accel.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/accelshot.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/accelshot.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/bar.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/bar.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/divide.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/divide.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/fast.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/fast.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/fire_slowshot.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/fire_slowshot.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/slide.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/slide.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/slowdown.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/slowdown.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/speed_rnd.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/speed_rnd.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/twin.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/twin.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/wedge_half.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/wedge_half.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;barrage/morph/wide.xml&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;barrage/morph/wide.xml&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">assert</span><span class="o">(</span><span class="kc">false</span><span class="o">,</span> <span class="s">&#34;unknown file: &#34;</span> <span class="o">~</span> <span class="n">path</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>It&rsquo;s not clever in any way but it works!</p>
 <p>For now, I&rsquo;ll skip file writing as it&rsquo;s only for replays and scores. However, I could extend this to save to local storage in JS and even possibly have online scoreboards for the game.</p>
@@ -656,7 +655,7 @@
 <p>Here are some steps along the way:</p>
 <ul>
 <li>Figure out internals of the runtime by looking at LDC&rsquo;s source code</li>
-<li>Asking a lot of questions on the forums to understand some strange behaviours (like why <code>TypeInfo_Array</code>'s <code>base</code> member is null or finding out <code>_aaInX</code> has possibly a compiler bug in LDC)</li>
+<li>Asking a lot of questions on the forums to understand some strange behaviours (like why <code>TypeInfo_Array</code>&rsquo;s <code>base</code> member is null or finding out <code>_aaInX</code> has possibly a compiler bug in LDC)</li>
 <li>Understand the way array append/concat works internally</li>
 <li>Replace <code>std</code> methods with my own fake ones (like <code>std.file.read</code> or adapting <code>listdir</code> to return static list of folders)</li>
 </ul>
@@ -671,7 +670,7 @@
 
 	</div>
 </div>
-            <div id="footer"><p>2026-06-18 12:33:34 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
+            <div id="footer"><p>2026-07-08 11:17:47 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
         </div>
     </div>
 </body>

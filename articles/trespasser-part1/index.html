@@ -29,7 +29,6 @@
                 </ul>
                 <div id="social"><a href="http://www.linkedin.com/in/remigillig"><img src="/images/linkedin.png"/></a></div>
                 <div id="social">&nbsp;</div>
-                <div id="social"><a href="http://twitter.com/remigillig"><img src="/images/twitter.png"/></a></div>
             </div>
 <div id="content">
 	<div id="page">
@@ -74,7 +73,7 @@
 <p>The <code>BE.SCN</code> file is the one we&rsquo;re going to start with. It&rsquo;s a natural start as it&rsquo;s the one referenced from the &ldquo;New Game&rdquo; menu in the game:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="hl"><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="hl"><span class="lnt"> 1
 </span></span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -104,55 +103,55 @@
 </span><span class="lnt">28
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="hl"><span class="cp">#define FIRST_LEVEL_NAME &#34;BE.SCN&#34;
-</span></span><span class="cp"></span>
-<span class="c1">// ...
-</span><span class="c1"></span>
-    <span class="k">switch</span> <span class="p">(</span><span class="n">pbutton</span><span class="o">-&gt;</span><span class="n">GetID</span><span class="p">())</span>
-    <span class="p">{</span>
-        <span class="k">case</span> <span class="mi">1000</span><span class="o">:</span>
-            <span class="p">{</span>
-                <span class="kt">int</span>     <span class="n">iRet</span><span class="p">;</span>
-
-                <span class="n">g_CTPassGlobals</span><span class="p">.</span><span class="n">FreeMenuAudio</span><span class="p">();</span>
-
-                <span class="n">CVideoWnd</span>   <span class="nf">video</span><span class="p">(</span><span class="n">m_pUIMgr</span><span class="p">);</span>
-
-                <span class="n">video</span><span class="p">.</span><span class="n">Play</span><span class="p">(</span><span class="s">&#34;menu</span><span class="se">\\</span><span class="s">newgame&#34;</span><span class="p">);</span>
-
-<span class="hl">                <span class="n">iRet</span> <span class="o">=</span> <span class="n">g_CTPassGlobals</span><span class="p">.</span><span class="n">LoadLevel</span><span class="p">(</span><span class="n">FIRST_LEVEL_NAME</span><span class="p">);</span>
-</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">iRet</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
-                <span class="p">{</span>
-                    <span class="n">EndUIWnd</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-                <span class="p">}</span>
-                <span class="k">else</span>
-                <span class="p">{</span>
-                    <span class="n">DisplayLoadingFileError</span><span class="p">(</span><span class="n">iRet</span><span class="p">);</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">break</span><span class="p">;</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line hl"><span class="cl"><span class="cp">#define FIRST_LEVEL_NAME &#34;BE.SCN&#34;
+</span></span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// ...
+</span></span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">switch</span> <span class="p">(</span><span class="n">pbutton</span><span class="o">-&gt;</span><span class="n">GetID</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">case</span> <span class="mi">1000</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="kt">int</span>     <span class="n">iRet</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">                <span class="n">g_CTPassGlobals</span><span class="p">.</span><span class="n">FreeMenuAudio</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">                <span class="n">CVideoWnd</span>   <span class="nf">video</span><span class="p">(</span><span class="n">m_pUIMgr</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">                <span class="n">video</span><span class="p">.</span><span class="n">Play</span><span class="p">(</span><span class="s">&#34;menu</span><span class="se">\\</span><span class="s">newgame&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line hl"><span class="cl">                <span class="n">iRet</span> <span class="o">=</span> <span class="n">g_CTPassGlobals</span><span class="p">.</span><span class="n">LoadLevel</span><span class="p">(</span><span class="n">FIRST_LEVEL_NAME</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="p">(</span><span class="n">iRet</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">EndUIWnd</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                <span class="k">else</span>
+</span></span><span class="line"><span class="cl">                <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">DisplayLoadingFileError</span><span class="p">(</span><span class="n">iRet</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="k">break</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>Following the <code>LoadLevel</code> call, we can find an interesting piece of code:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp">			<span class="c1">// Open a save file for reading.
-</span><span class="c1"></span>			<span class="n">CSaveFile</span> <span class="nf">sf</span><span class="p">(</span><span class="n">str_filename</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
-			<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">sf</span><span class="p">.</span><span class="n">bValidFile</span><span class="p">)</span>
-				<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl">			<span class="c1">// Open a save file for reading.
+</span></span></span><span class="line"><span class="cl">			<span class="n">CSaveFile</span> <span class="nf">sf</span><span class="p">(</span><span class="n">str_filename</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">sf</span><span class="p">.</span><span class="n">bValidFile</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">				<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>A <code>CSaveFile</code> instance reads the header of a <code>.SCN</code> file and extracts the header which contains the list of <code>.GRF</code> files to load.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -172,30 +171,30 @@
 </span><span class="lnt">18
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">//*********************************************************************************************
-</span><span class="c1">//
-</span><span class="c1"></span><span class="k">struct</span> <span class="nc">SSaveHeader</span>
-<span class="c1">//
-</span><span class="c1">// Data that every save game needs.
-</span><span class="c1">//
-</span><span class="c1">// Prefix: sh
-</span><span class="c1">//
-</span><span class="c1"></span><span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-	<span class="kt">int</span>		<span class="n">iVersion</span><span class="p">;</span>			<span class="c1">// The version number of the save game.
-</span><span class="hl"><span class="c1"></span>	<span class="kt">char</span>	<span class="n">strGROFF</span><span class="p">[</span><span class="n">iNUM_GROFFS</span><span class="p">][</span><span class="n">iGROFF_STRLEN</span><span class="p">];</span>		<span class="c1">// The GROFF file for the level used in the saved game.
-</span></span><span class="c1"></span>	<span class="kt">bool</span>	<span class="n">bBrief</span><span class="p">;</span>				<span class="c1">// Was this file saved as a brief save file?
-</span><span class="c1"></span>	<span class="n">TSec</span>	<span class="n">sCurrentTime</span><span class="p">;</span>
-	<span class="kt">int</span>		<span class="n">iAnimalVersion</span><span class="p">;</span>		<span class="c1">// Another version number, used for determining which animal and brain save formats to use
-</span><span class="c1"></span>	<span class="n">TSec</span>	<span class="n">sCurrentRealTime</span><span class="p">;</span>	
-	<span class="kt">char</span>	<span class="n">acSLOP</span><span class="p">[</span><span class="n">iSLOP_BYTES</span><span class="p">];</span>
-<span class="p">};</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//*********************************************************************************************
+</span></span></span><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">SSaveHeader</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Data that every save game needs.
+</span></span></span><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Prefix: sh
+</span></span></span><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span>		<span class="n">iVersion</span><span class="p">;</span>			<span class="c1">// The version number of the save game.
+</span></span></span><span class="line hl"><span class="cl">	<span class="kt">char</span>	<span class="n">strGROFF</span><span class="p">[</span><span class="n">iNUM_GROFFS</span><span class="p">][</span><span class="n">iGROFF_STRLEN</span><span class="p">];</span>		<span class="c1">// The GROFF file for the level used in the saved game.
+</span></span></span><span class="line"><span class="cl">	<span class="kt">bool</span>	<span class="n">bBrief</span><span class="p">;</span>				<span class="c1">// Was this file saved as a brief save file?
+</span></span></span><span class="line"><span class="cl">	<span class="n">TSec</span>	<span class="n">sCurrentTime</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">int</span>		<span class="n">iAnimalVersion</span><span class="p">;</span>		<span class="c1">// Another version number, used for determining which animal and brain save formats to use
+</span></span></span><span class="line"><span class="cl">	<span class="n">TSec</span>	<span class="n">sCurrentRealTime</span><span class="p">;</span>	
+</span></span><span class="line"><span class="cl">	<span class="kt">char</span>	<span class="n">acSLOP</span><span class="p">[</span><span class="n">iSLOP_BYTES</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>Note that we&rsquo;ve actually been dealing with what&rsquo;s called a GROFF file structure in <code>.SCN</code> files. A GROFF structure is organized like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -215,30 +214,30 @@
 </span><span class="lnt">18
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// Definition of the file header structure.
-</span><span class="c1"></span><span class="k">struct</span> <span class="nc">SFileHeader</span>
-<span class="c1">// Prefix: fh
-</span><span class="c1"></span><span class="p">{</span>
-	<span class="n">uint</span> <span class="n">uMagicNumber</span><span class="p">;</span>	<span class="c1">// Magic number to identify a GROFF file.
-</span><span class="c1"></span>	<span class="n">uint</span> <span class="n">uFileSize</span><span class="p">;</span>		<span class="c1">// The actual size of the file.
-</span><span class="c1"></span>	<span class="n">uint</span> <span class="n">uSectionCount</span><span class="p">;</span>	<span class="c1">// Number of sections in the file.
-</span><span class="c1"></span>	<span class="n">uint</span> <span class="n">uSymtabEntries</span><span class="p">;</span>	<span class="c1">// Size of the symbol table.
-</span><span class="c1"></span>	<span class="n">uint</span> <span class="n">uSymtabSize</span><span class="p">;</span>		<span class="c1">// The size of the symbol table.
-</span><span class="c1"></span>	<span class="n">uint</span> <span class="n">uSymtabOffset</span><span class="p">;</span>	<span class="c1">// Offset to the start of the symbol table.
-</span><span class="c1"></span>	<span class="n">uint</span> <span class="n">uTimeStamp</span><span class="p">;</span>		<span class="c1">// Encoded date and time of GROFF file.
-</span><span class="c1"></span>	<span class="n">uint</span> <span class="n">uFlags</span><span class="p">;</span>			<span class="c1">// Field providing general file information.
-</span><span class="c1"></span>	<span class="n">uint</span> <span class="n">uVersionNumber</span><span class="p">;</span>	<span class="c1">// Version number of this file.
-</span><span class="c1"></span>
-	<span class="n">uint</span> <span class="n">uReserved</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>	<span class="c1">// Reserved for future use. (Assume = 0)
-</span><span class="c1"></span>
-	<span class="n">uint</span> <span class="n">uCRC</span><span class="p">;</span>			<span class="c1">// CRC of the header.
-</span><span class="c1"></span><span class="p">}</span> <span class="p">;</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// Definition of the file header structure.
+</span></span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">SFileHeader</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// Prefix: fh
+</span></span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">uint</span> <span class="n">uMagicNumber</span><span class="p">;</span>	<span class="c1">// Magic number to identify a GROFF file.
+</span></span></span><span class="line"><span class="cl">	<span class="n">uint</span> <span class="n">uFileSize</span><span class="p">;</span>		<span class="c1">// The actual size of the file.
+</span></span></span><span class="line"><span class="cl">	<span class="n">uint</span> <span class="n">uSectionCount</span><span class="p">;</span>	<span class="c1">// Number of sections in the file.
+</span></span></span><span class="line"><span class="cl">	<span class="n">uint</span> <span class="n">uSymtabEntries</span><span class="p">;</span>	<span class="c1">// Size of the symbol table.
+</span></span></span><span class="line"><span class="cl">	<span class="n">uint</span> <span class="n">uSymtabSize</span><span class="p">;</span>		<span class="c1">// The size of the symbol table.
+</span></span></span><span class="line"><span class="cl">	<span class="n">uint</span> <span class="n">uSymtabOffset</span><span class="p">;</span>	<span class="c1">// Offset to the start of the symbol table.
+</span></span></span><span class="line"><span class="cl">	<span class="n">uint</span> <span class="n">uTimeStamp</span><span class="p">;</span>		<span class="c1">// Encoded date and time of GROFF file.
+</span></span></span><span class="line"><span class="cl">	<span class="n">uint</span> <span class="n">uFlags</span><span class="p">;</span>			<span class="c1">// Field providing general file information.
+</span></span></span><span class="line"><span class="cl">	<span class="n">uint</span> <span class="n">uVersionNumber</span><span class="p">;</span>	<span class="c1">// Version number of this file.
+</span></span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">uint</span> <span class="n">uReserved</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>	<span class="c1">// Reserved for future use. (Assume = 0)
+</span></span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">uint</span> <span class="n">uCRC</span><span class="p">;</span>			<span class="c1">// CRC of the header.
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span> <span class="p">;</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>We can see from this that we have a magic number (always <code>0x0ACEBABE</code>), a list of sections and a list of symbols. Each section has a symbol handle and data. To read the header <code>SSaveHeader</code> above, we need to read the <code>.SCN</code> file with the GROFF parser and then read the section named <code>Header</code> which contains the byte stream we&rsquo;re interested in. Replicating this in Rust gives us this output:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -263,30 +262,30 @@
 </span><span class="lnt">23
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-plaintext" data-lang="plaintext">SaveFile {
-    header: SaveHeader {
-        version: 22,
-        groff: [
-            &#34;M:\\Island\\Beach\\Candidate\\be.grf&#34;,
-            &#34;&#34;,
-            &#34;&#34;,
-            &#34;&#34;,
-            &#34;&#34;,
-        ],
-        brief: true,
-        current_time: TSec(
-            0.0,
-        ),
-        animal_version: 10,
-        current_real_time: TSec(
-            0.0,
-        ),
-        slop: [
-            ...
-        ],
-    },
-}
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">SaveFile {
+</span></span><span class="line"><span class="cl">    header: SaveHeader {
+</span></span><span class="line"><span class="cl">        version: 22,
+</span></span><span class="line"><span class="cl">        groff: [
+</span></span><span class="line"><span class="cl">            &#34;M:\\Island\\Beach\\Candidate\\be.grf&#34;,
+</span></span><span class="line"><span class="cl">            &#34;&#34;,
+</span></span><span class="line"><span class="cl">            &#34;&#34;,
+</span></span><span class="line"><span class="cl">            &#34;&#34;,
+</span></span><span class="line"><span class="cl">            &#34;&#34;,
+</span></span><span class="line"><span class="cl">        ],
+</span></span><span class="line"><span class="cl">        brief: true,
+</span></span><span class="line"><span class="cl">        current_time: TSec(
+</span></span><span class="line"><span class="cl">            0.0,
+</span></span><span class="line"><span class="cl">        ),
+</span></span><span class="line"><span class="cl">        animal_version: 10,
+</span></span><span class="line"><span class="cl">        current_real_time: TSec(
+</span></span><span class="line"><span class="cl">            0.0,
+</span></span><span class="line"><span class="cl">        ),
+</span></span><span class="line"><span class="cl">        slop: [
+</span></span><span class="line"><span class="cl">            ...
+</span></span><span class="line"><span class="cl">        ],
+</span></span><span class="line"><span class="cl">    },
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>The number of GROFF files and the length of their names is hardcoded, in this case we&rsquo;ll just need to load <code>BE.GRF</code>. It is stored as a full path here, but the code looks for the base name in a few folders so it just works.</p>
 <h3 id="grf-files">GRF files</h3>
@@ -294,7 +293,7 @@
 <p>I used <a href="https://www.cabextract.org.uk/libmspack/doc/szdd_kwaj_format.html">this page</a> as a reference to implement my own decompressor which implements the Rust <code>Read</code> trait and can be chained with the other parsers if needed. Here is the decompressor pseudo-code from the page:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -320,36 +319,36 @@
 </span><span class="lnt">24
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">char</span> <span class="n">window</span><span class="p">[</span><span class="mi">4096</span><span class="p">];</span>
-<span class="kt">int</span> <span class="n">pos</span> <span class="o">=</span> <span class="mi">4096</span> <span class="o">-</span> <span class="mi">16</span><span class="p">;</span>
-<span class="n">memset</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="mh">0x20</span><span class="p">,</span> <span class="mi">4096</span><span class="p">);</span> <span class="cm">/* window initially full of spaces */</span>
-<span class="k">for</span> <span class="p">(;;)</span> <span class="p">{</span>
-    <span class="kt">int</span> <span class="n">control</span> <span class="o">=</span> <span class="n">GETBYTE</span><span class="p">();</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">control</span> <span class="o">==</span> <span class="n">EOF</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span> <span class="cm">/* exit if no more to read */</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">cbit</span> <span class="o">=</span> <span class="mh">0x01</span><span class="p">;</span> <span class="n">cbit</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">;</span> <span class="n">cbit</span> <span class="o">&lt;&lt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">control</span> <span class="o">&amp;</span> <span class="n">cbit</span><span class="p">)</span> <span class="p">{</span>
-            <span class="cm">/* literal */</span>
-            <span class="n">PUTBYTE</span><span class="p">(</span><span class="n">window</span><span class="p">[</span><span class="n">pos</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">GETBYTE</span><span class="p">());</span>
-        <span class="p">}</span>
-        <span class="k">else</span> <span class="p">{</span>
-            <span class="cm">/* match */</span>
-            <span class="kt">int</span> <span class="n">matchpos</span> <span class="o">=</span> <span class="n">GETBYTE</span><span class="p">();</span>
-            <span class="kt">int</span> <span class="n">matchlen</span> <span class="o">=</span> <span class="n">GETBYTE</span><span class="p">();</span>
-            <span class="n">matchpos</span> <span class="o">|=</span> <span class="p">(</span><span class="n">matchlen</span> <span class="o">&amp;</span> <span class="mh">0xF0</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span><span class="p">;</span>
-            <span class="n">matchlen</span> <span class="o">=</span> <span class="p">(</span><span class="n">matchlen</span> <span class="o">&amp;</span> <span class="mh">0x0F</span><span class="p">)</span> <span class="o">+</span> <span class="mi">3</span><span class="p">;</span>
-            <span class="k">while</span> <span class="p">(</span><span class="n">matchlen</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
-                <span class="n">PUTBYTE</span><span class="p">(</span><span class="n">window</span><span class="p">[</span><span class="n">pos</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">window</span><span class="p">[</span><span class="n">matchpos</span><span class="o">++</span><span class="p">]);</span>
-                <span class="n">pos</span> <span class="o">&amp;=</span> <span class="mi">4095</span><span class="p">;</span> <span class="n">matchpos</span> <span class="o">&amp;=</span> <span class="mi">4095</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">char</span> <span class="n">window</span><span class="p">[</span><span class="mi">4096</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="n">pos</span> <span class="o">=</span> <span class="mi">4096</span> <span class="o">-</span> <span class="mi">16</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">memset</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="mh">0x20</span><span class="p">,</span> <span class="mi">4096</span><span class="p">);</span> <span class="cm">/* window initially full of spaces */</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="p">(;;)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">control</span> <span class="o">=</span> <span class="n">GETBYTE</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">control</span> <span class="o">==</span> <span class="n">EOF</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span> <span class="cm">/* exit if no more to read */</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">cbit</span> <span class="o">=</span> <span class="mh">0x01</span><span class="p">;</span> <span class="n">cbit</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">;</span> <span class="n">cbit</span> <span class="o">&lt;&lt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">control</span> <span class="o">&amp;</span> <span class="n">cbit</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="cm">/* literal */</span>
+</span></span><span class="line"><span class="cl">            <span class="n">PUTBYTE</span><span class="p">(</span><span class="n">window</span><span class="p">[</span><span class="n">pos</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">GETBYTE</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="cm">/* match */</span>
+</span></span><span class="line"><span class="cl">            <span class="kt">int</span> <span class="n">matchpos</span> <span class="o">=</span> <span class="n">GETBYTE</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">            <span class="kt">int</span> <span class="n">matchlen</span> <span class="o">=</span> <span class="n">GETBYTE</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">            <span class="n">matchpos</span> <span class="o">|=</span> <span class="p">(</span><span class="n">matchlen</span> <span class="o">&amp;</span> <span class="mh">0xF0</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="n">matchlen</span> <span class="o">=</span> <span class="p">(</span><span class="n">matchlen</span> <span class="o">&amp;</span> <span class="mh">0x0F</span><span class="p">)</span> <span class="o">+</span> <span class="mi">3</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">while</span> <span class="p">(</span><span class="n">matchlen</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">PUTBYTE</span><span class="p">(</span><span class="n">window</span><span class="p">[</span><span class="n">pos</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">window</span><span class="p">[</span><span class="n">matchpos</span><span class="o">++</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">pos</span> <span class="o">&amp;=</span> <span class="mi">4095</span><span class="p">;</span> <span class="n">matchpos</span> <span class="o">&amp;=</span> <span class="mi">4095</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>The Rust code I&rsquo;ve written follows the pseudo-code from the link above very closely and works perfectly to be able to decompress <code>.GRF</code> files:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -393,55 +392,55 @@
 </span><span class="lnt">42
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-rust" data-lang="rust"><span class="w">    </span><span class="k">fn</span> <span class="nf">decompress</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="bp">self</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nc">io</span>::<span class="nb">Result</span><span class="o">&lt;</span><span class="kt">usize</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span><span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">output_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w">
-</span><span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">output_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w">
-</span><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">control_bit</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span><span class="w">            </span><span class="bp">self</span><span class="p">.</span><span class="n">control</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">get_byte</span><span class="p">()</span><span class="o">?</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span><span class="w">                </span><span class="nb">Some</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w">
-</span><span class="w">                </span><span class="nb">None</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w">
-</span><span class="w">            </span><span class="p">};</span><span class="w">
-</span><span class="w">            </span><span class="bp">self</span><span class="p">.</span><span class="n">control_bit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x1</span><span class="p">;</span><span class="w">
-</span><span class="w">        </span><span class="p">}</span><span class="w">
-</span><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">control</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">control_bit</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span><span class="w">            </span><span class="k">match</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">get_byte</span><span class="p">()</span><span class="o">?</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span><span class="w">                </span><span class="nb">Some</span><span class="p">(</span><span class="n">byte</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span><span class="w">                    </span><span class="bp">self</span><span class="p">.</span><span class="n">window_buf</span><span class="p">[</span><span class="bp">self</span><span class="p">.</span><span class="n">window_pos</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">byte</span><span class="p">;</span><span class="w">
-</span><span class="w">                    </span><span class="bp">self</span><span class="p">.</span><span class="n">window_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">window_pos</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">WINDOW_SIZE</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span><span class="w">
-</span><span class="w">                    </span><span class="bp">self</span><span class="p">.</span><span class="n">output_byte</span><span class="p">(</span><span class="n">byte</span><span class="p">);</span><span class="w">
-</span><span class="w">                </span><span class="p">},</span><span class="w">
-</span><span class="w">                </span><span class="nb">None</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w">
-</span><span class="w">            </span><span class="p">}</span><span class="w">
-</span><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span><span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">match_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">get_byte</span><span class="p">()</span><span class="o">?</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span><span class="w">                </span><span class="nb">Some</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">,</span><span class="w">
-</span><span class="w">                </span><span class="nb">None</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w">
-</span><span class="w">            </span><span class="p">};</span><span class="w">
-</span><span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">match_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">get_byte</span><span class="p">()</span><span class="o">?</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span><span class="w">                </span><span class="nb">Some</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">,</span><span class="w">
-</span><span class="w">                </span><span class="nb">None</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w">
-</span><span class="w">            </span><span class="p">};</span><span class="w">
-</span><span class="w">            </span><span class="n">match_pos</span><span class="w"> </span><span class="o">|=</span><span class="w"> </span><span class="p">(</span><span class="n">match_len</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0xF0</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span><span class="w">
-</span><span class="w">            </span><span class="n">match_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">match_len</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0x0F</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span><span class="w">
-</span><span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="n">match_len</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span><span class="w">                </span><span class="kd">let</span><span class="w"> </span><span class="n">byte</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">window_buf</span><span class="p">[</span><span class="n">match_pos</span><span class="p">];</span><span class="w">
-</span><span class="w">                </span><span class="bp">self</span><span class="p">.</span><span class="n">window_buf</span><span class="p">[</span><span class="bp">self</span><span class="p">.</span><span class="n">window_pos</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">byte</span><span class="p">;</span><span class="w">
-</span><span class="w">                </span><span class="bp">self</span><span class="p">.</span><span class="n">window_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">window_pos</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">WINDOW_SIZE</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span><span class="w">
-</span><span class="w">                </span><span class="bp">self</span><span class="p">.</span><span class="n">output_byte</span><span class="p">(</span><span class="n">byte</span><span class="p">);</span><span class="w">
-</span><span class="w">                </span><span class="n">match_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">match_pos</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">WINDOW_SIZE</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span><span class="w">
-</span><span class="w">                </span><span class="n">match_len</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">
-</span><span class="w">            </span><span class="p">}</span><span class="w">
-</span><span class="w">        </span><span class="p">}</span><span class="w">
-</span><span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">control_bit</span><span class="w"> </span><span class="o">&lt;&lt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">
-</span><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">output_size</span><span class="p">);</span><span class="w">
-</span><span class="w">    </span><span class="p">}</span><span class="w">
-</span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="w">    </span><span class="k">fn</span> <span class="nf">decompress</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="bp">self</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nc">io</span>::<span class="nb">Result</span><span class="o">&lt;</span><span class="kt">usize</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">output_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">output_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">control_bit</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="bp">self</span><span class="p">.</span><span class="n">control</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">get_byte</span><span class="p">()</span><span class="o">?</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nb">Some</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nb">None</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="bp">self</span><span class="p">.</span><span class="n">control_bit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x1</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">control</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">control_bit</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">match</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">get_byte</span><span class="p">()</span><span class="o">?</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nb">Some</span><span class="p">(</span><span class="n">byte</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="bp">self</span><span class="p">.</span><span class="n">window_buf</span><span class="p">[</span><span class="bp">self</span><span class="p">.</span><span class="n">window_pos</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">byte</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="bp">self</span><span class="p">.</span><span class="n">window_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">window_pos</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">(</span><span class="no">WINDOW_SIZE</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                    </span><span class="bp">self</span><span class="p">.</span><span class="n">output_byte</span><span class="p">(</span><span class="n">byte</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="p">},</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nb">None</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">match_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">get_byte</span><span class="p">()</span><span class="o">?</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nb">Some</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nb">None</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">match_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">get_byte</span><span class="p">()</span><span class="o">?</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nb">Some</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="nb">None</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">match_pos</span><span class="w"> </span><span class="o">|=</span><span class="w"> </span><span class="p">(</span><span class="n">match_len</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0xF0</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">match_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">match_len</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0x0F</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="n">match_len</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="kd">let</span><span class="w"> </span><span class="n">byte</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">window_buf</span><span class="p">[</span><span class="n">match_pos</span><span class="p">];</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="bp">self</span><span class="p">.</span><span class="n">window_buf</span><span class="p">[</span><span class="bp">self</span><span class="p">.</span><span class="n">window_pos</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">byte</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="bp">self</span><span class="p">.</span><span class="n">window_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">window_pos</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">(</span><span class="no">WINDOW_SIZE</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="bp">self</span><span class="p">.</span><span class="n">output_byte</span><span class="p">(</span><span class="n">byte</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">match_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">match_pos</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">(</span><span class="no">WINDOW_SIZE</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">                </span><span class="n">match_len</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">control_bit</span><span class="w"> </span><span class="o">&lt;&lt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">output_size</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>Because we already had GROFF parsing done for the <code>.SCN</code> files, we can now load compressed <code>.GRF</code> files using the same code because we implemented the <code>Read</code> trait.</p>
 <p><code>.GRF</code> files follow the GROFF structure but also contain additional info that points us to the right sections to read for example. We have a list of <code>CGroffObjectConfig</code> for example:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -473,42 +472,42 @@
 </span><span class="lnt">30
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">//**********************************************************************************************
-</span><span class="c1">//
-</span><span class="c1"></span><span class="k">class</span> <span class="nc">CGroffObjectConfig</span>
-<span class="c1">//
-</span><span class="c1">// Define a struct which specifies the position, rotation and scale of an object.
-</span><span class="c1">//
-</span><span class="c1">// Prefix: goc
-</span><span class="c1">//
-</span><span class="c1">//**************************************
-</span><span class="c1"></span><span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="n">TSectionHandle</span> <span class="n">sehObject</span><span class="p">;</span>           <span class="c1">// The object definition section handle.
-</span><span class="c1"></span>    <span class="n">TSymbolHandle</span>  <span class="n">syhObjectName</span><span class="p">;</span>       <span class="c1">// The object symbol name handle.
-</span><span class="c1"></span>
-    <span class="n">fvector3</span>       <span class="n">fv3Position</span><span class="p">;</span>         <span class="c1">// The location of the object in the world.
-</span><span class="c1"></span>    <span class="n">fvector3</span>       <span class="n">fv3Rotation</span><span class="p">;</span>         <span class="c1">// The object orientation in Euler angles.
-</span><span class="c1"></span>    <span class="kt">float</span>          <span class="n">fScale</span><span class="p">;</span>              <span class="c1">// The scaling factor for the object.
-</span><span class="c1"></span>
-    <span class="cm">/* Version 12 - GROFF file format changes. */</span>
-    <span class="n">CHandle</span>        <span class="n">hAttributeHandle</span><span class="p">;</span>    <span class="c1">// A handle to the object value container.
-</span><span class="c1"></span>
-    <span class="c1">//******************************************************************************************
-</span><span class="c1"></span>    <span class="c1">//
-</span><span class="c1"></span>    <span class="c1">// Constructors and destructor.
-</span><span class="c1"></span>    <span class="c1">//
-</span><span class="c1"></span>
-    <span class="n">CGroffObjectConfig</span><span class="p">();</span>
-
-    <span class="o">~</span><span class="n">CGroffObjectConfig</span><span class="p">();</span>
-<span class="p">};</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//**********************************************************************************************
+</span></span></span><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">CGroffObjectConfig</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Define a struct which specifies the position, rotation and scale of an object.
+</span></span></span><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Prefix: goc
+</span></span></span><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1">//**************************************
+</span></span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">TSectionHandle</span> <span class="n">sehObject</span><span class="p">;</span>           <span class="c1">// The object definition section handle.
+</span></span></span><span class="line"><span class="cl">    <span class="n">TSymbolHandle</span>  <span class="n">syhObjectName</span><span class="p">;</span>       <span class="c1">// The object symbol name handle.
+</span></span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">fvector3</span>       <span class="n">fv3Position</span><span class="p">;</span>         <span class="c1">// The location of the object in the world.
+</span></span></span><span class="line"><span class="cl">    <span class="n">fvector3</span>       <span class="n">fv3Rotation</span><span class="p">;</span>         <span class="c1">// The object orientation in Euler angles.
+</span></span></span><span class="line"><span class="cl">    <span class="kt">float</span>          <span class="n">fScale</span><span class="p">;</span>              <span class="c1">// The scaling factor for the object.
+</span></span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="cm">/* Version 12 - GROFF file format changes. */</span>
+</span></span><span class="line"><span class="cl">    <span class="n">CHandle</span>        <span class="n">hAttributeHandle</span><span class="p">;</span>    <span class="c1">// A handle to the object value container.
+</span></span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">//******************************************************************************************
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//
+</span></span></span><span class="line"><span class="cl">    <span class="c1">// Constructors and destructor.
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//
+</span></span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">CGroffObjectConfig</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="o">~</span><span class="n">CGroffObjectConfig</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>We can then look up an object by its name, load the data from its section and look up attributes in the value table. At this point, I had enough to be able to write this in Rust:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -519,21 +518,21 @@
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-rust" data-lang="rust"><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">File</span>::<span class="n">open</span><span class="p">(</span><span class="s">&#34;data/be.grf&#34;</span><span class="p">)</span><span class="o">?</span><span class="p">;</span><span class="w">
-</span><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WorldLoader</span>::<span class="n">from_reader</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="n">file</span><span class="p">)</span><span class="o">?</span><span class="p">;</span><span class="w">
-</span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">object</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">objects</span><span class="p">().</span><span class="n">iter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">class_name</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">lookup_attr</span><span class="p">(</span><span class="o">&amp;</span><span class="n">object</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">Symbol</span>::<span class="n">Class</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span><span class="w">            </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">&#34;{} {}&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">object</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">class_name</span><span class="p">.</span><span class="n">as_str</span><span class="p">());</span><span class="w">
-</span><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span><span class="w">            </span><span class="n">println</span><span class="o">!</span><span class="p">(</span><span class="s">&#34;{} NULL&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">object</span><span class="p">.</span><span class="n">name</span><span class="p">);</span><span class="w">
-</span><span class="w">        </span><span class="p">}</span><span class="w">
-</span><span class="w">    </span><span class="p">}</span><span class="w">
-</span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">File</span>::<span class="n">open</span><span class="p">(</span><span class="s">&#34;data/be.grf&#34;</span><span class="p">)</span><span class="o">?</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WorldLoader</span>::<span class="n">from_reader</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="n">file</span><span class="p">)</span><span class="o">?</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">object</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">objects</span><span class="p">().</span><span class="n">iter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="kd">let</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">class_name</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">lookup_attr</span><span class="p">(</span><span class="o">&amp;</span><span class="n">object</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">Symbol</span>::<span class="n">Class</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="fm">println!</span><span class="p">(</span><span class="s">&#34;</span><span class="si">{}</span><span class="s"> </span><span class="si">{}</span><span class="s">&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">object</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">class_name</span><span class="p">.</span><span class="n">as_str</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="fm">println!</span><span class="p">(</span><span class="s">&#34;</span><span class="si">{}</span><span class="s"> NULL&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">object</span><span class="p">.</span><span class="n">name</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>Which outputs this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -550,36 +549,34 @@
 </span><span class="lnt">15
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-plaintext" data-lang="plaintext">TrnPlacement-00 TerrainPlacement
-PSpasFrame03-00 CGun
-Pdeserteagle-00 CGun
-PS&amp;W686-00 CGun
-Trig_Amb_bbjg CLocationTrigger
-Trig_Amb_bbkm CLocationTrigger
-AnchorBrach-00 NULL
-MLumberNatural-00 CMagnet
-MLumberHoldNatural-00 CMagnet
-SToolShackLumber-00 CInstance
-FPTruck16-00 CInstance
-AIBridgepiece-00 NULL
-Trig_Start_DriftWood-00 CStartTrigger
-TrnObj_OceanSound-00 CTerrainObj
-...
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">TrnPlacement-00 TerrainPlacement
+</span></span><span class="line"><span class="cl">PSpasFrame03-00 CGun
+</span></span><span class="line"><span class="cl">Pdeserteagle-00 CGun
+</span></span><span class="line"><span class="cl">PS&amp;W686-00 CGun
+</span></span><span class="line"><span class="cl">Trig_Amb_bbjg CLocationTrigger
+</span></span><span class="line"><span class="cl">Trig_Amb_bbkm CLocationTrigger
+</span></span><span class="line"><span class="cl">AnchorBrach-00 NULL
+</span></span><span class="line"><span class="cl">MLumberNatural-00 CMagnet
+</span></span><span class="line"><span class="cl">MLumberHoldNatural-00 CMagnet
+</span></span><span class="line"><span class="cl">SToolShackLumber-00 CInstance
+</span></span><span class="line"><span class="cl">FPTruck16-00 CInstance
+</span></span><span class="line"><span class="cl">AIBridgepiece-00 NULL
+</span></span><span class="line"><span class="cl">Trig_Start_DriftWood-00 CStartTrigger
+</span></span><span class="line"><span class="cl">TrnObj_OceanSound-00 CTerrainObj
+</span></span><span class="line"><span class="cl">...
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>I thought that each CTerrainObj would contain a mesh for each part of the terrain. However, that was before I remembered the part of Fabien Sanglard&rsquo;s article where he describes the terrain as using a wavelet transform to store heightfield data. I still wrote the code to load meshes so here is an example of a mesh:</p>
 <p><img src="/media/articles/jpt2.png" alt=""></p>
 <p>I found while parsing meshes that they are polygonal meshes, some of them mostly composed of polygons instead of triangles. For example, this truck:</p>
-<figure>
-    <img src="/media/articles/jpt3.png"/> <figcaption>
-            <h4>Triangles only</h4>
-        </figcaption>
+<figure><img src="/media/articles/jpt3.png"><figcaption>
+			<h4>Triangles only</h4>
+		</figcaption>
 </figure>
 
-<figure>
-    <img src="/media/articles/jpt4.png"/> <figcaption>
-            <h4>All polygons</h4>
-        </figcaption>
+<figure><img src="/media/articles/jpt4.png"><figcaption>
+			<h4>All polygons</h4>
+		</figcaption>
 </figure>
 
 <h2 id="textures">Textures</h2>
@@ -587,7 +584,7 @@ TrnObj_OceanSound-00 CTerrainObj
 <p>These files are an &ldquo;image directory&rdquo;. It contains just a list of descriptors for each of the textures used in a level. It looks like this from C++:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -634,52 +631,52 @@ TrnObj_OceanSound-00 CTerrainObj
 </span><span class="lnt">45
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">//**********************************************************************************************
-</span><span class="c1">//
-</span><span class="c1"></span><span class="k">struct</span> <span class="nc">SDirectoryFileHeader</span>
-<span class="p">{</span>
-    <span class="n">uint32</span>  <span class="n">u4Version</span><span class="p">;</span>
-    <span class="n">uint32</span>  <span class="n">u4BumpMapBitDepth</span><span class="p">;</span>          <span class="c1">// number of bits in the bump maps ithin the swap file
-</span><span class="c1"></span>    <span class="n">uint32</span>  <span class="n">u4RasterChunkOffset</span><span class="p">;</span>        <span class="c1">// file offset from start of file to first Raster chunk
-</span><span class="c1"></span>    <span class="n">uint32</span>  <span class="n">u4RasterChunkCount</span><span class="p">;</span>         <span class="c1">// number of raster chunks
-</span><span class="c1"></span>    <span class="n">uint32</span>  <span class="n">u4PaletteOffset</span><span class="p">;</span>            <span class="c1">// offset to the palettes
-</span><span class="c1"></span>    <span class="n">uint32</span>  <span class="n">u4PaletteCount</span><span class="p">;</span>             <span class="c1">// number of palettes
-</span><span class="c1"></span>    <span class="n">uint32</span>  <span class="n">u4PageableOffset</span><span class="p">;</span>           <span class="c1">// Offset of the first byte that can be dynamically paged
-</span><span class="c1"></span>    <span class="n">uint32</span>  <span class="n">u4NonPageableCount</span><span class="p">;</span>         <span class="c1">// Number of bytes from the start of the swap file that 
-</span><span class="c1"></span>                                        <span class="c1">// cannot be paged. This can be less than u4PageableOffset
-</span><span class="c1"></span><span class="p">};</span>
-
-<span class="c1">//**********************************************************************************************
-</span><span class="c1">//
-</span><span class="c1"></span><span class="k">struct</span> <span class="nc">SDirectoryFileChunk</span>
-<span class="p">{</span>
-    <span class="n">uint32</span>  <span class="n">u4Size</span><span class="p">;</span>                     <span class="c1">// size of this chunk (offset to next chunk)
-</span><span class="c1"></span>    <span class="n">uint32</span>  <span class="n">u4VMOffset</span><span class="p">;</span>                 <span class="c1">// Pack file (Virtual memory block) offset
-</span><span class="c1"></span>    <span class="n">uint32</span>  <span class="n">u4Width</span><span class="p">;</span>
-    <span class="n">uint32</span>  <span class="n">u4Height</span><span class="p">;</span>                   <span class="c1">// dimensions of the raster
-</span><span class="c1"></span>    <span class="n">uint32</span>  <span class="n">u4Stride</span><span class="p">;</span>
-    <span class="n">uint32</span>  <span class="n">u4Bits</span><span class="p">;</span>                     <span class="c1">// bits per pixel pf the raster
-</span><span class="c1"></span>    <span class="n">CColour</span> <span class="n">clrConstCol</span><span class="p">;</span>                <span class="c1">// constant colour of the surface
-</span><span class="c1"></span>    <span class="kt">int</span>     <span class="n">iTransparent</span><span class="p">;</span>               <span class="c1">// true for transparent
-</span><span class="c1"></span>    <span class="kt">int</span>     <span class="n">iBumpMap</span><span class="p">;</span>                   <span class="c1">// texture is a bump map
-</span><span class="c1"></span>    <span class="kt">int</span>     <span class="n">iOcclusion</span><span class="p">;</span>                 <span class="c1">// texture is an occlusion map
-</span><span class="c1"></span>    <span class="n">uint32</span>  <span class="n">u4Palette</span><span class="p">;</span>                  <span class="c1">// index into palette array of 0xffffffff for no palette
-</span><span class="c1"></span>    <span class="n">uint64</span>  <span class="n">u8HashValue</span><span class="p">;</span>                <span class="c1">// ID of the raster
-</span><span class="c1"></span><span class="p">};</span>
-
-<span class="c1">//**********************************************************************************************
-</span><span class="c1">//
-</span><span class="c1"></span><span class="k">struct</span> <span class="nc">SDirectoryPaletteChunk</span>
-<span class="p">{</span>
-    <span class="n">uint32</span>  <span class="n">u4Size</span><span class="p">;</span>                     <span class="c1">// size of this chunk (offset to next chunk)
-</span><span class="c1"></span>    <span class="n">uint32</span>  <span class="n">u4ColoursUsed</span><span class="p">;</span>              <span class="c1">// number of colours used in this palette
-</span><span class="c1"></span>    <span class="n">uint32</span>  <span class="n">u4HashValue</span><span class="p">;</span>                <span class="c1">// unique hash value for this palette
-</span><span class="c1"></span>    <span class="n">CColour</span> <span class="n">clr</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>                     <span class="c1">// binary colour data in CColour format
-</span><span class="c1"></span>    <span class="c1">//
-</span><span class="c1"></span>    <span class="c1">// followed by u4ColoursUsed entries, this data must be reflected in the u4Size parameter.
-</span><span class="c1"></span>    <span class="c1">//
-</span><span class="c1"></span><span class="p">};</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">//**********************************************************************************************
+</span></span></span><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">SDirectoryFileHeader</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">uint32</span>  <span class="n">u4Version</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">uint32</span>  <span class="n">u4BumpMapBitDepth</span><span class="p">;</span>          <span class="c1">// number of bits in the bump maps ithin the swap file
+</span></span></span><span class="line"><span class="cl">    <span class="n">uint32</span>  <span class="n">u4RasterChunkOffset</span><span class="p">;</span>        <span class="c1">// file offset from start of file to first Raster chunk
+</span></span></span><span class="line"><span class="cl">    <span class="n">uint32</span>  <span class="n">u4RasterChunkCount</span><span class="p">;</span>         <span class="c1">// number of raster chunks
+</span></span></span><span class="line"><span class="cl">    <span class="n">uint32</span>  <span class="n">u4PaletteOffset</span><span class="p">;</span>            <span class="c1">// offset to the palettes
+</span></span></span><span class="line"><span class="cl">    <span class="n">uint32</span>  <span class="n">u4PaletteCount</span><span class="p">;</span>             <span class="c1">// number of palettes
+</span></span></span><span class="line"><span class="cl">    <span class="n">uint32</span>  <span class="n">u4PageableOffset</span><span class="p">;</span>           <span class="c1">// Offset of the first byte that can be dynamically paged
+</span></span></span><span class="line"><span class="cl">    <span class="n">uint32</span>  <span class="n">u4NonPageableCount</span><span class="p">;</span>         <span class="c1">// Number of bytes from the start of the swap file that 
+</span></span></span><span class="line"><span class="cl">                                        <span class="c1">// cannot be paged. This can be less than u4PageableOffset
+</span></span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//**********************************************************************************************
+</span></span></span><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">SDirectoryFileChunk</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">uint32</span>  <span class="n">u4Size</span><span class="p">;</span>                     <span class="c1">// size of this chunk (offset to next chunk)
+</span></span></span><span class="line"><span class="cl">    <span class="n">uint32</span>  <span class="n">u4VMOffset</span><span class="p">;</span>                 <span class="c1">// Pack file (Virtual memory block) offset
+</span></span></span><span class="line"><span class="cl">    <span class="n">uint32</span>  <span class="n">u4Width</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">uint32</span>  <span class="n">u4Height</span><span class="p">;</span>                   <span class="c1">// dimensions of the raster
+</span></span></span><span class="line"><span class="cl">    <span class="n">uint32</span>  <span class="n">u4Stride</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">uint32</span>  <span class="n">u4Bits</span><span class="p">;</span>                     <span class="c1">// bits per pixel pf the raster
+</span></span></span><span class="line"><span class="cl">    <span class="n">CColour</span> <span class="n">clrConstCol</span><span class="p">;</span>                <span class="c1">// constant colour of the surface
+</span></span></span><span class="line"><span class="cl">    <span class="kt">int</span>     <span class="n">iTransparent</span><span class="p">;</span>               <span class="c1">// true for transparent
+</span></span></span><span class="line"><span class="cl">    <span class="kt">int</span>     <span class="n">iBumpMap</span><span class="p">;</span>                   <span class="c1">// texture is a bump map
+</span></span></span><span class="line"><span class="cl">    <span class="kt">int</span>     <span class="n">iOcclusion</span><span class="p">;</span>                 <span class="c1">// texture is an occlusion map
+</span></span></span><span class="line"><span class="cl">    <span class="n">uint32</span>  <span class="n">u4Palette</span><span class="p">;</span>                  <span class="c1">// index into palette array of 0xffffffff for no palette
+</span></span></span><span class="line"><span class="cl">    <span class="n">uint64</span>  <span class="n">u8HashValue</span><span class="p">;</span>                <span class="c1">// ID of the raster
+</span></span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//**********************************************************************************************
+</span></span></span><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">SDirectoryPaletteChunk</span>
+</span></span><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">uint32</span>  <span class="n">u4Size</span><span class="p">;</span>                     <span class="c1">// size of this chunk (offset to next chunk)
+</span></span></span><span class="line"><span class="cl">    <span class="n">uint32</span>  <span class="n">u4ColoursUsed</span><span class="p">;</span>              <span class="c1">// number of colours used in this palette
+</span></span></span><span class="line"><span class="cl">    <span class="n">uint32</span>  <span class="n">u4HashValue</span><span class="p">;</span>                <span class="c1">// unique hash value for this palette
+</span></span></span><span class="line"><span class="cl">    <span class="n">CColour</span> <span class="n">clr</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>                     <span class="c1">// binary colour data in CColour format
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//
+</span></span></span><span class="line"><span class="cl">    <span class="c1">// followed by u4ColoursUsed entries, this data must be reflected in the u4Size parameter.
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>Some members point to offsets into the next file format we&rsquo;ll investigate. You&rsquo;ll also notice that textures can be paletted which is quite common for space saving in games back then.</p>
 <h3 id="spz-files">SPZ files</h3>
@@ -693,10 +690,9 @@ TrnObj_OceanSound-00 CTerrainObj
 <p>Looking at the <code>SDirectoryFileChunk</code> structure above, the value in <code>u4VMOffset</code> is actually an offset from the beginning of the uncompressed data from the <code>.SPZ</code> files. Because compressed data can&rsquo;t be addressed this way, the original game would decompress the <code>.SPZ</code> files on demand and write out a <code>.SWP</code> file with the uncompressed data to the hard disk, and it&rsquo;s that one that would be read for each texture.</p>
 <p>However, for us, it&rsquo;s now just easier to load and decompress the whole file in memory. We can then fetch the data using the <code>u4VMOffset</code> value into a <code>[u8]</code> in Rust.</p>
 <p>The game supports <a href="https://en.wikipedia.org/wiki/Mipmap">mipmaps</a> for textures. Each mipmap is hashed into a <code>u64</code> value and the bottom 32 bits are shared between all the mips.</p>
-<figure>
-    <img src="/media/articles/jpt9.png"/> <figcaption>
-            <h4>Example of a mipmap chain extracted from the game (256x256 to 8x8, zoomed 4x)</h4>
-        </figcaption>
+<figure><img src="/media/articles/jpt9.png"><figcaption>
+			<h4>Example of a mipmap chain extracted from the game (256x256 to 8x8, zoomed 4x)</h4>
+		</figcaption>
 </figure>
 
 <h2 id="terrain">Terrain</h2>
@@ -705,7 +701,7 @@ TrnObj_OceanSound-00 CTerrainObj
 <p>From the C++ code, here are some interesting bits regarding the quad-tree code:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -752,57 +748,57 @@ TrnObj_OceanSound-00 CTerrainObj
 </span><span class="lnt">45
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp">    <span class="c1">//**********************************************************************************************
-</span><span class="c1"></span>    <span class="c1">//
-</span><span class="c1"></span>    <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">TD</span><span class="p">,</span> <span class="k">class</span> <span class="nc">TVT</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">CQuadNodeBaseT</span>
-    <span class="c1">//
-</span><span class="c1"></span>    <span class="c1">// Base class definition of a single node in the wavelet quad tree.
-</span><span class="c1"></span>    <span class="c1">//
-</span><span class="c1"></span>    <span class="c1">// Prefix: qnb
-</span><span class="c1"></span>    <span class="c1">//
-</span><span class="c1"></span>    <span class="c1">// Notes:
-</span><span class="c1"></span>    <span class="c1">//      This class is the base class for all quad node types. Note that even though this is a
-</span><span class="c1"></span>    <span class="c1">//      base class, none of the member functions are declared virtual. This is deliberate, so to
-</span><span class="c1"></span>    <span class="c1">//      avoid the vtbl size overhead. By passing the derived class&#39; type as a template parameter
-</span><span class="c1"></span>    <span class="c1">//      and casting the &#39;this&#39; pointer type to that of the derived class, it is still possible to
-</span><span class="c1"></span>    <span class="c1">//      overide certain functions in the derived class and get the expected behaviour.
-</span><span class="c1"></span>    <span class="c1">//
-</span><span class="c1"></span>    <span class="c1">//      Template type &#39;TD&#39; defines the type of the derived class. The template type &#39;TVT&#39;
-</span><span class="c1"></span>    <span class="c1">//      defines the vertex type.
-</span><span class="c1"></span>    <span class="c1">//
-</span><span class="c1"></span>    <span class="c1">//      The corner vertices and descendants of a node are maintained and numbered in a counter-
-</span><span class="c1"></span>    <span class="c1">//      clockwise order, starting with the bottom left corner. Similarly, the eight neighbours of
-</span><span class="c1"></span>    <span class="c1">//      a node are numbered in a counter-clockwise order, starting at the neighbouring node
-</span><span class="c1"></span>    <span class="c1">//      directly below.
-</span><span class="c1"></span>    <span class="c1">//
-</span><span class="c1"></span>    <span class="c1">//      Vertex 0 and descendant 0 are referred to as the &#39;base vertex&#39; and &#39;base descendant&#39; of
-</span><span class="c1"></span>    <span class="c1">//      a quad node, respectively. The odd numbered neighbours are referred to as the &#39;diagnonal&#39;
-</span><span class="c1"></span>    <span class="c1">//      neigbours and the even numbered neighbours are referred to as the &#39;transverse&#39; neighbours.
-</span><span class="c1"></span>    <span class="c1">//
-</span><span class="c1"></span>    <span class="c1">//      Within each quad node, there are three wavelet coefficients, located at the base vertex of
-</span><span class="c1"></span>    <span class="c1">//      descendants 1, 2 and 3. Therefore, a quad node can only have wavelet coeficients if it
-</span><span class="c1"></span>    <span class="c1">//      also has descendants.
-</span><span class="c1"></span>    <span class="c1">//                                      +-----+-----+-----+
-</span><span class="c1"></span>    <span class="c1">//          vt3           vt2           |     |     |     |
-</span><span class="c1"></span>    <span class="c1">//            +-----+-----+             |nghbr|nghbr|nghbr|
-</span><span class="c1"></span>    <span class="c1">//            |     |     |             |  5  |  4  |  3  |
-</span><span class="c1"></span>    <span class="c1">//            | dsc | dsc |             +-----+-----+-----+
-</span><span class="c1"></span>    <span class="c1">//            |  3  |  2  |             |     |     |     |
-</span><span class="c1"></span>    <span class="c1">//           wt2---wt1----+             |nghbr|     |nghbr|
-</span><span class="c1"></span>    <span class="c1">//            |     |     |             |  6  |     |  2  |
-</span><span class="c1"></span>    <span class="c1">//            | dsc | dsc |             +-----+-----+-----+
-</span><span class="c1"></span>    <span class="c1">//            |  0  |  1  |             |     |     |     |
-</span><span class="c1"></span>    <span class="c1">//            +----wt0----+             |nghbr|nghbr|nghbr|
-</span><span class="c1"></span>    <span class="c1">//          vt0           vt1           |  7  |  0  |  1  |
-</span><span class="c1"></span>    <span class="c1">//                                      +-----+-----+-----+
-</span><span class="c1"></span>    <span class="c1">//
-</span><span class="c1"></span>    <span class="c1">//**************************************
-</span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl">    <span class="c1">//**********************************************************************************************
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//
+</span></span></span><span class="line"><span class="cl">    <span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">TD</span><span class="p">,</span> <span class="k">class</span> <span class="nc">TVT</span><span class="o">&gt;</span> <span class="k">class</span> <span class="nc">CQuadNodeBaseT</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//
+</span></span></span><span class="line"><span class="cl">    <span class="c1">// Base class definition of a single node in the wavelet quad tree.
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//
+</span></span></span><span class="line"><span class="cl">    <span class="c1">// Prefix: qnb
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//
+</span></span></span><span class="line"><span class="cl">    <span class="c1">// Notes:
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//      This class is the base class for all quad node types. Note that even though this is a
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//      base class, none of the member functions are declared virtual. This is deliberate, so to
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//      avoid the vtbl size overhead. By passing the derived class&#39; type as a template parameter
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//      and casting the &#39;this&#39; pointer type to that of the derived class, it is still possible to
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//      overide certain functions in the derived class and get the expected behaviour.
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//      Template type &#39;TD&#39; defines the type of the derived class. The template type &#39;TVT&#39;
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//      defines the vertex type.
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//      The corner vertices and descendants of a node are maintained and numbered in a counter-
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//      clockwise order, starting with the bottom left corner. Similarly, the eight neighbours of
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//      a node are numbered in a counter-clockwise order, starting at the neighbouring node
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//      directly below.
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//      Vertex 0 and descendant 0 are referred to as the &#39;base vertex&#39; and &#39;base descendant&#39; of
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//      a quad node, respectively. The odd numbered neighbours are referred to as the &#39;diagnonal&#39;
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//      neigbours and the even numbered neighbours are referred to as the &#39;transverse&#39; neighbours.
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//      Within each quad node, there are three wavelet coefficients, located at the base vertex of
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//      descendants 1, 2 and 3. Therefore, a quad node can only have wavelet coeficients if it
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//      also has descendants.
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//                                      +-----+-----+-----+
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//          vt3           vt2           |     |     |     |
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//            +-----+-----+             |nghbr|nghbr|nghbr|
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//            |     |     |             |  5  |  4  |  3  |
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//            | dsc | dsc |             +-----+-----+-----+
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//            |  3  |  2  |             |     |     |     |
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//           wt2---wt1----+             |nghbr|     |nghbr|
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//            |     |     |             |  6  |     |  2  |
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//            | dsc | dsc |             +-----+-----+-----+
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//            |  0  |  1  |             |     |     |     |
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//            +----wt0----+             |nghbr|nghbr|nghbr|
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//          vt0           vt1           |  7  |  0  |  1  |
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//                                      +-----+-----+-----+
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//**************************************
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><p>Here is a description of the wavelet coefficients:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -824,27 +820,27 @@ TrnObj_OceanSound-00 CTerrainObj
 </span><span class="lnt">20
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-cpp" data-lang="cpp">    <span class="c1">//**********************************************************************************************
-</span><span class="c1"></span>    <span class="c1">//
-</span><span class="c1"></span>    <span class="k">class</span> <span class="nc">CCoef</span>
-    <span class="c1">//
-</span><span class="c1"></span>    <span class="c1">// Defines the coeficient type (used to represent wavelet and scaling coeficients) and the
-</span><span class="c1"></span>    <span class="c1">// integer 2D transform type (e.g. filter) for the wavelet transform.
-</span><span class="c1"></span>    <span class="c1">//
-</span><span class="c1"></span>    <span class="c1">// Prefix: cf
-</span><span class="c1"></span>    <span class="c1">//
-</span><span class="c1"></span>    <span class="c1">// Notes:
-</span><span class="c1"></span>    <span class="c1">//      This class implements a 0-disc 2D variation of the 1D 2-2 biorthogonal wavelet transform
-</span><span class="c1"></span>    <span class="c1">//      of Cohen, Daubechies and Feauveau using the lifting scheme.
-</span><span class="c1"></span>    <span class="c1">//
-</span><span class="c1"></span>    <span class="c1">//      This class defines an integer, perfect reconstruction wavelet transform. Conversions to
-</span><span class="c1"></span>    <span class="c1">//      and from this type require an appropriate (uniform) quantisation scalar.
-</span><span class="c1"></span>    <span class="c1">//
-</span><span class="c1"></span>    <span class="c1">//**************************************
-</span><span class="c1"></span>    <span class="p">{</span>
-        <span class="c1">//  ...
-</span><span class="c1"></span>    <span class="p">};</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl">    <span class="c1">//**********************************************************************************************
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//
+</span></span></span><span class="line"><span class="cl">    <span class="k">class</span> <span class="nc">CCoef</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//
+</span></span></span><span class="line"><span class="cl">    <span class="c1">// Defines the coeficient type (used to represent wavelet and scaling coeficients) and the
+</span></span></span><span class="line"><span class="cl">    <span class="c1">// integer 2D transform type (e.g. filter) for the wavelet transform.
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//
+</span></span></span><span class="line"><span class="cl">    <span class="c1">// Prefix: cf
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//
+</span></span></span><span class="line"><span class="cl">    <span class="c1">// Notes:
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//      This class implements a 0-disc 2D variation of the 1D 2-2 biorthogonal wavelet transform
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//      of Cohen, Daubechies and Feauveau using the lifting scheme.
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//      This class defines an integer, perfect reconstruction wavelet transform. Conversions to
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//      and from this type require an appropriate (uniform) quantisation scalar.
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//
+</span></span></span><span class="line"><span class="cl">    <span class="c1">//**************************************
+</span></span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">//  ...
+</span></span></span><span class="line"><span class="cl">    <span class="p">};</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>To understand what this means, a look at Wikipedia gives us some clues:</p>
 <p>From <a href="https://en.wikipedia.org/wiki/Cohen-Daubechies-Feauveau_wavelet#Numbering">https://en.wikipedia.org/wiki/Cohen-Daubechies-Feauveau_wavelet#Numbering</a></p>
@@ -876,7 +872,7 @@ TrnObj_OceanSound-00 CTerrainObj
 <p>After this interlude on wavelets, we can dig into parsing the <code>BE.WTD</code> file. Here is its header after parsing the file in Rust:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -931,60 +927,60 @@ TrnObj_OceanSound-00 CTerrainObj
 </span><span class="lnt">53
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-plaintext" data-lang="plaintext">TransformedDataHeader {
-    version: 1001,
-    num_quad_nodes: 17365,
-    num_quad_vertices: 14490,
-<span class="hl">    coef_root: Coef(
-</span><span class="hl">        15898,
-</span><span class="hl">    ),
-</span>    conversions: Mapping {
-        quad_extents: IRectangle {
-            start: IVector2 {
-                x: 0,
-                y: 0,
-            },
-            size: IVector2 {
-                x: 8192,
-                y: 8192,
-            },
-        },
-        world_extents: FRectangle {
-            start: FVector2 {
-                x: -2816.0,
-                y: -1792.0,
-            },
-            size: FVector2 {
-                x: 2048.0,
-                y: 2048.0,
-            },
-        },
-        quad_to_world: FTransLinear2 {
-            x: FTransLinear {
-                scale: 0.25,
-                offset: -2816.0,
-            },
-            y: FTransLinear {
-                scale: 0.25,
-                offset: -1792.0,
-            },
-        },
-        world_to_quad: FTransLinear2 {
-            x: FTransLinear {
-                scale: 4.0,
-                offset: 11264.0,
-            },
-            y: FTransLinear {
-                scale: 4.0,
-                offset: 7168.0,
-            },
-        },
-        world_to_coef: 292.69296,
-        coef_to_world: 0.0034165496,
-        coef_to_quad: 0.013666199,
-    },
-}
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">TransformedDataHeader {
+</span></span><span class="line"><span class="cl">    version: 1001,
+</span></span><span class="line"><span class="cl">    num_quad_nodes: 17365,
+</span></span><span class="line"><span class="cl">    num_quad_vertices: 14490,
+</span></span><span class="line hl"><span class="cl">    coef_root: Coef(
+</span></span><span class="line hl"><span class="cl">        15898,
+</span></span><span class="line hl"><span class="cl">    ),
+</span></span><span class="line"><span class="cl">    conversions: Mapping {
+</span></span><span class="line"><span class="cl">        quad_extents: IRectangle {
+</span></span><span class="line"><span class="cl">            start: IVector2 {
+</span></span><span class="line"><span class="cl">                x: 0,
+</span></span><span class="line"><span class="cl">                y: 0,
+</span></span><span class="line"><span class="cl">            },
+</span></span><span class="line"><span class="cl">            size: IVector2 {
+</span></span><span class="line"><span class="cl">                x: 8192,
+</span></span><span class="line"><span class="cl">                y: 8192,
+</span></span><span class="line"><span class="cl">            },
+</span></span><span class="line"><span class="cl">        },
+</span></span><span class="line"><span class="cl">        world_extents: FRectangle {
+</span></span><span class="line"><span class="cl">            start: FVector2 {
+</span></span><span class="line"><span class="cl">                x: -2816.0,
+</span></span><span class="line"><span class="cl">                y: -1792.0,
+</span></span><span class="line"><span class="cl">            },
+</span></span><span class="line"><span class="cl">            size: FVector2 {
+</span></span><span class="line"><span class="cl">                x: 2048.0,
+</span></span><span class="line"><span class="cl">                y: 2048.0,
+</span></span><span class="line"><span class="cl">            },
+</span></span><span class="line"><span class="cl">        },
+</span></span><span class="line"><span class="cl">        quad_to_world: FTransLinear2 {
+</span></span><span class="line"><span class="cl">            x: FTransLinear {
+</span></span><span class="line"><span class="cl">                scale: 0.25,
+</span></span><span class="line"><span class="cl">                offset: -2816.0,
+</span></span><span class="line"><span class="cl">            },
+</span></span><span class="line"><span class="cl">            y: FTransLinear {
+</span></span><span class="line"><span class="cl">                scale: 0.25,
+</span></span><span class="line"><span class="cl">                offset: -1792.0,
+</span></span><span class="line"><span class="cl">            },
+</span></span><span class="line"><span class="cl">        },
+</span></span><span class="line"><span class="cl">        world_to_quad: FTransLinear2 {
+</span></span><span class="line"><span class="cl">            x: FTransLinear {
+</span></span><span class="line"><span class="cl">                scale: 4.0,
+</span></span><span class="line"><span class="cl">                offset: 11264.0,
+</span></span><span class="line"><span class="cl">            },
+</span></span><span class="line"><span class="cl">            y: FTransLinear {
+</span></span><span class="line"><span class="cl">                scale: 4.0,
+</span></span><span class="line"><span class="cl">                offset: 7168.0,
+</span></span><span class="line"><span class="cl">            },
+</span></span><span class="line"><span class="cl">        },
+</span></span><span class="line"><span class="cl">        world_to_coef: 292.69296,
+</span></span><span class="line"><span class="cl">        coef_to_world: 0.0034165496,
+</span></span><span class="line"><span class="cl">        coef_to_quad: 0.013666199,
+</span></span><span class="line"><span class="cl">    },
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>As you can see in the highlighted lines above, it contains the root coefficient, which is the one wavelet coefficient I was talking about. It also contains scales to transform to/from quad-tree coordinates and also to/from wavelet coefficients and world coordinates. That&rsquo;s how the world Z value of each terrain vertex is obtained mesh from the integer wavelet coefficients.</p>
 <p>For ease of porting for now, I decided to subdivide the quad-tree to the maximum possible to get the full resolution of the tree. In the original code, it would compute the best subdivision factor for each quad depending on the desired pixel density. Once I get to porting gameplay features, I&rsquo;ll be able to reproduce that behaviour and query the player position, camera position, etc. to compute the original parameters to subdivide.</p>
@@ -1003,7 +999,7 @@ TrnObj_OceanSound-00 CTerrainObj
 
 	</div>
 </div>
-            <div id="footer"><p>2026-06-18 12:33:34 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
+            <div id="footer"><p>2026-07-08 11:17:47 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
         </div>
     </div>
 </body>

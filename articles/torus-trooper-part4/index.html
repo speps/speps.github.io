@@ -29,7 +29,6 @@
                 </ul>
                 <div id="social"><a href="http://www.linkedin.com/in/remigillig"><img src="/images/linkedin.png"/></a></div>
                 <div id="social">&nbsp;</div>
-                <div id="social"><a href="http://twitter.com/remigillig"><img src="/images/twitter.png"/></a></div>
             </div>
 <div id="content">
 	<div id="page">
@@ -69,7 +68,7 @@
 <p>Remember the interface described earlier:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -78,19 +77,19 @@
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-d" data-lang="d"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">InputBackend</span> <span class="o">{</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">();</span>
-  <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getDirState</span><span class="o">();</span>
-  <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getButtonState</span><span class="o">();</span>
-  <span class="kd">public</span> <span class="kt">bool</span> <span class="nf">getExitState</span><span class="o">();</span>
-  <span class="kd">public</span> <span class="kt">bool</span> <span class="nf">getPauseState</span><span class="o">();</span>
-<span class="o">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-d" data-lang="d"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">InputBackend</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getDirState</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getButtonState</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kt">bool</span> <span class="nf">getExitState</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kt">bool</span> <span class="nf">getPauseState</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>Here is the implementation for WebAssembly:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -104,25 +103,25 @@
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-d" data-lang="d"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">InputBackendWASM</span> <span class="o">:</span> <span class="n">InputBackend</span> <span class="o">{</span>
-  <span class="kt">uint</span> <span class="n">state</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-
-  <span class="kd">public</span> <span class="kd">override</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">()</span> <span class="o">{</span>
-    <span class="kn">import</span> <span class="nn">wasm</span><span class="o">;</span>
-    <span class="n">state</span> <span class="o">=</span> <span class="n">wasm</span><span class="o">.</span><span class="na">inputState</span><span class="o">();</span>
-  <span class="o">}</span>
-  <span class="kd">public</span> <span class="kd">override</span> <span class="kt">int</span> <span class="nf">getDirState</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">state</span> <span class="o">&amp;</span> <span class="mh">0xF</span><span class="o">;</span> <span class="o">}</span>
-  <span class="kd">public</span> <span class="kd">override</span> <span class="kt">int</span> <span class="nf">getButtonState</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">state</span> <span class="o">&amp;</span> <span class="mh">0x30</span><span class="o">;</span> <span class="o">}</span>
-  <span class="kd">public</span> <span class="kd">override</span> <span class="kt">bool</span> <span class="nf">getExitState</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="o">(</span><span class="n">state</span> <span class="o">&amp;</span> <span class="mh">0x40</span><span class="o">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">;</span> <span class="o">}</span>
-  <span class="kd">public</span> <span class="kd">override</span> <span class="kt">bool</span> <span class="nf">getPauseState</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="o">(</span><span class="n">state</span> <span class="o">&amp;</span> <span class="mh">0x80</span><span class="o">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">;</span> <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-d" data-lang="d"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">InputBackendWASM</span> <span class="o">:</span> <span class="n">InputBackend</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">uint</span> <span class="n">state</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kd">override</span> <span class="kt">void</span> <span class="nf">update</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kn">import</span> <span class="nn">wasm</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">state</span> <span class="o">=</span> <span class="n">wasm</span><span class="o">.</span><span class="na">inputState</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kd">override</span> <span class="kt">int</span> <span class="nf">getDirState</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">state</span> <span class="o">&amp;</span> <span class="mh">0xF</span><span class="o">;</span> <span class="o">}</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kd">override</span> <span class="kt">int</span> <span class="nf">getButtonState</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="n">state</span> <span class="o">&amp;</span> <span class="mh">0x30</span><span class="o">;</span> <span class="o">}</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kd">override</span> <span class="kt">bool</span> <span class="nf">getExitState</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="o">(</span><span class="n">state</span> <span class="o">&amp;</span> <span class="mh">0x40</span><span class="o">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">;</span> <span class="o">}</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kd">override</span> <span class="kt">bool</span> <span class="nf">getPauseState</span><span class="o">()</span> <span class="o">{</span> <span class="k">return</span> <span class="o">(</span><span class="n">state</span> <span class="o">&amp;</span> <span class="mh">0x80</span><span class="o">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">;</span> <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>Very simple, the good thing is that the original code already used masks for gameplay inputs. I just had to add another bit for exit and another one for pause.</p>
 <p>From the JS side, there are <code>keydown</code>/<code>keyup</code> events that map the masks to the final value:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -158,41 +157,41 @@
 </span><span class="lnt">34
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">maskInput</span><span class="p">(</span><span class="nx">code</span><span class="p">,</span> <span class="nx">enable</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kr">const</span> <span class="nx">masks</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="nx">ArrowUp</span><span class="o">:</span> <span class="mh">0x1</span><span class="p">,</span>
-    <span class="nx">ArrowDown</span><span class="o">:</span> <span class="mh">0x2</span><span class="p">,</span>
-    <span class="nx">ArrowLeft</span><span class="o">:</span> <span class="mh">0x4</span><span class="p">,</span>
-    <span class="nx">ArrowRight</span><span class="o">:</span> <span class="mh">0x8</span><span class="p">,</span>
-    <span class="nx">ControlLeft</span><span class="o">:</span> <span class="mh">0x10</span><span class="p">,</span>
-    <span class="nx">ShiftLeft</span><span class="o">:</span> <span class="mh">0x20</span><span class="p">,</span>
-    <span class="nx">Escape</span><span class="o">:</span> <span class="mh">0x40</span><span class="p">,</span>
-    <span class="nx">KeyP</span><span class="o">:</span> <span class="mh">0x80</span>
-  <span class="p">};</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">code</span> <span class="k">in</span> <span class="nx">masks</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kr">const</span> <span class="nx">mask</span> <span class="o">=</span> <span class="nx">masks</span><span class="p">[</span><span class="nx">code</span><span class="p">];</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">enable</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">inputState</span> <span class="o">|=</span> <span class="nx">mask</span><span class="p">;</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-      <span class="nx">inputState</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="nx">mask</span><span class="p">;</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&#34;keydown&#34;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">event</span><span class="p">.</span><span class="nx">defaultPrevented</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">maskInput</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">code</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
-  <span class="p">}</span>
-  <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
-<span class="p">},</span> <span class="kc">true</span><span class="p">);</span>
-
-<span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&#34;keyup&#34;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">event</span><span class="p">.</span><span class="nx">defaultPrevented</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">maskInput</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">code</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
-  <span class="p">}</span>
-  <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
-<span class="p">},</span> <span class="kc">true</span><span class="p">);</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">maskInput</span><span class="p">(</span><span class="nx">code</span><span class="p">,</span> <span class="nx">enable</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">const</span> <span class="nx">masks</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">ArrowUp</span><span class="o">:</span> <span class="mh">0x1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">ArrowDown</span><span class="o">:</span> <span class="mh">0x2</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">ArrowLeft</span><span class="o">:</span> <span class="mh">0x4</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">ArrowRight</span><span class="o">:</span> <span class="mh">0x8</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">ControlLeft</span><span class="o">:</span> <span class="mh">0x10</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">ShiftLeft</span><span class="o">:</span> <span class="mh">0x20</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">Escape</span><span class="o">:</span> <span class="mh">0x40</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">KeyP</span><span class="o">:</span> <span class="mh">0x80</span>
+</span></span><span class="line"><span class="cl">  <span class="p">};</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="p">(</span><span class="nx">code</span> <span class="k">in</span> <span class="nx">masks</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">mask</span> <span class="o">=</span> <span class="nx">masks</span><span class="p">[</span><span class="nx">code</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="nx">enable</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">inputState</span> <span class="o">|=</span> <span class="nx">mask</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">inputState</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="nx">mask</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&#34;keydown&#34;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">event</span><span class="p">.</span><span class="nx">defaultPrevented</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">maskInput</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">code</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="p">},</span> <span class="kc">true</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&#34;keyup&#34;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">event</span><span class="p">.</span><span class="nx">defaultPrevented</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">maskInput</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">code</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="p">},</span> <span class="kc">true</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>This works well enough, it can be extended later with more keys that map to the same input or make it customisable.</p>
 <h2 id="fmodf">fmodf</h2>
@@ -200,17 +199,17 @@
 <p>Unfortunately this doesn&rsquo;t have a JS <code>Math</code> equivalent like the other ones, but it works in JS with the <code>%</code> operator, so I just ended up using that:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">wasm_fmodf</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">x</span> <span class="o">%</span> <span class="nx">y</span><span class="p">;</span> <span class="p">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">wasm_fmodf</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">x</span> <span class="o">%</span> <span class="nx">y</span><span class="p">;</span> <span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="tackling-memory-allocation">Tackling memory allocation</h2>
 <p>In the title screen, I found that approximately every 4800 frame there was an increase of the WASM memory buffer. It came from a <code>Vector3</code> allocation in <code>createTorusShape</code> used to draw multiple parts of the menu. I solved this one by using the <a href="https://dlang.org/spec/attribute.html#scope"><code>scope</code> keyword in D</a>, it means the allocation is limited to the scope:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -218,13 +217,13 @@
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-d" data-lang="d"><span class="kd">private</span> <span class="kt">void</span> <span class="nf">createTorusShape</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
-  <span class="n">scope</span> <span class="n">Vector3</span> <span class="n">cp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Vector3</span><span class="o">;</span>
-  <span class="n">cp</span><span class="o">.</span><span class="na">z</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-  <span class="n">scope</span> <span class="n">Vector3</span> <span class="n">ringOfs</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Vector3</span><span class="o">;</span>
-  <span class="o">...</span>
-<span class="o">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-d" data-lang="d"><span class="line"><span class="cl"><span class="kd">private</span> <span class="kt">void</span> <span class="nf">createTorusShape</span><span class="o">(</span><span class="kt">int</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">scope</span> <span class="n">Vector3</span> <span class="n">cp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Vector3</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="n">cp</span><span class="o">.</span><span class="na">z</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">scope</span> <span class="n">Vector3</span> <span class="n">ringOfs</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Vector3</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>However, during gameplay there are class instances that will live beyond the scope of a method and will need cleaning up once ununsed (eg. bullets or enemies). Ideally, the GC would take care of that but D doesn&rsquo;t really have a GC unless you use the <code>druntime</code> code. Best here is to reuse memory as much as possible and identify which parts still need allocations.</p>
 <p>This is an area that probably needs more attention as it currently leaks memory but it&rsquo;s still possible to play through the game multiple times before it&rsquo;s an issue. Help would be appreciated on a solution, possibly making a very basic GC would be good but an easier way would just be to make a pool of most things that can be reused (some classes already did that but only for game stuff).</p>
@@ -233,7 +232,7 @@
 <p>I exposed a D method to WASM that will be called whenever the game needs to be resized, that tells the game what size the GL viewport is.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -253,32 +252,32 @@
 </span><span class="lnt">18
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">onResize</span><span class="p">()</span> <span class="p">{</span>
-  <span class="kd">var</span> <span class="nx">w</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span><span class="p">;</span>
-  <span class="kd">var</span> <span class="nx">h</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span><span class="p">;</span>
-  <span class="kr">const</span> <span class="nx">ratio</span> <span class="o">=</span> <span class="mf">4.0</span> <span class="o">/</span> <span class="mf">3.0</span><span class="p">;</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">w</span> <span class="o">&lt;</span> <span class="p">(</span><span class="nx">h</span> <span class="o">*</span> <span class="nx">ratio</span><span class="p">))</span> <span class="p">{</span>
-    <span class="nx">h</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">w</span> <span class="o">/</span> <span class="nx">ratio</span><span class="p">);</span>
-  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="nx">w</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">h</span> <span class="o">*</span> <span class="nx">ratio</span><span class="p">);</span>
-  <span class="p">}</span>
-  <span class="nx">canvas</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">left</span> <span class="o">=</span> <span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="nx">w</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&#34;px&#34;</span><span class="p">;</span>
-  <span class="nx">canvas</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">top</span> <span class="o">=</span> <span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="nx">h</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&#34;px&#34;</span><span class="p">;</span>
-  <span class="nx">canvas</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">width</span> <span class="o">=</span> <span class="nx">w</span> <span class="o">+</span> <span class="s2">&#34;px&#34;</span><span class="p">;</span>
-  <span class="nx">canvas</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">height</span> <span class="o">=</span> <span class="nx">h</span> <span class="o">+</span> <span class="s2">&#34;px&#34;</span><span class="p">;</span>
-  <span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span> <span class="o">=</span> <span class="nx">w</span><span class="p">;</span>
-  <span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span> <span class="o">=</span> <span class="nx">h</span><span class="p">;</span>
-  <span class="nx">exports</span><span class="p">.</span><span class="nx">_resized</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">h</span><span class="p">);</span>
-<span class="p">}</span>
-<span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&#34;resize&#34;</span><span class="p">,</span> <span class="nx">onResize</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">onResize</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">var</span> <span class="nx">w</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">var</span> <span class="nx">h</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">const</span> <span class="nx">ratio</span> <span class="o">=</span> <span class="mf">4.0</span> <span class="o">/</span> <span class="mf">3.0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="p">(</span><span class="nx">w</span> <span class="o">&lt;</span> <span class="p">(</span><span class="nx">h</span> <span class="o">*</span> <span class="nx">ratio</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">h</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">w</span> <span class="o">/</span> <span class="nx">ratio</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">w</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">h</span> <span class="o">*</span> <span class="nx">ratio</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">canvas</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">left</span> <span class="o">=</span> <span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="nx">w</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&#34;px&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">canvas</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">top</span> <span class="o">=</span> <span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="nx">h</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&#34;px&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">canvas</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">width</span> <span class="o">=</span> <span class="nx">w</span> <span class="o">+</span> <span class="s2">&#34;px&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">canvas</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">height</span> <span class="o">=</span> <span class="nx">h</span> <span class="o">+</span> <span class="s2">&#34;px&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">canvas</span><span class="p">.</span><span class="nx">width</span> <span class="o">=</span> <span class="nx">w</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">canvas</span><span class="p">.</span><span class="nx">height</span> <span class="o">=</span> <span class="nx">h</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">exports</span><span class="p">.</span><span class="nx">_resized</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">h</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&#34;resize&#34;</span><span class="p">,</span> <span class="nx">onResize</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>That allows the game to retain its original 4:3 ratio. I found using a wider viewport results in camera issues that I&rsquo;m not willing to fix at this point, it also stretches the text and doesn&rsquo;t look as good.</p>
 <h2 id="playing-audio">Playing audio</h2>
 <p>Playing music and sound effects is an important part of the game&rsquo;s character. However, supporting SDL_Mixer in WebAssembly wasn&rsquo;t realistic. The best solution I found is to embed the sound files as <code>ubyte[]</code> and create bridge between JS and WASM that then uses the WebAudio API to play sounds.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -297,29 +296,29 @@
 </span><span class="lnt">17
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-d" data-lang="d"><span class="kt">ubyte</span><span class="o">[]</span> <span class="nf">read</span><span class="o">(</span><span class="kt">string</span> <span class="n">path</span><span class="o">)</span> <span class="o">{</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/chunks/boss_dest.wav&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/chunks/boss_dest.wav&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/chunks/charge.wav&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/chunks/charge.wav&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/chunks/charge_shot.wav&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/chunks/charge_shot.wav&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/chunks/extend.wav&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/chunks/extend.wav&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/chunks/hit.wav&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/chunks/hit.wav&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/chunks/middle_dest.wav&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/chunks/middle_dest.wav&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/chunks/myship_dest.wav&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/chunks/myship_dest.wav&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/chunks/shot.wav&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/chunks/shot.wav&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/chunks/small_dest.wav&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/chunks/small_dest.wav&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/chunks/timeup_beep.wav&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/chunks/timeup_beep.wav&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/musics/tt1.ogg&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/musics/tt1.ogg&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/musics/tt2.ogg&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/musics/tt2.ogg&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/musics/tt3.ogg&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/musics/tt3.ogg&#34;</span><span class="o">);</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/musics/tt4.ogg&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/musics/tt4.ogg&#34;</span><span class="o">);</span>
-  <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
-<span class="o">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-d" data-lang="d"><span class="line"><span class="cl"><span class="kt">ubyte</span><span class="o">[]</span> <span class="nf">read</span><span class="o">(</span><span class="nb">string</span> <span class="n">path</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/chunks/boss_dest.wav&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/chunks/boss_dest.wav&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/chunks/charge.wav&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/chunks/charge.wav&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/chunks/charge_shot.wav&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/chunks/charge_shot.wav&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/chunks/extend.wav&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/chunks/extend.wav&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/chunks/hit.wav&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/chunks/hit.wav&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/chunks/middle_dest.wav&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/chunks/middle_dest.wav&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/chunks/myship_dest.wav&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/chunks/myship_dest.wav&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/chunks/shot.wav&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/chunks/shot.wav&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/chunks/small_dest.wav&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/chunks/small_dest.wav&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/chunks/timeup_beep.wav&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/chunks/timeup_beep.wav&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/musics/tt1.ogg&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/musics/tt1.ogg&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/musics/tt2.ogg&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/musics/tt2.ogg&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/musics/tt3.ogg&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/musics/tt3.ogg&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">path</span> <span class="o">==</span> <span class="s">&#34;sounds/musics/tt4.ogg&#34;</span><span class="o">)</span> <span class="k">return</span> <span class="k">cast</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">[])</span> <span class="n">import</span><span class="o">(</span><span class="s">&#34;sounds/musics/tt4.ogg&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>Then add a few new WASM exposed methods:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -327,13 +326,13 @@
 </span><span class="lnt">6
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-d" data-lang="d"><span class="n">extern</span> <span class="o">(</span><span class="n">C</span><span class="o">)</span> <span class="o">{</span>
-  <span class="kt">uint</span> <span class="nf">wasm_sound_load</span><span class="o">(</span><span class="kd">const</span><span class="o">(</span><span class="kt">char</span><span class="o">*)</span> <span class="n">nameptr</span><span class="o">,</span> <span class="n">size_t</span> <span class="n">namelen</span><span class="o">,</span> <span class="kd">const</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">*)</span> <span class="n">bufptr</span><span class="o">,</span> <span class="n">size_t</span> <span class="n">buflen</span><span class="o">);</span>
-  <span class="kt">void</span> <span class="nf">wasm_sound_play</span><span class="o">(</span><span class="kd">const</span><span class="o">(</span><span class="kt">char</span><span class="o">*)</span> <span class="n">nameptr</span><span class="o">,</span> <span class="n">size_t</span> <span class="n">namelen</span><span class="o">);</span>
-  <span class="kt">void</span> <span class="nf">wasm_sound_fadeMusic</span><span class="o">(</span><span class="kt">uint</span> <span class="n">ms</span><span class="o">);</span>
-  <span class="kt">void</span> <span class="nf">wasm_sound_haltMusic</span><span class="o">();</span>
-<span class="o">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-d" data-lang="d"><span class="line"><span class="cl"><span class="kd">extern</span> <span class="o">(</span><span class="n">C</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">uint</span> <span class="nf">wasm_sound_load</span><span class="o">(</span><span class="kd">const</span><span class="o">(</span><span class="kt">char</span><span class="o">*)</span> <span class="n">nameptr</span><span class="o">,</span> <span class="nb">size_t</span> <span class="n">namelen</span><span class="o">,</span> <span class="kd">const</span><span class="o">(</span><span class="kt">ubyte</span><span class="o">*)</span> <span class="n">bufptr</span><span class="o">,</span> <span class="nb">size_t</span> <span class="n">buflen</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">void</span> <span class="nf">wasm_sound_play</span><span class="o">(</span><span class="kd">const</span><span class="o">(</span><span class="kt">char</span><span class="o">*)</span> <span class="n">nameptr</span><span class="o">,</span> <span class="nb">size_t</span> <span class="n">namelen</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">void</span> <span class="nf">wasm_sound_fadeMusic</span><span class="o">(</span><span class="kt">uint</span> <span class="n">ms</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">void</span> <span class="nf">wasm_sound_haltMusic</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>The main trick here was to make sure of 2 things:</p>
 <ul>
@@ -344,7 +343,7 @@
 <p>For 2, the same flow can be reused for preloading but then also connect a <code>GainNode</code> to control the volume and store the sound instance so it can be stopped when the next music starts. Conveniently, the <code>gain</code> property is an <code>AudioParam</code> instance which has a <code>linearRampToValueAtTime</code> method which is used to fade out the music.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -374,35 +373,35 @@
 </span><span class="lnt">28
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-js" data-lang="js">    <span class="c1">// ...
-</span><span class="c1"></span>    <span class="nx">wasm_sound_play</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">nameptr</span><span class="p">,</span> <span class="nx">namelen</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kr">const</span> <span class="nx">name</span> <span class="o">=</span> <span class="nx">decoder</span><span class="p">.</span><span class="nx">decode</span><span class="p">(</span><span class="k">new</span> <span class="nx">Uint8Array</span><span class="p">(</span><span class="nx">memory</span><span class="p">.</span><span class="nx">buffer</span><span class="p">,</span> <span class="nx">nameptr</span><span class="p">,</span> <span class="nx">namelen</span><span class="p">));</span>
-      <span class="kr">const</span> <span class="nx">isMusic</span> <span class="o">=</span> <span class="nx">name</span><span class="p">.</span><span class="nx">startsWith</span><span class="p">(</span><span class="s2">&#34;sounds/musics&#34;</span><span class="p">);</span>
-      <span class="kr">const</span> <span class="nx">src</span> <span class="o">=</span> <span class="nx">ac</span><span class="p">.</span><span class="nx">createBufferSource</span><span class="p">();</span>
-      <span class="nx">src</span><span class="p">.</span><span class="nx">buffer</span> <span class="o">=</span> <span class="nx">acData</span><span class="p">[</span><span class="nx">name</span><span class="p">];</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">isMusic</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">acMusic</span><span class="p">)</span> <span class="p">{</span>
-          <span class="nx">acMusic</span><span class="p">.</span><span class="nx">node</span><span class="p">.</span><span class="nx">stop</span><span class="p">();</span>
-          <span class="nx">acMusic</span><span class="p">.</span><span class="nx">gain</span><span class="p">.</span><span class="nx">disconnect</span><span class="p">();</span>
-          <span class="nx">acMusic</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kr">const</span> <span class="nx">gain</span> <span class="o">=</span> <span class="nx">ac</span><span class="p">.</span><span class="nx">createGain</span><span class="p">();</span>
-        <span class="nx">src</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">gain</span><span class="p">);</span>
-        <span class="nx">src</span><span class="p">.</span><span class="nx">loop</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-        <span class="nx">gain</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">ac</span><span class="p">.</span><span class="nx">destination</span><span class="p">);</span>
-        <span class="nx">acMusic</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">node</span><span class="o">:</span> <span class="nx">src</span><span class="p">,</span> <span class="nx">gain</span><span class="o">:</span> <span class="nx">gain</span> <span class="p">};</span>
-      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="nx">src</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">ac</span><span class="p">.</span><span class="nx">destination</span><span class="p">);</span>
-      <span class="p">}</span>
-      <span class="nx">src</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
-    <span class="p">},</span>
-    <span class="nx">wasm_sound_fadeMusic</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ms</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">acMusic</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">acMusic</span><span class="p">.</span><span class="nx">gain</span><span class="p">.</span><span class="nx">linearRampToValueAtTime</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">ac</span><span class="p">.</span><span class="nx">currentTime</span> <span class="o">+</span> <span class="nx">ms</span> <span class="o">*</span> <span class="mf">0.001</span><span class="p">);</span>
-      <span class="p">}</span>
-    <span class="p">},</span>
-    <span class="c1">// ...
-</span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl">    <span class="c1">// ...
+</span></span></span><span class="line"><span class="cl">    <span class="nx">wasm_sound_play</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">nameptr</span><span class="p">,</span> <span class="nx">namelen</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="kr">const</span> <span class="nx">name</span> <span class="o">=</span> <span class="nx">decoder</span><span class="p">.</span><span class="nx">decode</span><span class="p">(</span><span class="k">new</span> <span class="nx">Uint8Array</span><span class="p">(</span><span class="nx">memory</span><span class="p">.</span><span class="nx">buffer</span><span class="p">,</span> <span class="nx">nameptr</span><span class="p">,</span> <span class="nx">namelen</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">      <span class="kr">const</span> <span class="nx">isMusic</span> <span class="o">=</span> <span class="nx">name</span><span class="p">.</span><span class="nx">startsWith</span><span class="p">(</span><span class="s2">&#34;sounds/musics&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="kr">const</span> <span class="nx">src</span> <span class="o">=</span> <span class="nx">ac</span><span class="p">.</span><span class="nx">createBufferSource</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">src</span><span class="p">.</span><span class="nx">buffer</span> <span class="o">=</span> <span class="nx">acData</span><span class="p">[</span><span class="nx">name</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="p">(</span><span class="nx">isMusic</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="nx">acMusic</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">acMusic</span><span class="p">.</span><span class="nx">node</span><span class="p">.</span><span class="nx">stop</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">acMusic</span><span class="p">.</span><span class="nx">gain</span><span class="p">.</span><span class="nx">disconnect</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">acMusic</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">gain</span> <span class="o">=</span> <span class="nx">ac</span><span class="p">.</span><span class="nx">createGain</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">src</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">gain</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">src</span><span class="p">.</span><span class="nx">loop</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">gain</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">ac</span><span class="p">.</span><span class="nx">destination</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">acMusic</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">node</span><span class="o">:</span> <span class="nx">src</span><span class="p">,</span> <span class="nx">gain</span><span class="o">:</span> <span class="nx">gain</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">src</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">ac</span><span class="p">.</span><span class="nx">destination</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">src</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">wasm_sound_fadeMusic</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">ms</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="p">(</span><span class="nx">acMusic</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">acMusic</span><span class="p">.</span><span class="nx">gain</span><span class="p">.</span><span class="nx">linearRampToValueAtTime</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">ac</span><span class="p">.</span><span class="nx">currentTime</span> <span class="o">+</span> <span class="nx">ms</span> <span class="o">*</span> <span class="mf">0.001</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// ...
+</span></span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="fix-gamedraw-loop">Fix game/draw loop</h2>
 <p>On platforms where the game runs a bit slower, it looks a bit jarring as the whole gameplay slows down to a crawl. The usual way I fix this is by using the method from <a href="https://gafferongames.com/post/fix_your_timestep/">Glenn Fiedler</a>. It&rsquo;s similar to what the original game did but original had a sleep timer which isn&rsquo;t very practical and doesn&rsquo;t really work in some contexts.</p>
@@ -410,7 +409,7 @@
 <p>It looks something like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -438,33 +437,33 @@
 </span><span class="lnt">26
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">targetFrameRate</span> <span class="o">=</span> <span class="mf">1000.0</span> <span class="o">/</span> <span class="mf">60.0</span><span class="p">;</span>
-<span class="kd">var</span> <span class="nx">frameAccumulator</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
-<span class="kd">var</span> <span class="nx">previousTimestamp</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-<span class="kd">function</span> <span class="nx">loop</span><span class="p">(</span><span class="nx">timestamp</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">previousTimestamp</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">previousTimestamp</span> <span class="o">=</span> <span class="nx">timestamp</span><span class="p">;</span>
-  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="kr">const</span> <span class="nx">diff</span> <span class="o">=</span> <span class="nx">timestamp</span> <span class="o">-</span> <span class="nx">previousTimestamp</span><span class="p">;</span>
-    <span class="nx">previousTimestamp</span> <span class="o">=</span> <span class="nx">timestamp</span><span class="p">;</span>
-    <span class="nx">frameAccumulator</span> <span class="o">+=</span> <span class="nx">diff</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="kd">var</span> <span class="nx">numUpdates</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-  <span class="k">while</span> <span class="p">(</span><span class="nx">frameAccumulator</span> <span class="o">&gt;=</span> <span class="nx">targetFrameRate</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">frameAccumulator</span> <span class="o">-=</span> <span class="nx">targetFrameRate</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">exports</span><span class="p">.</span><span class="nx">_update</span><span class="p">())</span> <span class="p">{</span>
-      <span class="nx">numUpdates</span><span class="o">++</span><span class="p">;</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-      <span class="k">break</span><span class="p">;</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">numUpdates</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">exports</span><span class="p">.</span><span class="nx">_draw</span><span class="p">();</span>
-    <span class="nx">numUpdates</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="nx">requestAnimationFrame</span><span class="p">(</span><span class="nx">loop</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">targetFrameRate</span> <span class="o">=</span> <span class="mf">1000.0</span> <span class="o">/</span> <span class="mf">60.0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">frameAccumulator</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">previousTimestamp</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">loop</span><span class="p">(</span><span class="nx">timestamp</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="p">(</span><span class="nx">previousTimestamp</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">previousTimestamp</span> <span class="o">=</span> <span class="nx">timestamp</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">diff</span> <span class="o">=</span> <span class="nx">timestamp</span> <span class="o">-</span> <span class="nx">previousTimestamp</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">previousTimestamp</span> <span class="o">=</span> <span class="nx">timestamp</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">frameAccumulator</span> <span class="o">+=</span> <span class="nx">diff</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">var</span> <span class="nx">numUpdates</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="k">while</span> <span class="p">(</span><span class="nx">frameAccumulator</span> <span class="o">&gt;=</span> <span class="nx">targetFrameRate</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">frameAccumulator</span> <span class="o">-=</span> <span class="nx">targetFrameRate</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">exports</span><span class="p">.</span><span class="nx">_update</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">numUpdates</span><span class="o">++</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="p">(</span><span class="nx">numUpdates</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">exports</span><span class="p">.</span><span class="nx">_draw</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">numUpdates</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">requestAnimationFrame</span><span class="p">(</span><span class="nx">loop</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="loading-screen">Loading screen</h2>
 <p>With adding the audio, the transfer of <code>tt.wasm</code> is becoming a problem on first visit (it&rsquo;s cached afterwards). Before embedding the audio, the server side compression in HTTP was doing an amazing job. However, with <code>.ogg</code> files it&rsquo;s not as efficient as those are already compressed. At the time of writing, it&rsquo;s a 5.49 MB transferred for a 7.66 MB total file size once decompressed. I&rsquo;ll need to find a solution and show a progress bar during loading.</p>
@@ -476,7 +475,7 @@
 <p>The game save 2 types of files: a <code>tt.prf</code> file which contains high-scores and unlocked levels, replays as <code>last.rpl</code> and <code>error.rpl</code>. I&rsquo;m going to map the <code>std.file.read</code> and <code>std.file.write</code> functions to read/write with the LocalStorage API in JavaScript. The only trick here is that LocalStorage is a string key/value store, it maps string keys to string values. It&rsquo;s very simple to use for my binary data, I have to convert the files to/from a string. I tried using the <code>btoa</code>/<code>atob</code> calls in JavaScript but it expects well-formed strings which aren&rsquo;t going to work the data the game is writing as it can contain invalid UTF-8 sequences for example. So I just converted to a hex string, eg. <code>[104, 101, 108, 108, 111]</code> becomes <code>68656c6c6f</code> and vice-versa.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -497,32 +496,30 @@
 </span><span class="lnt">19
 </span><span class="lnt">20
 </span><span class="lnt">21
-</span><span class="lnt">22
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">bin2hex</span><span class="p">(</span><span class="nx">buf</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="nx">buf</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">hexstr</span><span class="p">,</span> <span class="kr">byte</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">hexstr</span> <span class="o">+</span> <span class="p">(</span><span class="s1">&#39;0&#39;</span> <span class="o">+</span> <span class="p">(</span><span class="kr">byte</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">).</span><span class="nx">toString</span><span class="p">(</span><span class="mi">16</span><span class="p">)).</span><span class="nx">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">);</span>
-  <span class="p">},</span> <span class="s2">&#34;&#34;</span><span class="p">);</span>
-<span class="p">}</span>
-<span class="kd">function</span> <span class="nx">hex2bin</span><span class="p">(</span><span class="nx">hexstr</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="nx">Uint8Array</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="nx">hexstr</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/../g</span><span class="p">).</span><span class="nx">reduce</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">bytes</span><span class="p">,</span> <span class="nx">hex</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">bytes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">hex</span><span class="p">,</span> <span class="mi">16</span><span class="p">));</span>
-    <span class="k">return</span> <span class="nx">bytes</span><span class="p">;</span>
-  <span class="p">},</span> <span class="p">[]));</span>
-<span class="p">}</span>
-
-<span class="c1">// ...
-</span><span class="c1"></span>
-<span class="nx">wasm_writeFile</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">nameptr</span><span class="p">,</span> <span class="nx">namelen</span><span class="p">,</span> <span class="nx">dataptr</span><span class="p">,</span> <span class="nx">datalen</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kr">const</span> <span class="nx">name</span> <span class="o">=</span> <span class="nx">decoder</span><span class="p">.</span><span class="nx">decode</span><span class="p">(</span><span class="k">new</span> <span class="nx">Uint8Array</span><span class="p">(</span><span class="nx">memory</span><span class="p">.</span><span class="nx">buffer</span><span class="p">,</span> <span class="nx">nameptr</span><span class="p">,</span> <span class="nx">namelen</span><span class="p">));</span>
-  <span class="kr">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Uint8Array</span><span class="p">(</span><span class="nx">memory</span><span class="p">.</span><span class="nx">buffer</span><span class="p">,</span> <span class="nx">dataptr</span><span class="p">,</span> <span class="nx">datalen</span><span class="p">);</span>
-  <span class="kr">const</span> <span class="nx">str</span> <span class="o">=</span> <span class="nx">bin2hex</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
-  <span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">str</span><span class="p">);</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;saved &#34;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s2">&#34; with &#34;</span> <span class="o">+</span> <span class="nx">data</span><span class="p">.</span><span class="nx">length</span> <span class="o">+</span> <span class="s2">&#34; bytes&#34;</span><span class="p">);</span>
-<span class="p">},</span>
-
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">bin2hex</span><span class="p">(</span><span class="nx">buf</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="nx">buf</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">hexstr</span><span class="p">,</span> <span class="kr">byte</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">hexstr</span> <span class="o">+</span> <span class="p">(</span><span class="s1">&#39;0&#39;</span> <span class="o">+</span> <span class="p">(</span><span class="kr">byte</span> <span class="o">&amp;</span> <span class="mh">0xFF</span><span class="p">).</span><span class="nx">toString</span><span class="p">(</span><span class="mi">16</span><span class="p">)).</span><span class="nx">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span> <span class="s2">&#34;&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">hex2bin</span><span class="p">(</span><span class="nx">hexstr</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="nx">Uint8Array</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="nx">hexstr</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/../g</span><span class="p">).</span><span class="nx">reduce</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">bytes</span><span class="p">,</span> <span class="nx">hex</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">bytes</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">hex</span><span class="p">,</span> <span class="mi">16</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">bytes</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span> <span class="p">[]));</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// ...
+</span></span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">wasm_writeFile</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">nameptr</span><span class="p">,</span> <span class="nx">namelen</span><span class="p">,</span> <span class="nx">dataptr</span><span class="p">,</span> <span class="nx">datalen</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">const</span> <span class="nx">name</span> <span class="o">=</span> <span class="nx">decoder</span><span class="p">.</span><span class="nx">decode</span><span class="p">(</span><span class="k">new</span> <span class="nx">Uint8Array</span><span class="p">(</span><span class="nx">memory</span><span class="p">.</span><span class="nx">buffer</span><span class="p">,</span> <span class="nx">nameptr</span><span class="p">,</span> <span class="nx">namelen</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Uint8Array</span><span class="p">(</span><span class="nx">memory</span><span class="p">.</span><span class="nx">buffer</span><span class="p">,</span> <span class="nx">dataptr</span><span class="p">,</span> <span class="nx">datalen</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">const</span> <span class="nx">str</span> <span class="o">=</span> <span class="nx">bin2hex</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">str</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;saved &#34;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s2">&#34; with &#34;</span> <span class="o">+</span> <span class="nx">data</span><span class="p">.</span><span class="nx">length</span> <span class="o">+</span> <span class="s2">&#34; bytes&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">},</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>Note the files are binary compatible with the original game. If you have a replay or high-scores, you can technically import them in the browser using the Dev Tools and have the online version of the game load them.</p>
 <h2 id="mobile-support">Mobile support</h2>
@@ -533,7 +530,7 @@
 <p>A bit harder, but I didn&rsquo;t want to make it too complicated. The main element here is a SVG layer on top that has elements with <code>id</code> attribute set. Every time a touch event happens, the touched elements are checked and the <code>id</code> is mapped to the bitmask the game knows.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -583,55 +580,55 @@
 </span><span class="lnt">48
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">uiMap</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="nx">uiA</span><span class="o">:</span> <span class="mh">0x10</span><span class="p">,</span>
-  <span class="nx">uiB</span><span class="o">:</span> <span class="mh">0x20</span><span class="p">,</span>
-  <span class="nx">uiBack</span><span class="o">:</span> <span class="mh">0x40</span><span class="p">,</span>
-  <span class="nx">uiDirR</span><span class="o">:</span> <span class="mh">0x8</span><span class="p">,</span>
-  <span class="nx">uiDirBR</span><span class="o">:</span> <span class="mh">0xA</span><span class="p">,</span>
-  <span class="nx">uiDirB</span><span class="o">:</span> <span class="mh">0x2</span><span class="p">,</span>
-  <span class="nx">uiDirBL</span><span class="o">:</span> <span class="mh">0x6</span><span class="p">,</span>
-  <span class="nx">uiDirL</span><span class="o">:</span> <span class="mh">0x4</span><span class="p">,</span>
-  <span class="nx">uiDirTL</span><span class="o">:</span> <span class="mh">0x5</span><span class="p">,</span>
-  <span class="nx">uiDirT</span><span class="o">:</span> <span class="mh">0x1</span><span class="p">,</span>
-  <span class="nx">uiDirTR</span><span class="o">:</span> <span class="mh">0x9</span>
-<span class="p">};</span>
-<span class="kd">function</span> <span class="nx">uiID</span><span class="p">(</span><span class="nx">element</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">element</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">element</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">element</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">element</span><span class="p">.</span><span class="nx">parentNode</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">element</span><span class="p">.</span><span class="nx">parentNode</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-  <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="kd">function</span> <span class="nx">registerTouchEvent</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">state</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">var</span> <span class="nx">ids</span> <span class="o">=</span> <span class="p">[];</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kr">const</span> <span class="nx">touch</span> <span class="k">of</span> <span class="nx">event</span><span class="p">.</span><span class="nx">touches</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kr">const</span> <span class="nx">element</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">elementFromPoint</span><span class="p">(</span><span class="nx">touch</span><span class="p">.</span><span class="nx">clientX</span><span class="p">,</span> <span class="nx">touch</span><span class="p">.</span><span class="nx">clientY</span><span class="p">);</span>
-      <span class="kr">const</span> <span class="nx">id</span> <span class="o">=</span> <span class="nx">uiID</span><span class="p">(</span><span class="nx">element</span><span class="p">);</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">id</span> <span class="k">in</span> <span class="nx">uiMap</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">ids</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="nx">touchInputState</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">for</span> <span class="p">(</span><span class="nx">id</span> <span class="k">of</span> <span class="nx">ids</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">touchInputState</span> <span class="o">|=</span> <span class="nx">uiMap</span><span class="p">[</span><span class="nx">id</span><span class="p">];</span>
-    <span class="p">}</span>
-    <span class="nx">updateInput</span><span class="p">();</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">ids</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
-    <span class="p">}</span>
-  <span class="p">},</span> <span class="kc">false</span><span class="p">);</span>
-<span class="p">}</span>
-<span class="nx">registerTouchEvent</span><span class="p">(</span><span class="s2">&#34;touchstart&#34;</span><span class="p">);</span>
-<span class="nx">registerTouchEvent</span><span class="p">(</span><span class="s2">&#34;touchend&#34;</span><span class="p">);</span>
-<span class="nx">registerTouchEvent</span><span class="p">(</span><span class="s2">&#34;touchmove&#34;</span><span class="p">);</span>
-<span class="nx">registerTouchEvent</span><span class="p">(</span><span class="s2">&#34;touchcancel&#34;</span><span class="p">);</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">uiMap</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">uiA</span><span class="o">:</span> <span class="mh">0x10</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">uiB</span><span class="o">:</span> <span class="mh">0x20</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">uiBack</span><span class="o">:</span> <span class="mh">0x40</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">uiDirR</span><span class="o">:</span> <span class="mh">0x8</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">uiDirBR</span><span class="o">:</span> <span class="mh">0xA</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">uiDirB</span><span class="o">:</span> <span class="mh">0x2</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">uiDirBL</span><span class="o">:</span> <span class="mh">0x6</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">uiDirL</span><span class="o">:</span> <span class="mh">0x4</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">uiDirTL</span><span class="o">:</span> <span class="mh">0x5</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">uiDirT</span><span class="o">:</span> <span class="mh">0x1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">uiDirTR</span><span class="o">:</span> <span class="mh">0x9</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">uiID</span><span class="p">(</span><span class="nx">element</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="p">(</span><span class="nx">element</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="nx">element</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="nx">element</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="nx">element</span><span class="p">.</span><span class="nx">parentNode</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="nx">element</span><span class="p">.</span><span class="nx">parentNode</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">registerTouchEvent</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">state</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nx">ids</span> <span class="o">=</span> <span class="p">[];</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="kr">const</span> <span class="nx">touch</span> <span class="k">of</span> <span class="nx">event</span><span class="p">.</span><span class="nx">touches</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="kr">const</span> <span class="nx">element</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">elementFromPoint</span><span class="p">(</span><span class="nx">touch</span><span class="p">.</span><span class="nx">clientX</span><span class="p">,</span> <span class="nx">touch</span><span class="p">.</span><span class="nx">clientY</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="kr">const</span> <span class="nx">id</span> <span class="o">=</span> <span class="nx">uiID</span><span class="p">(</span><span class="nx">element</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="p">(</span><span class="nx">id</span> <span class="k">in</span> <span class="nx">uiMap</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">ids</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">touchInputState</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="nx">id</span> <span class="k">of</span> <span class="nx">ids</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">touchInputState</span> <span class="o">|=</span> <span class="nx">uiMap</span><span class="p">[</span><span class="nx">id</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">updateInput</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="nx">ids</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span> <span class="kc">false</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">registerTouchEvent</span><span class="p">(</span><span class="s2">&#34;touchstart&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nx">registerTouchEvent</span><span class="p">(</span><span class="s2">&#34;touchend&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nx">registerTouchEvent</span><span class="p">(</span><span class="s2">&#34;touchmove&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nx">registerTouchEvent</span><span class="p">(</span><span class="s2">&#34;touchcancel&#34;</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><h3 id="progressive-web-app-pwa-support">Progressive Web App (PWA) support</h3>
 <p>This mainly consisted of generating the <code>manifest.json</code> file to describe the application. A lot of tutorials I have found describing the setup of a PWA usually omitted to detail the ServiceWorker life cycle though. Every time the page loads, the <code>sw.js</code> file is checked for differences, and if there are any it&rsquo;ll load a new worker but only shut down the previous one when the page is closed and not when merely reloading (except when using Shift+F5). In the end, I added a simple way during the public deploy to add the git commit SHA in <code>sw.js</code> to reload it every time it changes and that also clears the cache. Otherwise files would still be in cache.</p>
@@ -652,7 +649,7 @@
 
 	</div>
 </div>
-            <div id="footer"><p>2026-06-18 12:33:34 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
+            <div id="footer"><p>2026-07-08 11:17:47 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
         </div>
     </div>
 </body>

@@ -29,7 +29,6 @@
                 </ul>
                 <div id="social"><a href="http://www.linkedin.com/in/remigillig"><img src="/images/linkedin.png"/></a></div>
                 <div id="social">&nbsp;</div>
-                <div id="social"><a href="http://twitter.com/remigillig"><img src="/images/twitter.png"/></a></div>
             </div>
 <div id="content">
 	<div id="page">
@@ -38,7 +37,7 @@
 		<div id="sideinfo">
 			<nav id="TableOfContents">
   <ul>
-    <li><a href="#d1s-stdfilelistdir">D1&rsquo;s <code>std.file.listdir</code></a></li>
+    <li><a href="#d1s-stdfilelistdir">D1’s <code>std.file.listdir</code></a></li>
     <li><a href="#cyclic-dependency-between-modules-constructorsdestructors">Cyclic dependency between modules constructors/destructors</a></li>
     <li><a href="#code-smell-using-static-state-for-non-static-code">Code smell: using static state for non-static code</a></li>
     <li><a href="#associative-arrays-membership-test">Associative arrays membership test</a></li>
@@ -59,11 +58,11 @@
 <p>Answer is&hellip; NO!</p>
 <p>Alright, let&rsquo;s dig into it!</p>
 <h2 id="d1s-stdfilelistdir">D1&rsquo;s <code>std.file.listdir</code></h2>
-<div class="highlight"><pre class="chroma"><code class="language-plaintext" data-lang="plaintext">core.exception.RangeError@src\abagames\tt\barrage.d(110): Range violation
-----------------
-0x00448944 in _d_newarrayU
-0x0041734B in void abagames.tt.barrage.Barrage.addBml(immutable(char)[], immutable(char)[], float, bool, float)
-</code></pre></div><p>D1 used to have a function named <code>listdir</code> in Phobos. It can&rsquo;t be found in <code>undead</code> unfortunately. However, a quick search later here is what I found in the official docs:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">core.exception.RangeError@src\abagames\tt\barrage.d(110): Range violation
+</span></span><span class="line"><span class="cl">----------------
+</span></span><span class="line"><span class="cl">0x00448944 in _d_newarrayU
+</span></span><span class="line"><span class="cl">0x0041734B in void abagames.tt.barrage.Barrage.addBml(immutable(char)[], immutable(char)[], float, bool, float)
+</span></span></code></pre></div><p>D1 used to have a function named <code>listdir</code> in Phobos. It can&rsquo;t be found in <code>undead</code> unfortunately. However, a quick search later here is what I found in the official docs:</p>
 <p><img src="/media/articles/tt3.png" alt=""></p>
 <p>I thought &ldquo;great!&rdquo;, thanks to the contributor who thought of exactly this case!</p>
 <p>And then I found out that the crash above was because none of the XML files for BulletML were loading. A quick &ldquo;debug print&rdquo; session revealed that <code>listdir</code> only returned the list of files in a path. Is that the original behaviour? Let&rsquo;s check&hellip; it wasn&rsquo;t!</p>
@@ -71,7 +70,7 @@
 <p>Well the fix was easy at least:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
@@ -81,27 +80,27 @@
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gu">@@ -8,7 +8,6 @@ string[] listdir(string pathname)
-</span><span class="gu"></span>   import std.path;
- 
-   return std.file.dirEntries(pathname, SpanMode.shallow)
-<span class="gd">-    .filter!(a =&gt; a.isFile)
-</span><span class="gd"></span>     .map!(a =&gt; std.path.baseName(a.name))
-     .array;
- }
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl"><span class="gu">@@ -8,7 +8,6 @@ string[] listdir(string pathname)
+</span></span></span><span class="line"><span class="cl">   import std.path;
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">   return std.file.dirEntries(pathname, SpanMode.shallow)
+</span></span><span class="line"><span class="cl"><span class="gd">-    .filter!(a =&gt; a.isFile)
+</span></span></span><span class="line"><span class="cl">     .map!(a =&gt; std.path.baseName(a.name))
+</span></span><span class="line"><span class="cl">     .array;
+</span></span><span class="line"><span class="cl"> }
+</span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="cyclic-dependency-between-modules-constructorsdestructors">Cyclic dependency between modules constructors/destructors</h2>
-<div class="highlight"><pre class="chroma"><code class="language-plaintext" data-lang="plaintext">object.Error@src\rt\minfo.d(371): Cyclic dependency between module constructors/destructors of abagames.tt.enemy and abagames.tt.barrage
-abagames.tt.enemy* -&gt;
-abagames.tt.barrage* -&gt;
-abagames.tt.bulletactor -&gt;
-abagames.tt.enemy*
-</code></pre></div><p>From what I could understand, this comes from the fact that when using static constructors in classes, the D runtime has no way of knowing if they have a dependency on each other. There are ways to disable the check if you&rsquo;re sure of your code (<a href="https://forum.dlang.org/post/aizgmatfgcdmkckmpqzf@forum.dlang.org">see the thread I started there</a>). However, looking at the code, it seems like I could just replace the static constructors.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">object.Error@src\rt\minfo.d(371): Cyclic dependency between module constructors/destructors of abagames.tt.enemy and abagames.tt.barrage
+</span></span><span class="line"><span class="cl">abagames.tt.enemy* -&gt;
+</span></span><span class="line"><span class="cl">abagames.tt.barrage* -&gt;
+</span></span><span class="line"><span class="cl">abagames.tt.bulletactor -&gt;
+</span></span><span class="line"><span class="cl">abagames.tt.enemy*
+</span></span></code></pre></div><p>From what I could understand, this comes from the fact that when using static constructors in classes, the D runtime has no way of knowing if they have a dependency on each other. There are ways to disable the check if you&rsquo;re sure of your code (<a href="https://forum.dlang.org/post/aizgmatfgcdmkckmpqzf@forum.dlang.org">see the thread I started there</a>). However, looking at the code, it seems like I could just replace the static constructors.</p>
 <p>What it was used for before:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -122,31 +121,31 @@ abagames.tt.enemy*
 </span><span class="lnt">19
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-d" data-lang="d"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Barrage</span> <span class="o">{</span>
- <span class="kd">private</span><span class="o">:</span>
-  <span class="kd">static</span> <span class="n">Rand</span> <span class="n">rand</span><span class="o">;</span>
-  <span class="n">ParserParam</span><span class="o">[]</span> <span class="n">parserParam</span><span class="o">;</span>
-  <span class="n">Drawable</span> <span class="n">shape</span><span class="o">,</span> <span class="n">disapShape</span><span class="o">;</span>
-  <span class="kt">bool</span> <span class="n">longRange</span><span class="o">;</span>
-  <span class="kt">int</span> <span class="n">prevWait</span><span class="o">,</span> <span class="n">postWait</span><span class="o">;</span>
-  <span class="kt">bool</span> <span class="n">noXReverse</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
-
-<span class="hl">  <span class="kd">public</span> <span class="kd">static</span> <span class="nf">this</span><span class="o">()</span> <span class="o">{</span>
-</span><span class="hl">    <span class="n">rand</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Rand</span><span class="o">;</span>
-</span><span class="hl">  <span class="o">}</span>
-</span>
-  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">setRandSeed</span><span class="o">(</span><span class="kt">long</span> <span class="n">seed</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">rand</span><span class="o">.</span><span class="na">setSeed</span><span class="o">(</span><span class="n">seed</span><span class="o">);</span>
-  <span class="o">}</span>
-
-  <span class="c1">// ...
-</span><span class="c1"></span><span class="o">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-d" data-lang="d"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Barrage</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl"> <span class="kd">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="n">Rand</span> <span class="n">rand</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="n">ParserParam</span><span class="o">[]</span> <span class="n">parserParam</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="n">Drawable</span> <span class="n">shape</span><span class="o">,</span> <span class="n">disapShape</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">bool</span> <span class="n">longRange</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">int</span> <span class="n">prevWait</span><span class="o">,</span> <span class="n">postWait</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">bool</span> <span class="n">noXReverse</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line hl"><span class="cl">  <span class="kd">public</span> <span class="kd">static</span> <span class="nf">this</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line hl"><span class="cl">    <span class="n">rand</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Rand</span><span class="o">;</span>
+</span></span><span class="line hl"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">setRandSeed</span><span class="o">(</span><span class="kt">long</span> <span class="n">seed</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">rand</span><span class="o">.</span><span class="na">setSeed</span><span class="o">(</span><span class="n">seed</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="c1">// ...
+</span></span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>Because of the replay feature, none of the <code>Rand</code> instances were accessed without calling <code>setRandSeed</code>. So removing the constructor and initializing the static <code>rand</code> member on demand seemed appropriate:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -166,25 +165,25 @@ abagames.tt.enemy*
 </span><span class="lnt">18
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-d" data-lang="d"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Barrage</span> <span class="o">{</span>
- <span class="kd">private</span><span class="o">:</span>
-  <span class="kd">static</span> <span class="n">Rand</span> <span class="n">rand</span><span class="o">;</span>
-  <span class="n">ParserParam</span><span class="o">[]</span> <span class="n">parserParam</span><span class="o">;</span>
-  <span class="n">Drawable</span> <span class="n">shape</span><span class="o">,</span> <span class="n">disapShape</span><span class="o">;</span>
-  <span class="kt">bool</span> <span class="n">longRange</span><span class="o">;</span>
-  <span class="kt">int</span> <span class="n">prevWait</span><span class="o">,</span> <span class="n">postWait</span><span class="o">;</span>
-  <span class="kt">bool</span> <span class="n">noXReverse</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
-
-  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">setRandSeed</span><span class="o">(</span><span class="kt">long</span> <span class="n">seed</span><span class="o">)</span> <span class="o">{</span>
-<span class="hl">    <span class="k">if</span> <span class="o">(!</span><span class="n">rand</span><span class="o">)</span> <span class="o">{</span>
-</span><span class="hl">      <span class="n">rand</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Rand</span><span class="o">;</span>
-</span><span class="hl">    <span class="o">}</span>
-</span>    <span class="n">rand</span><span class="o">.</span><span class="na">setSeed</span><span class="o">(</span><span class="n">seed</span><span class="o">);</span>
-  <span class="o">}</span>
-
-  <span class="c1">// ...
-</span><span class="c1"></span><span class="o">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-d" data-lang="d"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Barrage</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl"> <span class="kd">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="n">Rand</span> <span class="n">rand</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="n">ParserParam</span><span class="o">[]</span> <span class="n">parserParam</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="n">Drawable</span> <span class="n">shape</span><span class="o">,</span> <span class="n">disapShape</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">bool</span> <span class="n">longRange</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">int</span> <span class="n">prevWait</span><span class="o">,</span> <span class="n">postWait</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">bool</span> <span class="n">noXReverse</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">setRandSeed</span><span class="o">(</span><span class="kt">long</span> <span class="n">seed</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line hl"><span class="cl">    <span class="k">if</span> <span class="o">(!</span><span class="n">rand</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line hl"><span class="cl">      <span class="n">rand</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Rand</span><span class="o">;</span>
+</span></span><span class="line hl"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">rand</span><span class="o">.</span><span class="na">setSeed</span><span class="o">(</span><span class="n">seed</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="c1">// ...
+</span></span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>No cyclic dependency error anymore!</p>
 <h2 id="code-smell-using-static-state-for-non-static-code">Code smell: using static state for non-static code</h2>
@@ -192,7 +191,7 @@ abagames.tt.enemy*
 <p>Here is what I&rsquo;m talking about:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -248,83 +247,83 @@ abagames.tt.enemy*
 </span><span class="lnt">54
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-d" data-lang="d"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ShipShape</span><span class="o">:</span> <span class="n">Collidable</span><span class="o">,</span> <span class="n">Drawable</span> <span class="o">{</span>
-  <span class="k">mixin</span> <span class="n">CollidableImpl</span><span class="o">;</span>
- <span class="kd">public</span><span class="o">:</span>
-  <span class="kd">static</span> <span class="kd">enum</span> <span class="n">Type</span> <span class="o">{</span>
-    <span class="n">SMALL</span><span class="o">,</span> <span class="n">MIDDLE</span><span class="o">,</span> <span class="n">LARGE</span>
-  <span class="o">}</span>
- <span class="kd">private</span><span class="o">:</span>
-  <span class="kd">static</span> <span class="n">Rand</span> <span class="n">rand</span><span class="o">;</span>
-  <span class="n">Structure</span><span class="o">[]</span> <span class="n">structure</span><span class="o">;</span>
-  <span class="n">Vector</span> <span class="n">_collision</span><span class="o">;</span>
-  <span class="n">DisplayList</span> <span class="n">displayList</span><span class="o">;</span>
-  <span class="kt">float</span><span class="o">[]</span> <span class="n">rocketX</span><span class="o">;</span>
-  <span class="n">Vector</span> <span class="n">rocketPos</span><span class="o">,</span> <span class="n">fragmentPos</span><span class="o">;</span>
-  <span class="kt">int</span> <span class="n">color</span><span class="o">;</span>
-  
-<span class="hl">  <span class="kd">public</span> <span class="nf">this</span><span class="o">(</span><span class="kt">long</span> <span class="n">randSeed</span><span class="o">)</span> <span class="o">{</span>
-</span><span class="hl">    <span class="n">rand</span><span class="o">.</span><span class="na">setSeed</span><span class="o">(</span><span class="n">randSeed</span><span class="o">);</span>
-</span><span class="hl">  <span class="o">}</span>
-</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">close</span><span class="o">()</span> <span class="o">{</span>
-    <span class="n">displayList</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
-  <span class="o">}</span>
-
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setSeed</span><span class="o">(</span><span class="kt">long</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">rand</span><span class="o">.</span><span class="na">setSeed</span><span class="o">(</span><span class="n">n</span><span class="o">);</span>
-  <span class="o">}</span>
-
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">create</span><span class="o">(</span><span class="kt">int</span> <span class="n">type</span><span class="o">,</span> <span class="kt">bool</span> <span class="n">damaged</span> <span class="o">=</span> <span class="kc">false</span><span class="o">)</span> <span class="o">{</span>
-    <span class="k">switch</span> <span class="o">(</span><span class="n">type</span><span class="o">)</span> <span class="o">{</span>
-    <span class="k">case</span> <span class="n">Type</span><span class="o">.</span><span class="na">SMALL</span><span class="o">:</span>
-      <span class="n">createSmallType</span><span class="o">(</span><span class="n">damaged</span><span class="o">);</span>
-      <span class="k">break</span><span class="o">;</span>
-    <span class="k">case</span> <span class="n">Type</span><span class="o">.</span><span class="na">MIDDLE</span><span class="o">:</span>
-      <span class="n">createMiddleType</span><span class="o">(</span><span class="n">damaged</span><span class="o">);</span>
-      <span class="k">break</span><span class="o">;</span>
-    <span class="k">case</span> <span class="n">Type</span><span class="o">.</span><span class="na">LARGE</span><span class="o">:</span>
-      <span class="n">createLargeType</span><span class="o">(</span><span class="n">damaged</span><span class="o">);</span>
-      <span class="k">break</span><span class="o">;</span>
-    <span class="o">}</span>
-    <span class="n">createDisplayList</span><span class="o">();</span>
-    <span class="n">rocketPos</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Vector</span><span class="o">;</span>
-    <span class="n">fragmentPos</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Vector</span><span class="o">;</span>
-  <span class="o">}</span>
-
-  <span class="c1">// ...
-</span><span class="c1"></span>
-  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">createSmallType</span><span class="o">(</span><span class="kt">bool</span> <span class="n">damaged</span> <span class="o">=</span> <span class="kc">false</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">_collision</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Vector</span><span class="o">;</span>
-<span class="hl">    <span class="kt">int</span> <span class="n">shaftNum</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">rand</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
-</span>    <span class="c1">// ...
-</span><span class="c1"></span>  <span class="o">}</span>
-
-  <span class="c1">// ...
-</span><span class="c1"></span><span class="o">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-d" data-lang="d"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ShipShape</span><span class="o">:</span> <span class="n">Collidable</span><span class="o">,</span> <span class="n">Drawable</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">mixin</span> <span class="n">CollidableImpl</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"> <span class="kd">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="kd">enum</span> <span class="n">Type</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">SMALL</span><span class="o">,</span> <span class="n">MIDDLE</span><span class="o">,</span> <span class="n">LARGE</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl"> <span class="kd">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">  <span class="kd">static</span> <span class="n">Rand</span> <span class="n">rand</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="n">Structure</span><span class="o">[]</span> <span class="n">structure</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="n">Vector</span> <span class="n">_collision</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="n">DisplayList</span> <span class="n">displayList</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">float</span><span class="o">[]</span> <span class="n">rocketX</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="n">Vector</span> <span class="n">rocketPos</span><span class="o">,</span> <span class="n">fragmentPos</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">int</span> <span class="n">color</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line hl"><span class="cl">  <span class="kd">public</span> <span class="nf">this</span><span class="o">(</span><span class="kt">long</span> <span class="n">randSeed</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line hl"><span class="cl">    <span class="n">rand</span><span class="o">.</span><span class="na">setSeed</span><span class="o">(</span><span class="n">randSeed</span><span class="o">);</span>
+</span></span><span class="line hl"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">close</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">displayList</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setSeed</span><span class="o">(</span><span class="kt">long</span> <span class="n">n</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">rand</span><span class="o">.</span><span class="na">setSeed</span><span class="o">(</span><span class="n">n</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">create</span><span class="o">(</span><span class="kt">int</span> <span class="n">type</span><span class="o">,</span> <span class="kt">bool</span> <span class="n">damaged</span> <span class="o">=</span> <span class="kc">false</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">switch</span> <span class="o">(</span><span class="n">type</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">case</span> <span class="n">Type</span><span class="o">.</span><span class="na">SMALL</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">      <span class="n">createSmallType</span><span class="o">(</span><span class="n">damaged</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">      <span class="k">break</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">case</span> <span class="n">Type</span><span class="o">.</span><span class="na">MIDDLE</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">      <span class="n">createMiddleType</span><span class="o">(</span><span class="n">damaged</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">      <span class="k">break</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">case</span> <span class="n">Type</span><span class="o">.</span><span class="na">LARGE</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">      <span class="n">createLargeType</span><span class="o">(</span><span class="n">damaged</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">      <span class="k">break</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">createDisplayList</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">    <span class="n">rocketPos</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Vector</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">fragmentPos</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Vector</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="c1">// ...
+</span></span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">createSmallType</span><span class="o">(</span><span class="kt">bool</span> <span class="n">damaged</span> <span class="o">=</span> <span class="kc">false</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">_collision</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Vector</span><span class="o">;</span>
+</span></span><span class="line hl"><span class="cl">    <span class="kt">int</span> <span class="n">shaftNum</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">rand</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// ...
+</span></span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="c1">// ...
+</span></span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>And it&rsquo;s used like this:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-d" data-lang="d">    <span class="kt">long</span> <span class="n">rs</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">99999</span><span class="o">);</span>
-    <span class="n">_shape</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ShipShape</span><span class="o">(</span><span class="n">rs</span><span class="o">);</span>
-    <span class="n">_shape</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">ShipShape</span><span class="o">.</span><span class="na">Type</span><span class="o">.</span><span class="na">SMALL</span><span class="o">);</span>
-    <span class="n">_damagedShape</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ShipShape</span><span class="o">(</span><span class="n">rs</span><span class="o">);</span>
-    <span class="n">_damagedShape</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">ShipShape</span><span class="o">.</span><span class="na">Type</span><span class="o">.</span><span class="na">SMALL</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-d" data-lang="d"><span class="line"><span class="cl">    <span class="kt">long</span> <span class="n">rs</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">99999</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">_shape</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ShipShape</span><span class="o">(</span><span class="n">rs</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">_shape</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">ShipShape</span><span class="o">.</span><span class="na">Type</span><span class="o">.</span><span class="na">SMALL</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">_damagedShape</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ShipShape</span><span class="o">(</span><span class="n">rs</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">_damagedShape</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">ShipShape</span><span class="o">.</span><span class="na">Type</span><span class="o">.</span><span class="na">SMALL</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>I have fixed this by creating a local <code>Rand</code> instance inside <code>create</code> and pass that to the appropriate functions.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -345,48 +344,48 @@ abagames.tt.enemy*
 </span><span class="lnt">19
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-d" data-lang="d">  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">create</span><span class="o">(</span><span class="kt">long</span> <span class="n">seed</span><span class="o">,</span> <span class="n">Type</span> <span class="n">type</span><span class="o">,</span> <span class="kt">bool</span> <span class="n">damaged</span> <span class="o">=</span> <span class="kc">false</span><span class="o">)</span> <span class="o">{</span>
-    <span class="kd">auto</span> <span class="n">localRand</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Rand</span><span class="o">;</span>
-    <span class="n">localRand</span><span class="o">.</span><span class="na">setSeed</span><span class="o">(</span><span class="n">seed</span><span class="o">);</span>
-    <span class="kd">final</span> <span class="nf">switch</span> <span class="o">(</span><span class="n">type</span><span class="o">)</span> <span class="o">{</span>
-    <span class="k">case</span> <span class="n">Type</span><span class="o">.</span><span class="na">SMALL</span><span class="o">:</span>
-      <span class="n">createSmallType</span><span class="o">(</span><span class="n">localRand</span><span class="o">,</span> <span class="n">damaged</span><span class="o">);</span>
-      <span class="k">break</span><span class="o">;</span>
-      <span class="c1">// ...
-</span><span class="c1"></span>    <span class="o">}</span>
-    <span class="c1">// ...
-</span><span class="c1"></span>  <span class="o">}</span>
-
-  <span class="c1">// ...
-</span><span class="c1"></span>
-  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">createSmallType</span><span class="o">(</span><span class="n">Rand</span> <span class="n">localRand</span><span class="o">,</span> <span class="kt">bool</span> <span class="n">damaged</span> <span class="o">=</span> <span class="kc">false</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">_collision</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Vector</span><span class="o">;</span>
-    <span class="kt">int</span> <span class="n">shaftNum</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">localRand</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
-    <span class="c1">// ...
-</span><span class="c1"></span>  <span class="o">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-d" data-lang="d"><span class="line"><span class="cl">  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">create</span><span class="o">(</span><span class="kt">long</span> <span class="n">seed</span><span class="o">,</span> <span class="n">Type</span> <span class="n">type</span><span class="o">,</span> <span class="kt">bool</span> <span class="n">damaged</span> <span class="o">=</span> <span class="kc">false</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">auto</span> <span class="n">localRand</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Rand</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">localRand</span><span class="o">.</span><span class="na">setSeed</span><span class="o">(</span><span class="n">seed</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">final</span> <span class="nf">switch</span> <span class="o">(</span><span class="n">type</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">case</span> <span class="n">Type</span><span class="o">.</span><span class="na">SMALL</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">      <span class="n">createSmallType</span><span class="o">(</span><span class="n">localRand</span><span class="o">,</span> <span class="n">damaged</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">      <span class="k">break</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">      <span class="c1">// ...
+</span></span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// ...
+</span></span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="c1">// ...
+</span></span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">createSmallType</span><span class="o">(</span><span class="n">Rand</span> <span class="n">localRand</span><span class="o">,</span> <span class="kt">bool</span> <span class="n">damaged</span> <span class="o">=</span> <span class="kc">false</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">_collision</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Vector</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">shaftNum</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">localRand</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// ...
+</span></span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-d" data-lang="d">    <span class="kt">long</span> <span class="n">rs</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">99999</span><span class="o">);</span>
-    <span class="n">_shape</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ShipShape</span><span class="o">();</span>
-    <span class="n">_shape</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">rs</span><span class="o">,</span> <span class="n">ShipShape</span><span class="o">.</span><span class="na">Type</span><span class="o">.</span><span class="na">SMALL</span><span class="o">);</span>
-    <span class="n">_damagedShape</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ShipShape</span><span class="o">();</span>
-    <span class="n">_damagedShape</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">rs</span><span class="o">,</span> <span class="n">ShipShape</span><span class="o">.</span><span class="na">Type</span><span class="o">.</span><span class="na">SMALL</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-d" data-lang="d"><span class="line"><span class="cl">    <span class="kt">long</span> <span class="n">rs</span> <span class="o">=</span> <span class="n">rand</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">99999</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">_shape</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ShipShape</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">    <span class="n">_shape</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">rs</span><span class="o">,</span> <span class="n">ShipShape</span><span class="o">.</span><span class="na">Type</span><span class="o">.</span><span class="na">SMALL</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">_damagedShape</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ShipShape</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">    <span class="n">_damagedShape</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">rs</span><span class="o">,</span> <span class="n">ShipShape</span><span class="o">.</span><span class="na">Type</span><span class="o">.</span><span class="na">SMALL</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="associative-arrays-membership-test">Associative arrays membership test</h2>
-<p>D1 had associative arrays that worked like C++'s <code>std::map</code> where you check for ownership by checking if there is a value. That got replaced with the <code>in</code> operator. It means a little more checking as you need to check both levels in case you have a multidimensional associative array but it&rsquo;s reasonable and probably clearer.</p>
+<p>D1 had associative arrays that worked like C++&rsquo;s <code>std::map</code> where you check for ownership by checking if there is a value. That got replaced with the <code>in</code> operator. It means a little more checking as you need to check both levels in case you have a multidimensional associative array but it&rsquo;s reasonable and probably clearer.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -410,45 +409,45 @@ abagames.tt.enemy*
 </span><span class="lnt">22
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gu">@@ -107,7 +107,7 @@ public class BarrageManager {
-</span><span class="gu"></span>   }
- 
-   public static BulletMLParserTinyXML* getInstance(string dirName, string fileName) {
-<span class="gd">-    if (!parser[dirName][fileName]) {
-</span><span class="gd"></span><span class="gi">+    if (!(dirName in parser) || !(fileName in parser[dirName])) {
-</span><span class="gi"></span>       string barrageName = dirName ~ &#34;/&#34; ~ fileName;
-       Logger.info(&#34;Load BulletML: &#34; ~ barrageName);
-       parser[dirName][fileName] = 
-<span class="gu">@@ -119,8 +119,10 @@ public class BarrageManager {
-</span><span class="gu"></span> 
-   public static BulletMLParserTinyXML*[] getInstanceList(string dirName) {
-     BulletMLParserTinyXML*[] pl;
-<span class="gd">-    foreach (BulletMLParserTinyXML *p; parser[dirName]) {
-</span><span class="gd">-      pl ~= p;
-</span><span class="gd"></span><span class="gi">+    if (dirName in parser) {
-</span><span class="gi">+      foreach (BulletMLParserTinyXML *p; parser[dirName]) {
-</span><span class="gi">+        pl ~= p;
-</span><span class="gi">+      }
-</span><span class="gi"></span>     }
-     return pl;
-   }
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl"><span class="gu">@@ -107,7 +107,7 @@ public class BarrageManager {
+</span></span></span><span class="line"><span class="cl">   }
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">   public static BulletMLParserTinyXML* getInstance(string dirName, string fileName) {
+</span></span><span class="line"><span class="cl"><span class="gd">-    if (!parser[dirName][fileName]) {
+</span></span></span><span class="line"><span class="cl"><span class="gi">+    if (!(dirName in parser) || !(fileName in parser[dirName])) {
+</span></span></span><span class="line"><span class="cl">       string barrageName = dirName ~ &#34;/&#34; ~ fileName;
+</span></span><span class="line"><span class="cl">       Logger.info(&#34;Load BulletML: &#34; ~ barrageName);
+</span></span><span class="line"><span class="cl">       parser[dirName][fileName] = 
+</span></span><span class="line"><span class="cl"><span class="gu">@@ -119,8 +119,10 @@ public class BarrageManager {
+</span></span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">   public static BulletMLParserTinyXML*[] getInstanceList(string dirName) {
+</span></span><span class="line"><span class="cl">     BulletMLParserTinyXML*[] pl;
+</span></span><span class="line"><span class="cl"><span class="gd">-    foreach (BulletMLParserTinyXML *p; parser[dirName]) {
+</span></span></span><span class="line"><span class="cl"><span class="gd">-      pl ~= p;
+</span></span></span><span class="line"><span class="cl"><span class="gi">+    if (dirName in parser) {
+</span></span></span><span class="line"><span class="cl"><span class="gi">+      foreach (BulletMLParserTinyXML *p; parser[dirName]) {
+</span></span></span><span class="line"><span class="cl"><span class="gi">+        pl ~= p;
+</span></span></span><span class="line"><span class="cl"><span class="gi">+      }
+</span></span></span><span class="line"><span class="cl">     }
+</span></span><span class="line"><span class="cl">     return pl;
+</span></span><span class="line"><span class="cl">   }
+</span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="first-gameplay">First gameplay!</h2>
 <p>I can now run the game! However, not for long, or at least it&rsquo;s not very entertaining.</p>
 <video controls src="/media/articles/tt_crash.mp4"></video>
 <p>Indeed it crashes whenever you destroy a big enemy&hellip; let&rsquo;s see the error:</p>
-<div class="highlight"><pre class="chroma"><code class="language-plaintext" data-lang="plaintext">object.Error@(0): Access Violation
-----------------
-0x00425F9F in void abagames.tt.shape.ShipShape.addFragments(abagames.util.vector.Vector, abagames.tt.particle.ParticlePool) at src\abagames\tt\shape.d(317)
-0x0041FFF5 in void abagames.tt.enemy.Enemy.destroyed() at src\abagames\tt\enemy.d(327)
-0x0041FCE7 in void abagames.tt.enemy.Enemy.checkShotHit(abagames.util.vector.Vector, abagames.tt.shape.Collidable, abagames.tt.shot.Shot) at src\abagames\tt\enemy.d(297)
-0x00420342 in void abagames.tt.enemy.EnemyPool.checkShotHit(abagames.util.vector.Vector, abagames.tt.shape.Collidable, abagames.tt.shot.Shot) at src\abagames\tt\enemy.d(394)
-0x0042BF45 in void abagames.tt.shot.Shot.move()
-</code></pre></div><p>Here is the fix:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">object.Error@(0): Access Violation
+</span></span><span class="line"><span class="cl">----------------
+</span></span><span class="line"><span class="cl">0x00425F9F in void abagames.tt.shape.ShipShape.addFragments(abagames.util.vector.Vector, abagames.tt.particle.ParticlePool) at src\abagames\tt\shape.d(317)
+</span></span><span class="line"><span class="cl">0x0041FFF5 in void abagames.tt.enemy.Enemy.destroyed() at src\abagames\tt\enemy.d(327)
+</span></span><span class="line"><span class="cl">0x0041FCE7 in void abagames.tt.enemy.Enemy.checkShotHit(abagames.util.vector.Vector, abagames.tt.shape.Collidable, abagames.tt.shot.Shot) at src\abagames\tt\enemy.d(297)
+</span></span><span class="line"><span class="cl">0x00420342 in void abagames.tt.enemy.EnemyPool.checkShotHit(abagames.util.vector.Vector, abagames.tt.shape.Collidable, abagames.tt.shot.Shot) at src\abagames\tt\enemy.d(394)
+</span></span><span class="line"><span class="cl">0x0042BF45 in void abagames.tt.shot.Shot.move()
+</span></span></code></pre></div><p>Here is the fix:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -481,38 +480,38 @@ abagames.tt.enemy*
 </span><span class="lnt">31
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gd">--- a/src/abagames/tt/gamemanager.d
-</span><span class="gd"></span><span class="gi">+++ b/src/abagames/tt/gamemanager.d
-</span><span class="gi"></span><span class="gu">@@ -327,6 +327,7 @@ public class InGameState: GameState {
-</span><span class="gu"></span>     Particle.setRandSeed(_seed);
-     Shot.setRandSeed(_seed);
-     SoundManager.setRandSeed(_seed);
-<span class="gi">+    ShipShape.setRandSeed(_seed);
-</span><span class="gi"></span>     ship.start(_grade, _seed);
-     stageManager.start(_level, _grade, _seed);
-     initGameState();
-<span class="gu">@@ -592,6 +593,7 @@ public class TitleState: GameState {
-</span><span class="gu"></span>     Particle.setRandSeed(_seed);
-     Shot.setRandSeed(_seed);
-     SoundManager.setRandSeed(_seed);
-<span class="gi">+    ShipShape.setRandSeed(_seed);
-</span><span class="gi"></span>     ship.start(_grade, _seed);
-     stageManager.start(_level, _grade, _seed);
-     inGameState.initGameState();
-<span class="gh">diff --git a/src/abagames/tt/shape.d b/src/abagames/tt/shape.d
-</span><span class="gh">index b240208..95e8d33 100644
-</span><span class="gh"></span><span class="gd">--- a/src/abagames/tt/shape.d
-</span><span class="gd"></span><span class="gi">+++ b/src/abagames/tt/shape.d
-</span><span class="gi"></span><span class="gu">@@ -70,7 +70,7 @@ public class ShipShape: Collidable, Drawable {
-</span><span class="gu"></span>     displayList.close();
-   }
- 
-<span class="gd">-  public void setRandSeed(long n) {
-</span><span class="gd"></span><span class="gi">+  public static void setRandSeed(long n) {
-</span><span class="gi"></span>     if (!rand) {
-       rand = new Rand;
-     }
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl"><span class="gd">--- a/src/abagames/tt/gamemanager.d
+</span></span></span><span class="line"><span class="cl"><span class="gi">+++ b/src/abagames/tt/gamemanager.d
+</span></span></span><span class="line"><span class="cl"><span class="gu">@@ -327,6 +327,7 @@ public class InGameState: GameState {
+</span></span></span><span class="line"><span class="cl">     Particle.setRandSeed(_seed);
+</span></span><span class="line"><span class="cl">     Shot.setRandSeed(_seed);
+</span></span><span class="line"><span class="cl">     SoundManager.setRandSeed(_seed);
+</span></span><span class="line"><span class="cl"><span class="gi">+    ShipShape.setRandSeed(_seed);
+</span></span></span><span class="line"><span class="cl">     ship.start(_grade, _seed);
+</span></span><span class="line"><span class="cl">     stageManager.start(_level, _grade, _seed);
+</span></span><span class="line"><span class="cl">     initGameState();
+</span></span><span class="line"><span class="cl"><span class="gu">@@ -592,6 +593,7 @@ public class TitleState: GameState {
+</span></span></span><span class="line"><span class="cl">     Particle.setRandSeed(_seed);
+</span></span><span class="line"><span class="cl">     Shot.setRandSeed(_seed);
+</span></span><span class="line"><span class="cl">     SoundManager.setRandSeed(_seed);
+</span></span><span class="line"><span class="cl"><span class="gi">+    ShipShape.setRandSeed(_seed);
+</span></span></span><span class="line"><span class="cl">     ship.start(_grade, _seed);
+</span></span><span class="line"><span class="cl">     stageManager.start(_level, _grade, _seed);
+</span></span><span class="line"><span class="cl">     inGameState.initGameState();
+</span></span><span class="line"><span class="cl"><span class="gh">diff --git a/src/abagames/tt/shape.d b/src/abagames/tt/shape.d
+</span></span></span><span class="line"><span class="cl"><span class="gh">index b240208..95e8d33 100644
+</span></span></span><span class="line"><span class="cl"><span class="gd">--- a/src/abagames/tt/shape.d
+</span></span></span><span class="line"><span class="cl"><span class="gi">+++ b/src/abagames/tt/shape.d
+</span></span></span><span class="line"><span class="cl"><span class="gu">@@ -70,7 +70,7 @@ public class ShipShape: Collidable, Drawable {
+</span></span></span><span class="line"><span class="cl">     displayList.close();
+</span></span><span class="line"><span class="cl">   }
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="gd">-  public void setRandSeed(long n) {
+</span></span></span><span class="line"><span class="cl"><span class="gi">+  public static void setRandSeed(long n) {
+</span></span></span><span class="line"><span class="cl">     if (!rand) {
+</span></span><span class="line"><span class="cl">       rand = new Rand;
+</span></span><span class="line"><span class="cl">     }
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>Of course, it&rsquo;s the <a href="#code-smell-using-static-state-for-non-static-code">code smell I preemptively tried to fix earlier</a>&hellip;</p>
 <p>I suspected my original fix might have had consequences down the line, at least this was easy to figure out. However, it shows you can&rsquo;t make assumptions about old code like this, everything has a purpose, don&rsquo;t fix it if it doesn&rsquo;t need fixing! My assumption here was that the <code>ShipShape</code> class had its <code>Rand</code> initialized the same way as the others but it hadn&rsquo;t&hellip;</p>
@@ -523,7 +522,7 @@ abagames.tt.enemy*
 
 	</div>
 </div>
-            <div id="footer"><p>2026-01-05 16:50:23 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
+            <div id="footer"><p>2026-07-08 11:17:47 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
         </div>
     </div>
 </body>
