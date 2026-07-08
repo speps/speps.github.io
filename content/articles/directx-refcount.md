@@ -4,6 +4,8 @@ date = "2013-08-10T21:31:30Z"
 title = "Debugging a DirectX memory leak"
 +++
 
+**NOTE from 2026: this seems quite obvious now, but I never really dug into how the ref count was working before, so it was a revelation at the time. Keeping the article for posterity to remind myself how much I learned since.**
+
 A short tale (with pictures and code) of a recent debugging session.
 
 DirectX uses reference counting to handle the destruction of its resources. When creating a resource, the handle returned by DirectX already has a reference counter of 1. When this resource is not needed anymore, you call Release, each call decrements the reference counter by 1. However, the memory allocated by DirectX for this resource will only be released when the reference counter reaches 0.
