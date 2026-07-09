@@ -212,6 +212,11 @@ body, html
     background-color: #eee;
 }
 
+#content .chroma .lnt {
+    padding-right: 0.5em;
+    color: #ccc;
+}
+
 #content .highlight code {
     font-weight: 100;
     background-color: transparent;
