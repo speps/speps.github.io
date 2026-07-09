@@ -22,7 +22,7 @@ The goal was to mask out parts of the ocean that were crossing the inside of the
 
 We first need to create the mask meshes, these are the meshes whose shape is going to be holes in the water mesh. In our case, we want to create one that is the inside of the hull of the ship for example. This is created manually as we want to have something that sits right in between the 2 walls of the hull so we don't see the edge of the hole.
 
-Now for a bit of setup, we're going to use the `SV_IsFrontFace` (DirectX) or `@builtin(front_facing)` (WebGPU) semantic in the pixel shader, so we need to disable face culling. Then, we're going to store depth values, so ideally we should use a format that stays precise enough, for ease in this demo I used `float32`. The size of the render target for this is 1:4 scale from the main buffer, this is to allow for 16 (4x4) values per pixel, so the actual size in bytes will be the same of the main buffer (and matches exactly if it's 32 bits too) but the viewport is 1:4.
+Now for a bit of setup, we're going to use the `SV_IsFrontFace` (DirectX) or `@builtin(front_facing)` (WebGPU) semantic in the pixel shader, so we need to disable face culling. Then, we're going to store depth values, so ideally we should use a format that stays precise enough, for ease in this demo I used `float32`. The viewport size of the render target for this is 1:4 scale from the main buffer, this is to allow for 16 (4x4) values per pixel, but the actual size in pixels will be the same of the main buffer. We're just dividing to be able to store more than one value per pixel, 16 values was enough for let's say up to 8 boats at once if they were all aligned which was rare anyway.
 
 **The key insight here is that we can write a positive depth value for front faces, and a negative depth value for back faces.** Using an atomic counter per pixel, we can accumulate these values per pixel (up to 16 values).
 
@@ -62,4 +62,6 @@ if any mask surfaces stored at this pixel:
 
 ### Extensions
 
-* The "inside volume" case could also be handled by adding a value at near clip depth during sort, so the cost of sampling the first value is gone during the sampling.
+* The "camera inside volume" case could also be handled by adding a value at near clip depth during the sort pass, so the cost of sampling the first value is gone during the sampling.
+* The inverse of the hole test can also be used to render another water plane inside the boat. This was actually used, so the the inside water plane can just be a simple quad which gets shaped automatically to fill the hole. With the sampling mask described above, whatever is outside is ocean, whatever is inside is the ship's flooding water plane.
+* Of course, this technique doesn't just apply to water, it can be used to make holes into anything. For example, portals with the masking shape being set within the portal mesh. Again, it's just a sort of alternative to the stencil buffer with slightly different use cases.
