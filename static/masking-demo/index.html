@@ -74,6 +74,8 @@ const cubeDefs=[
 	{x:-1,z:2.5,rySpd:.5,bobSpd:.9,bobAmp:.8},
 ];
 const NUM_CUBES=cubeDefs.length;
+const WF=1.333,WA=.3,WQ=2,WS=.8;
+const WD=[-1/Math.SQRT2,1/Math.SQRT2];
 
 // ── WGSL shaders ─────────────────────────────────────────────
 const maskCode = `
@@ -154,8 +156,8 @@ fn cs(@builtin(global_invocation_id) g: vec3u) {
 }
 `;
 
-const sceneCode = `
-struct U { mvp: mat4x4f, model: mat4x4f, maskW: i32, maskH: i32, screenW: i32, screenH: i32 }
+const waterCode = `
+struct U { mvp: mat4x4f, maskW: i32, maskH: i32, screenW: i32, screenH: i32, time: f32, waveFreq: f32, waveAmp: f32, waveQ: f32, waveSpeed: f32, _pad: f32, waveDir: vec2f }
 @group(0) @binding(0) var<uniform> u: U;
 
 @group(0) @binding(1) var<storage> cnt: array<u32>;
@@ -166,9 +168,20 @@ struct VOut { @builtin(position) p: vec4f, @location(0) wP: vec3f, @location(1) 
 
 @vertex fn v(i: VIn) -> VOut {
 	var o: VOut;
-	o.p = u.mvp * vec4f(i.p, 1.0);
-	o.wP = (u.model * vec4f(i.p, 1.0)).xyz;
-	o.wN = (u.model * vec4f(i.n, 0.0)).xyz;
+	let dir = u.waveDir;
+	let freq = u.waveFreq;
+	let amp = u.waveAmp;
+	let q = u.waveQ;
+	let phase = freq * (dir.x * i.p.x + dir.y * i.p.z) + u.time * u.waveSpeed;
+	let s = sin(phase);
+	let c = cos(phase);
+	let d = vec3f(q * amp * dir.x * c, amp * s, q * amp * dir.y * c);
+	let wp = i.p + d;
+	o.p = u.mvp * vec4f(wp, 1.0);
+	o.wP = wp;
+	let wa = freq * amp;
+	let wn = normalize(vec3f(-wa * dir.x * c, 1.0, -wa * dir.y * c));
+	o.wN = wn;
 	return o;
 }
 
@@ -224,7 +237,7 @@ struct VOut { @builtin(position) p: vec4f }
 	let W,H,mW,mH;
 	let depthTex=null,maskTex=null;
 	let counterBuf=null,depthBuf=null;
-	let sortBG=null,sceneBG=null;
+	let sortBG=null,waterBG=null;
 	let maskBGs=[],wireBGs=[];
 	let zeroFill=null;
 
@@ -250,7 +263,7 @@ struct VOut { @builtin(position) p: vec4f }
 		mW=Math.ceil(W/4);mH=Math.ceil(H/4);
 		ctx.configure({device,format:fmt,alphaMode:'opaque'});
 		makeTextures();makeBuffers();
-		if(sortBG)sortBG=null;if(sceneBG)sceneBG=null;
+		if(sortBG)sortBG=null;if(waterBG)waterBG=null;
 		maskBGs=[];wireBGs=[];
 		for(let i=0;i<NUM_CUBES;i++){
 			maskBGs.push(device.createBindGroup({layout:maskBGL,entries:[
@@ -267,8 +280,8 @@ struct VOut { @builtin(position) p: vec4f }
 			{binding:1,resource:{buffer:counterBuf}},
 			{binding:2,resource:{buffer:depthBuf}},
 		]});
-		sceneBG=device.createBindGroup({layout:sceneBGL,entries:[
-			{binding:0,resource:{buffer:sceneUBuf}},
+		waterBG=device.createBindGroup({layout:waterBGL,entries:[
+			{binding:0,resource:{buffer:waterUBuf}},
 			{binding:1,resource:{buffer:counterBuf}},
 			{binding:2,resource:{buffer:depthBuf}},
 		]});
@@ -277,7 +290,7 @@ struct VOut { @builtin(position) p: vec4f }
 	// ── shader modules ──
 	let maskMod=device.createShaderModule({code:maskCode});
 	let sortMod=device.createShaderModule({code:sortCode});
-	let sceneMod=device.createShaderModule({code:sceneCode});
+	let waterMod=device.createShaderModule({code:waterCode});
 	let wireMod=device.createShaderModule({code:wireCode});
 
 	// ── geometry buffers ──
@@ -299,7 +312,7 @@ struct VOut { @builtin(position) p: vec4f }
 		wireUBufs.push(device.createBuffer({size:64,usage:GPUBufferUsage.UNIFORM|GPUBufferUsage.COPY_DST}));
 	}
 	let sortUBuf=device.createBuffer({size:16,usage:GPUBufferUsage.UNIFORM|GPUBufferUsage.COPY_DST});
-	let sceneUBuf=device.createBuffer({size:144,usage:GPUBufferUsage.UNIFORM|GPUBufferUsage.COPY_DST});
+	let waterUBuf=device.createBuffer({size:128,usage:GPUBufferUsage.UNIFORM|GPUBufferUsage.COPY_DST});
 
 	// ── pipeline layouts ──
 	function bgl(e){return device.createBindGroupLayout({entries:e})}
@@ -313,7 +326,7 @@ struct VOut { @builtin(position) p: vec4f }
 		{binding:1,visibility:GPUShaderStage.COMPUTE,buffer:{type:'read-only-storage'}},
 		{binding:2,visibility:GPUShaderStage.COMPUTE,buffer:{type:'storage'}},
 	]);
-	let sceneBGL=bgl([
+	let waterBGL=bgl([
 		{binding:0,visibility:GPUShaderStage.VERTEX|GPUShaderStage.FRAGMENT,buffer:{type:'uniform'}},
 		{binding:1,visibility:GPUShaderStage.FRAGMENT,buffer:{type:'read-only-storage'}},
 		{binding:2,visibility:GPUShaderStage.FRAGMENT,buffer:{type:'read-only-storage'}},
@@ -332,13 +345,13 @@ struct VOut { @builtin(position) p: vec4f }
 		layout:device.createPipelineLayout({bindGroupLayouts:[sortBGL]}),
 		compute:{module:sortMod,entryPoint:'cs'},
 	});
-	let scenePL=device.createRenderPipeline({
-		layout:device.createPipelineLayout({bindGroupLayouts:[sceneBGL]}),
-		vertex:{module:sceneMod,entryPoint:'v',buffers:[{arrayStride:32,attributes:[
+	let waterPL=device.createRenderPipeline({
+		layout:device.createPipelineLayout({bindGroupLayouts:[waterBGL]}),
+		vertex:{module:waterMod,entryPoint:'v',buffers:[{arrayStride:32,attributes:[
 			{shaderLocation:0,offset:0,format:'float32x3'},
 			{shaderLocation:1,offset:12,format:'float32x3'},
 		]}]},
-		fragment:{module:sceneMod,entryPoint:'f',targets:[{format:fmt}]},
+		fragment:{module:waterMod,entryPoint:'f',targets:[{format:fmt}]},
 		primitive:{topology:'triangle-list',cullMode:'none'},
 		depthStencil:{depthWriteEnabled:true,depthCompare:'less',format:'depth24plus'},
 	});
@@ -494,22 +507,23 @@ let boatBG=device.createBindGroup({layout:boatBGL,entries:[
 			cp.end();
 		}
 
-		// ── Pass 3: scene ──
+		// ── Pass 3: water + cubes ──
 		{
-			let su=new Float32Array(36);
+			let su=new Float32Array(32);
 			su.set(vp,0);
-			su[16]=1;su[21]=1;su[26]=1;su[31]=1;
 			let su32=new Uint32Array(su.buffer);
-			su32[32]=mW;su32[33]=mH;su32[34]=W;su32[35]=H;
-			device.queue.writeBuffer(sceneUBuf,0,su);
+			su32[16]=mW;su32[17]=mH;su32[18]=W;su32[19]=H;
+			su[20]=t;su[21]=WF;su[22]=WA;su[23]=WQ;su[24]=WS;
+			su[26]=WD[0];su[27]=WD[1];
+			device.queue.writeBuffer(waterUBuf,0,su);
 
 			let tv=ctx.getCurrentTexture().createView();
 			let rp=enc.beginRenderPass({
 				colorAttachments:[{view:tv,clearValue:{r:.05,g:.05,b:.08,a:1},loadOp:'clear',storeOp:'store'}],
 				depthStencilAttachment:{view:depthTex.createView(),depthClearValue:1,depthLoadOp:'clear',depthStoreOp:'store'},
 			});
-			rp.setPipeline(scenePL);
-			rp.setBindGroup(0,sceneBG);
+			rp.setPipeline(waterPL);
+			rp.setBindGroup(0,waterBG);
 			rp.setVertexBuffer(0,wVBuf);
 			rp.setIndexBuffer(wIBuf,'uint32');
 			rp.setViewport(0,0,W,H,0,1);
@@ -523,9 +537,27 @@ let boatBG=device.createBindGroup({layout:boatBGL,entries:[
 				rp.setBindGroup(0,wireBGs[i]);
 				rp.drawIndexed(24);
 			}
-			{
-			let s=.6,by=s*.631;
-			let m=m4s(m4t(m4rY(m4t(m4id(),[0,-0.4,0]),t*.15),[0,by,0]),[s,s,s]);
+		{
+		let s=.6,by=s*.631-.3,dd=1/Math.SQRT2,ph=t*WS;
+		let c=Math.cos(ph),dw=WQ*WA*dd*c,dh=WA*Math.sin(ph);
+		let bx=-dw,bz=dw;
+		let wdx=WD[0],wdy=WD[1];
+		let fx=wdx,fz=wdy;
+		let lx=-fz,lz=fx;
+		let off=.3;
+		let ht=(x,z)=>WA*Math.sin(WF*(wdx*x+wdy*z)+WS*t);
+		let fh=ht(bx+fx*off,bz+fz*off),bh=ht(bx-fx*off,bz-fz*off);
+		let lh=ht(bx+lx*off,bz+lz*off),rh=ht(bx-lx*off,bz-lz*off);
+		let tf=[fx,(fh-bh)/(2*off),fz],tl=[lx,(lh-rh)/(2*off),lz];
+		let n=[tl[1]*tf[2]-tl[2]*tf[1],tl[2]*tf[0]-tl[0]*tf[2],tl[0]*tf[1]-tl[1]*tf[0]];
+		let nl=Math.hypot(n[0],n[1],n[2]);n[0]/=nl;n[1]/=nl;n[2]/=nl;
+		let fh2=[fx,0,fz];let fhl=Math.hypot(fh2[0],fh2[1],fh2[2]);fh2[0]/=fhl;fh2[1]/=fhl;fh2[2]/=fhl;
+		let r=[n[1]*fh2[2]-n[2]*fh2[1],n[2]*fh2[0]-n[0]*fh2[2],n[0]*fh2[1]-n[1]*fh2[0]];
+		let rl=Math.hypot(r[0],r[1],r[2]);r[0]/=rl;r[1]/=rl;r[2]/=rl;
+		let nf=[r[1]*n[2]-r[2]*n[1],r[2]*n[0]-r[0]*n[2],r[0]*n[1]-r[1]*n[0]];
+		let m=new Float32Array(16);
+		m[0]=r[0]*s;m[1]=r[1]*s;m[2]=r[2]*s;m[4]=n[0]*s;m[5]=n[1]*s;m[6]=n[2]*s;m[8]=nf[0]*s;m[9]=nf[1]*s;m[10]=nf[2]*s;
+		m[12]=bx;m[13]=dh+by;m[14]=bz;m[15]=1;
 				let mu=new Float32Array(32);
 				mu.set(m4m(vp,m),0);mu.set(m,16);
 				device.queue.writeBuffer(boatUBuf,0,mu);
