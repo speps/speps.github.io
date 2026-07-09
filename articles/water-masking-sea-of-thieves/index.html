@@ -38,7 +38,7 @@
 			<nav id="TableOfContents">
   <ul>
     <li><a href="#demo">Demo</a></li>
-    <li><a href="#overview">Overview</a>
+    <li><a href="#algorithm">Algorithm</a>
       <ul>
         <li><a href="#mask-depth">Mask depth</a></li>
         <li><a href="#sort-pass">Sort pass</a></li>
@@ -56,7 +56,7 @@
 <div style="text-align:center"><iframe src="/masking-demo/" width="800" height="600" frameborder="0"></iframe></div>
 
 <p>Rowboat model: <a href="https://opengameart.org/content/low-poly-boat">https://opengameart.org/content/low-poly-boat</a>, mask mesh made manually in Blender</p>
-<h2 id="overview">Overview</h2>
+<h2 id="algorithm">Algorithm</h2>
 <p>The goal was to mask out parts of the ocean that were crossing the inside of the boats. This can be achieved using a stencil buffer depending on the viewpoint of the player. However, in Sea of Thieves, the players can climb onboard, and walk around the ship below decks (with multiple decks). Another use case was the addition of caves on islands, if a cave was going under the ocean level we would need to hide parts of the ocean mesh that crosses the cave. Note that this could possibly still be done using a stencil buffer with increment/decrement, but I think I remember trying and it wasn&rsquo;t suited because our water didn&rsquo;t write depth, and would have been quite expensive to re-render into the stencil to try and change the count. All in all, this meant that a more advanced solution was necessary.</p>
 <h3 id="mask-depth">Mask depth</h3>
 <p>We first need to create the mask meshes, these are the meshes whose shape is going to make the holes in the water mesh. In our case, we want to create one that is the inside of the hull of the ship for example. This is created manually as we want to have something that sits right in between the 2 walls of the hull so we don&rsquo;t see the edge of the hole. We also imposed it to be convex, but it&rsquo;s not a requirement of the algorithm. It&rsquo;s just that if it&rsquo;s concave you might be losing 2 potential slots that could be used for another shape.</p>
@@ -302,7 +302,7 @@
 
 	</div>
 </div>
-            <div id="footer"><p>2026-07-09 21:18:16 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
+            <div id="footer"><p>2026-07-09 21:25:49 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
         </div>
     </div>
 </body>
