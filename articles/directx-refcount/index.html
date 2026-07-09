@@ -34,10 +34,6 @@
 	<div id="page">
 		<h1>Debugging a DirectX memory leak</h1>
 		
-		<div id="sideinfo">
-			<nav id="TableOfContents"></nav>
-		</div>
-		
 		<p><strong>NOTE from 2026: this seems quite obvious now, but I never really dug into how the ref count was working before, so it was a revelation at the time. Keeping the article for posterity to remind myself how much I learned since.</strong></p>
 <p>A short tale (with pictures and code) of a recent debugging session.</p>
 <p>DirectX uses reference counting to handle the destruction of its resources. When creating a resource, the handle returned by DirectX already has a reference counter of 1. When this resource is not needed anymore, you call Release, each call decrements the reference counter by 1. However, the memory allocated by DirectX for this resource will only be released when the reference counter reaches 0.</p>
@@ -224,7 +220,7 @@
 
 	</div>
 </div>
-            <div id="footer"><p>2026-07-08 11:20:54 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
+            <div id="footer"><p>2026-07-09 11:15:53 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
         </div>
     </div>
 </body>
