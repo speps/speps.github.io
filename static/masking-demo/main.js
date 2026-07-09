@@ -12,19 +12,11 @@ const WAVE_Q = 2.0;
 const WAVE_SPEED = 0.8;
 const WAVE_DIR = [-1.0 / Math.SQRT2, 1.0 / Math.SQRT2];
 
-let showWireframe = true;
-let showBoatMesh = true;
-let showBoatMask = true;
+const settings = { showWireframe: true, showBoatMesh: true, showBoatMask: true };
 
-function syncToggle(event) {
-  const id = event.target.id;
-  if (id === "toggleWireframe") showWireframe = event.target.checked;
-  else if (id === "toggleBoatMesh") showBoatMesh = event.target.checked;
-  else showBoatMask = event.target.checked;
-}
-document.getElementById("toggleWireframe").addEventListener("change", syncToggle);
-document.getElementById("toggleBoatMesh").addEventListener("change", syncToggle);
-document.getElementById("toggleBoatMask").addEventListener("change", syncToggle);
+document.getElementById("toggleWireframe").addEventListener("change", (e) => settings.showWireframe = e.target.checked);
+document.getElementById("toggleBoatMesh").addEventListener("change", (e) => settings.showBoatMesh = e.target.checked);
+document.getElementById("toggleBoatMask").addEventListener("change", (e) => settings.showBoatMask = e.target.checked);
 
 function mat4Identity() {
   return new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
@@ -859,7 +851,7 @@ function parseObj(text, includeUV) {
         renderPass.drawIndexed(36);
       }
 
-      if (showBoatMask) {
+      if (settings.showBoatMask) {
         const uniformData = new Float32Array(20);
         uniformData.set(boatMVP, 0);
         const uniformInts = new Uint32Array(uniformData.buffer);
@@ -932,7 +924,7 @@ function parseObj(text, includeUV) {
       renderPass.drawIndexed(waterGeometry.indexCount);
 
       // Boat mesh
-      if (showBoatMesh) {
+      if (settings.showBoatMesh) {
         const boatUniformData = new Float32Array(32);
         boatUniformData.set(boatMVP, 0);
         boatUniformData.set(boatModel, 16);
@@ -944,7 +936,7 @@ function parseObj(text, includeUV) {
         renderPass.drawIndexed(boatGeometry.indexCount);
       }
 
-      if (showWireframe) {
+      if (settings.showWireframe) {
         // Cube wireframes
         renderPass.setPipeline(pipelines.wire);
         renderPass.setVertexBuffer(0, geometryBuffers.cube.vertex);
@@ -955,7 +947,7 @@ function parseObj(text, includeUV) {
           renderPass.setBindGroup(0, wireBindGroups[i]);
           renderPass.drawIndexed(24);
         }
-        if (showBoatMask) {
+        if (settings.showBoatMask) {
           // Boat mask wireframe
           renderPass.setPipeline(pipelines.wire);
           renderPass.setBindGroup(0, boatMaskWireBindGroup);
