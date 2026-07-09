@@ -6,7 +6,7 @@ title = "Water Masking in Sea of Thieves"
 
 While working on the Rendering Team at [Rare Ltd](https://www.rare.co.uk) between 2015 and 2019 on [Sea of Thieves](https://seaofthieves.com), I was tasked with finding a solution to carve holes in our infinite water mesh used for the ocean.
 
-This was a very interesting task that ended up some uncommon GPU features in a creative way.
+This was a very interesting task that ended up using some uncommon GPU features in a creative way.
 
 ## Demo
 
