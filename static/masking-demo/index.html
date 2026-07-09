@@ -5,12 +5,17 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
 	<title>Masking Demo</title>
 	<style>
-		* { margin:0; padding:0; }
+		* { margin:0; padding:0; box-sizing:border-box; }
 		html,body { width:100%; height:100%; overflow:hidden; background:#111; }
 		canvas { display:block; width:100%; height:100%; }
+		#toolbar { position:fixed; top:0; left:0; right:0; z-index:10; display:flex; gap:6px; padding:8px 12px; background:rgba(0,0,0,0.7); backdrop-filter:blur(4px); font:13px/1.4 system-ui,sans-serif; color:#ccc; }
+		#toolbar label { display:flex; align-items:center; gap:4px; cursor:pointer; user-select:none; padding:2px 8px; border-radius:4px; transition:background .15s; }
+		#toolbar label:hover { background:rgba(255,255,255,.1); }
+		#toolbar input { accent-color:#6af; }
 	</style>
 </head>
 <body>
+	<div id="toolbar"><label><input type="checkbox" checked id="tglWire"> Wireframe</label><label><input type="checkbox" checked id="tglBoat"> Boat mesh</label><label><input type="checkbox" checked id="tglMask"> Boat mask</label></div>
 	<canvas id="gpuCanvas"></canvas>
 	<script type="text/javascript">
 // ── Mat4 helpers ──────────────────────────────────────────────
@@ -76,6 +81,11 @@ const cubeDefs=[
 const NUM_CUBES=cubeDefs.length;
 const WF=1.333,WA=.3,WQ=2,WS=.8;
 const WD=[-1/Math.SQRT2,1/Math.SQRT2];
+let showWire=true,showBoat=true,showMask=true;
+function sync(e){let id=e.target.id;if(id==='tglWire')showWire=e.target.checked;else if(id==='tglBoat')showBoat=e.target.checked;else showMask=e.target.checked;}
+document.getElementById('tglWire').addEventListener('change',sync);
+document.getElementById('tglBoat').addEventListener('change',sync);
+document.getElementById('tglMask').addEventListener('change',sync);
 
 // ── WGSL shaders ─────────────────────────────────────────────
 const maskCode = `
@@ -541,7 +551,7 @@ let bmMaskUBuf=device.createBuffer({size:80,usage:GPUBufferUsage.UNIFORM|GPUBuff
 				rp.setBindGroup(0,maskBGs[i]);
 				rp.drawIndexed(36);
 			}
-			{
+			if(showMask){
 				let mu=new Float32Array(20);
 				mu.set(boatMvp,0);
 				let mu32=new Uint32Array(mu.buffer);
@@ -588,6 +598,7 @@ let bmMaskUBuf=device.createBuffer({size:80,usage:GPUBufferUsage.UNIFORM|GPUBuff
 			rp.setIndexBuffer(wIBuf,'uint32');
 			rp.setViewport(0,0,W,H,0,1);
 			rp.drawIndexed(wg.ni);
+			if(showWire){
 			rp.setPipeline(wirePL);
 			rp.setVertexBuffer(0,cVBuf);
 			rp.setIndexBuffer(cWBuf,'uint32');
@@ -597,6 +608,8 @@ let bmMaskUBuf=device.createBuffer({size:80,usage:GPUBufferUsage.UNIFORM|GPUBuff
 				rp.setBindGroup(0,wireBGs[i]);
 				rp.drawIndexed(24);
 			}
+			}
+		if(showBoat){
 		{
 				let mu=new Float32Array(32);
 				mu.set(boatMvp,0);mu.set(boatM,16);
@@ -606,6 +619,9 @@ let bmMaskUBuf=device.createBuffer({size:80,usage:GPUBufferUsage.UNIFORM|GPUBuff
 				rp.setVertexBuffer(0,boatVBuf);
 				rp.setIndexBuffer(boatIBuf,'uint32');
 				rp.drawIndexed(boatObj.ic);
+		}
+		}
+		if(showWire){
 			rp.setPipeline(wirePL);
 			rp.setBindGroup(0,bmBG);
 			rp.setVertexBuffer(0,bmVBuf);
@@ -613,7 +629,7 @@ let bmMaskUBuf=device.createBuffer({size:80,usage:GPUBufferUsage.UNIFORM|GPUBuff
 			let bmMvp=boatMvp;
 			device.queue.writeBuffer(bmUBuf,0,new Float32Array(bmMvp));
 			rp.drawIndexed(boatMask.i.length);
-			}
+		}
 			rp.end();
 		}
 
