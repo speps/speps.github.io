@@ -14,7 +14,7 @@ This was a very interesting task that ended up using some uncommon GPU features 
 
 Rowboat model: https://opengameart.org/content/low-poly-boat, mask mesh made manually in Blender
 
-## Overview
+## Algorithm
 
 The goal was to mask out parts of the ocean that were crossing the inside of the boats. This can be achieved using a stencil buffer depending on the viewpoint of the player. However, in Sea of Thieves, the players can climb onboard, and walk around the ship below decks (with multiple decks). Another use case was the addition of caves on islands, if a cave was going under the ocean level we would need to hide parts of the ocean mesh that crosses the cave. Note that this could possibly still be done using a stencil buffer with increment/decrement, but I think I remember trying and it wasn't suited because our water didn't write depth, and would have been quite expensive to re-render into the stencil to try and change the count. All in all, this meant that a more advanced solution was necessary.
 
