@@ -2,7 +2,7 @@
 <div id="content">
 	<div id="page">
 		<h1>{{ .Title }}</h1>
-		{{ if .TableOfContents }}
+		{{ if and .TableOfContents (.Params.toc | default true) }}
 		<div id="sideinfo">
 			{{ .TableOfContents }}
 		</div>
