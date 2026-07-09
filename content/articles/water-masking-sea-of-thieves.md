@@ -40,7 +40,7 @@ Here is an example of what it might look like for each pixel, with up to 16 valu
 
 The mask is ready to be used. There are two cases we need to handle:
 
-* Outside a mask shape (first entry is positive)
+* Camera outside a mask shape (first entry is positive)
 * Camera inside a mask shape (first entry is negative)
 
 Here is the algorithm which can be done in a function in your shader and reused for all materials that need it:
@@ -60,4 +60,6 @@ if any mask surfaces stored at this pixel:
         discard
 ```
 
-Note that the "inside volume" case could also be handled by adding a value at near clip depth during sort, so the cost of sampling the first value is gone during the sampling.
+### Extensions
+
+* The "inside volume" case could also be handled by adding a value at near clip depth during sort, so the cost of sampling the first value is gone during the sampling.
