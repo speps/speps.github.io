@@ -1,0 +1,190 @@
+<svg viewBox="0 0 750 320" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,sans-serif">
+
+  <text x="375" y="26" text-anchor="middle" font-size="14" font-weight="700" fill="#444">Before (unordered)</text>
+
+  <g transform="translate(20,50)">
+      <g transform="translate(0,0)">
+        <rect width="40" height="40" rx="4" fill="#ffb3b3" stroke="#d16d6d"/>
+        <path d="M20 2l-6 10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">0.75</text>
+      </g>
+      <g transform="translate(44,0)">
+        <rect width="40" height="40" rx="4" fill="#b3ffd9" stroke="#6dd1a1"/>
+        <path d="M20 38l-6-10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">-0.61</text>
+      </g>
+      <g transform="translate(88,0)">
+        <rect width="40" height="40" rx="4" fill="#ffb3b3" stroke="#d16d6d"/>
+        <path d="M20 38l-6-10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">-0.88</text>
+      </g>
+      <g transform="translate(132,0)">
+        <rect width="40" height="40" rx="4" fill="#d9b3ff" stroke="#a16dd1"/>
+        <path d="M20 2l-6 10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">0.33</text>
+      </g>
+      <g transform="translate(176,0)">
+        <rect width="40" height="40" rx="4" fill="#b3ffd9" stroke="#6dd1a1"/>
+        <path d="M20 2l-6 10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">0.55</text>
+      </g>
+      <g transform="translate(220,0)">
+        <rect width="40" height="40" rx="4" fill="#b3d9ff" stroke="#6d9fd1"/>
+        <path d="M20 38l-6-10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">-0.18</text>
+      </g>
+      <g transform="translate(264,0)">
+        <rect width="40" height="40" rx="4" fill="#d9b3ff" stroke="#a16dd1"/>
+        <path d="M20 38l-6-10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">-0.42</text>
+      </g>
+      <g transform="translate(308,0)">
+        <rect width="40" height="40" rx="4" fill="#ffd9b3" stroke="#d1a16d"/>
+        <path d="M20 2l-6 10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">0.27</text>
+      </g>
+      <g transform="translate(352,0)">
+        <rect width="40" height="40" rx="4" fill="#b3d9ff" stroke="#6d9fd1"/>
+        <path d="M20 2l-6 10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">0.12</text>
+      </g>
+      <g transform="translate(396,0)">
+        <rect width="40" height="40" rx="4" fill="#ffd9b3" stroke="#d1a16d"/>
+        <path d="M20 38l-6-10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">-0.40</text>
+      </g>
+      <g transform="translate(440,0)">
+        <rect width="40" height="40" rx="4" fill="#eee" stroke="#ddd"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#999">-</text>
+      </g>
+      <g transform="translate(484,0)">
+        <rect width="40" height="40" rx="4" fill="#eee" stroke="#ddd"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#999">-</text>
+      </g>
+      <g transform="translate(528,0)">
+        <rect width="40" height="40" rx="4" fill="#eee" stroke="#ddd"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#999">-</text>
+      </g>
+      <g transform="translate(572,0)">
+        <rect width="40" height="40" rx="4" fill="#eee" stroke="#ddd"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#999">-</text>
+      </g>
+      <g transform="translate(616,0)">
+        <rect width="40" height="40" rx="4" fill="#eee" stroke="#ddd"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#999">-</text>
+      </g>
+      <g transform="translate(660,0)">
+        <rect width="40" height="40" rx="4" fill="#eee" stroke="#ddd"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#999">-</text>
+      </g>
+  </g>
+
+      <path d="M38 90 C38 140, 390 140, 390 190" fill="none" stroke="#d16d6d" stroke-width="1.5" opacity="0.4"/>
+      <path d="M82 90 C82 140, 346 140, 346 190" fill="none" stroke="#6dd1a1" stroke-width="1.5" opacity="0.4"/>
+      <path d="M126 90 C126 140, 434 140, 434 190" fill="none" stroke="#d16d6d" stroke-width="1.5" opacity="0.4"/>
+      <path d="M170 90 C170 140, 170 140, 170 190" fill="none" stroke="#a16dd1" stroke-width="1.5" opacity="0.4"/>
+      <path d="M214 90 C214 140, 302 140, 302 190" fill="none" stroke="#6dd1a1" stroke-width="1.5" opacity="0.4"/>
+      <path d="M258 90 C258 140, 82 140, 82 190" fill="none" stroke="#6d9fd1" stroke-width="1.5" opacity="0.4"/>
+      <path d="M302 90 C302 140, 258 140, 258 190" fill="none" stroke="#a16dd1" stroke-width="1.5" opacity="0.4"/>
+      <path d="M346 90 C346 140, 126 140, 126 190" fill="none" stroke="#d1a16d" stroke-width="1.5" opacity="0.4"/>
+      <path d="M390 90 C390 140, 38 140, 38 190" fill="none" stroke="#6d9fd1" stroke-width="1.5" opacity="0.4"/>
+      <path d="M434 90 C434 140, 214 140, 214 190" fill="none" stroke="#d1a16d" stroke-width="1.5" opacity="0.4"/>
+
+  <text x="375" y="165" text-anchor="middle" font-size="14" font-weight="700" fill="#444">After (sorted by |depth|)</text>
+
+  <g transform="translate(20,190)">
+      <g transform="translate(0,0)">
+        <rect width="40" height="40" rx="4" fill="#b3d9ff" stroke="#6d9fd1"/>
+        <path d="M20 2l-6 10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">0.12</text>
+      </g>
+      <g transform="translate(44,0)">
+        <rect width="40" height="40" rx="4" fill="#b3d9ff" stroke="#6d9fd1"/>
+        <path d="M20 38l-6-10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">-0.18</text>
+      </g>
+      <g transform="translate(88,0)">
+        <rect width="40" height="40" rx="4" fill="#ffd9b3" stroke="#d1a16d"/>
+        <path d="M20 2l-6 10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">0.27</text>
+      </g>
+      <g transform="translate(132,0)">
+        <rect width="40" height="40" rx="4" fill="#d9b3ff" stroke="#a16dd1"/>
+        <path d="M20 2l-6 10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">0.33</text>
+      </g>
+      <g transform="translate(176,0)">
+        <rect width="40" height="40" rx="4" fill="#ffd9b3" stroke="#d1a16d"/>
+        <path d="M20 38l-6-10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">-0.40</text>
+      </g>
+      <g transform="translate(220,0)">
+        <rect width="40" height="40" rx="4" fill="#d9b3ff" stroke="#a16dd1"/>
+        <path d="M20 38l-6-10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">-0.42</text>
+      </g>
+      <g transform="translate(264,0)">
+        <rect width="40" height="40" rx="4" fill="#b3ffd9" stroke="#6dd1a1"/>
+        <path d="M20 2l-6 10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">0.55</text>
+      </g>
+      <g transform="translate(308,0)">
+        <rect width="40" height="40" rx="4" fill="#b3ffd9" stroke="#6dd1a1"/>
+        <path d="M20 38l-6-10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">-0.61</text>
+      </g>
+      <g transform="translate(352,0)">
+        <rect width="40" height="40" rx="4" fill="#ffb3b3" stroke="#d16d6d"/>
+        <path d="M20 2l-6 10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">0.75</text>
+      </g>
+      <g transform="translate(396,0)">
+        <rect width="40" height="40" rx="4" fill="#ffb3b3" stroke="#d16d6d"/>
+        <path d="M20 38l-6-10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">-0.88</text>
+      </g>
+      <g transform="translate(440,0)">
+        <rect width="40" height="40" rx="4" fill="#eee" stroke="#ddd"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#999">-</text>
+      </g>
+      <g transform="translate(484,0)">
+        <rect width="40" height="40" rx="4" fill="#eee" stroke="#ddd"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#999">-</text>
+      </g>
+      <g transform="translate(528,0)">
+        <rect width="40" height="40" rx="4" fill="#eee" stroke="#ddd"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#999">-</text>
+      </g>
+      <g transform="translate(572,0)">
+        <rect width="40" height="40" rx="4" fill="#eee" stroke="#ddd"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#999">-</text>
+      </g>
+      <g transform="translate(616,0)">
+        <rect width="40" height="40" rx="4" fill="#eee" stroke="#ddd"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#999">-</text>
+      </g>
+      <g transform="translate(660,0)">
+        <rect width="40" height="40" rx="4" fill="#eee" stroke="#ddd"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#999">-</text>
+      </g>
+  </g>
+
+  <g transform="translate(20,270)">
+    <rect x="0" y="0" width="14" height="14" rx="2" fill="#b3d9ff" stroke="#6d9fd1"/>
+    <text x="18" y="11" font-size="10" fill="#555">mask 0</text>
+    <rect x="68" y="0" width="14" height="14" rx="2" fill="#ffd9b3" stroke="#d1a16d"/>
+    <text x="86" y="11" font-size="10" fill="#555">mask 1</text>
+    <rect x="136" y="0" width="14" height="14" rx="2" fill="#d9b3ff" stroke="#a16dd1"/>
+    <text x="154" y="11" font-size="10" fill="#555">mask 2</text>
+    <rect x="204" y="0" width="14" height="14" rx="2" fill="#b3ffd9" stroke="#6dd1a1"/>
+    <text x="222" y="11" font-size="10" fill="#555">mask 3</text>
+    <rect x="272" y="0" width="14" height="14" rx="2" fill="#ffb3b3" stroke="#d16d6d"/>
+    <text x="290" y="11" font-size="10" fill="#555">mask 4</text>
+    <rect x="350" y="0" width="14" height="14" rx="2" fill="#eee" stroke="#ddd"/>
+    <text x="368" y="11" font-size="10" fill="#555">empty</text>
+    <path d="M417 2l-4 7h8z" fill="#333" opacity=".4"/>
+    <text x="430" y="11" font-size="10" fill="#555">front face</text>
+    <path d="M507 12l-4-7h8z" fill="#333" opacity=".4"/>
+    <text x="520" y="11" font-size="10" fill="#555">back face</text>
+  </g>
+</svg>
