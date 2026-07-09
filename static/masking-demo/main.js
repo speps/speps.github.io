@@ -281,7 +281,7 @@ struct Uniforms {
 @group(0) @binding(0) var<uniform> uniforms: Uniforms;
 
 @group(0) @binding(1) var<storage> counter: array<u32>;
-@group(0) @binding(2) var<storage> depthBuffer: array<f32>;
+@group(0) @binding(2) var<storage> maskBuffer: array<f32>;
 
 struct VertexInput { @location(0) position: vec3f, @location(1) normal: vec3f }
 struct VertexOutput { @builtin(position) position: vec4f, @location(0) worldPosition: vec3f, @location(1) worldNormal: vec3f }
@@ -311,9 +311,18 @@ struct VertexOutput { @builtin(position) position: vec4f, @location(0) worldPosi
   if (mx < uniforms.maskWidth && my < uniforms.maskHeight) {
     let index = my * uniforms.maskWidth + mx;
     let count = counter[index];
+    // Camera inside a volume: the first stored surface is a back face.
+    // Discard any fragment behind that back face.
+    if (count > 0u) {
+      let firstValue = maskBuffer[index * 16];
+      if (firstValue < 0.0 && position.z > abs(firstValue)) {
+        discard;
+      }
+    }
+    // Camera outside: use depth counter to detect fragments inside volumes
     var depth = 0i;
     for (var i = 0u; i < count; i = i + 1u) {
-      let v = depthBuffer[index * 16 + i32(i)];
+      let v = maskBuffer[index * 16 + i32(i)];
       if (abs(v) > position.z) { break; }
       if (v >= 0.0) { depth = depth + 1; }
       else { depth = depth - 1; }
