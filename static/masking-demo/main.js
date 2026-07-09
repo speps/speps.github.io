@@ -955,13 +955,15 @@ function parseObj(text, includeUV) {
           renderPass.setBindGroup(0, wireBindGroups[i]);
           renderPass.drawIndexed(24);
         }
-        // Boat mask wireframe
-        renderPass.setPipeline(pipelines.wire);
-        renderPass.setBindGroup(0, boatMaskWireBindGroup);
-        renderPass.setVertexBuffer(0, geometryBuffers.boatMask.vertex);
-        renderPass.setIndexBuffer(geometryBuffers.boatMask.wire, "uint32");
-        device.queue.writeBuffer(uniformBuffers.boatMaskWire, 0, new Float32Array(boatMVP));
-        renderPass.drawIndexed(boatMaskGeometry.edgeIndices.length);
+        if (showBoatMask) {
+          // Boat mask wireframe
+          renderPass.setPipeline(pipelines.wire);
+          renderPass.setBindGroup(0, boatMaskWireBindGroup);
+          renderPass.setVertexBuffer(0, geometryBuffers.boatMask.vertex);
+          renderPass.setIndexBuffer(geometryBuffers.boatMask.wire, "uint32");
+          device.queue.writeBuffer(uniformBuffers.boatMaskWire, 0, new Float32Array(boatMVP));
+          renderPass.drawIndexed(boatMaskGeometry.edgeIndices.length);
+        }
       }
 
       renderPass.end();
