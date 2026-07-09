@@ -1,0 +1,307 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>Water Masking in Sea of Thieves - speps.fr</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="/css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/syntax.css"/>
+    <link rel='shortcut icon' href='/favicon.ico'/>
+    <link rel='icon' href='/favicon.gif' type='image/gif'/>
+    <link href="/index.xml" rel="alternate" type="application/rss+xml" title="speps.fr"/>
+    <link href="/index.xml" rel="feed" type="application/rss+xml" title="speps.fr"/>
+</head>
+<body>
+    <div id="bg-container">
+        <div id="bg">
+            <div id="bg-right"></div>
+        </div>
+    </div>
+    <div id="main-container">
+        <div id="main">
+            <div id="header">
+                <h1><a href="/" title="Return to the first page">speps.fr</a></h1>
+                <ul>
+                    <li><a href="/aboutme" title="Some information about myself"><span class="left"></span><span class="mid">About Me</span><span class="right"></span></a></li>
+                    <li><a href="/projects" title="My work, my projects, my hobbies"><span class="left"></span><span class="mid">Projects</span><span class="right"></span></a></li>
+                    <li><a href="/articles" title="Some articles I wrote"><span class="left"></span><span class="mid">Articles</span><span class="right"></span></a></li>
+                    <li><a href="/resume" title="My resume for your recruiting needs"><span class="left"></span><span class="mid">Resume</span><span class="right"></span></a></li>
+                    <li><a href="/links" title="What I spend my time with on the web"><span class="left"></span><span class="mid">Links</span><span class="right"></span></a></li>
+                </ul>
+                <div id="social"><a href="http://www.linkedin.com/in/remigillig"><img src="/images/linkedin.png"/></a></div>
+                <div id="social">&nbsp;</div>
+            </div>
+<div id="content">
+	<div id="page">
+		<h1>Water Masking in Sea of Thieves</h1>
+		
+		<div id="sideinfo">
+			<nav id="TableOfContents">
+  <ul>
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#overview">Overview</a>
+      <ul>
+        <li><a href="#render-mask-meshes">Render mask meshes</a></li>
+        <li><a href="#sort-pass">Sort pass</a></li>
+        <li><a href="#usage">Usage</a></li>
+        <li><a href="#extensions">Extensions</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+		</div>
+		
+		<p>While working on the Rendering Team at Rare Ltd between 2015 and 2019 on Sea of Thieves, I was tasked with finding a solution to carve holes in our infinite water mesh used for the ocean.</p>
+<p>This was a very interesting task that ended up some uncommon GPU features in a creative way.</p>
+<h2 id="demo">Demo</h2>
+<div style="text-align:center"><iframe src="/masking-demo/" width="800" height="600" frameborder="0"></iframe></div>
+
+<p>Rowboat model: <a href="https://opengameart.org/content/low-poly-boat">https://opengameart.org/content/low-poly-boat</a>, mask mesh made manually in Blender</p>
+<h2 id="overview">Overview</h2>
+<p>The goal was to mask out parts of the ocean that were crossing the inside of the boats. This can be achieved using a stencil buffer depending on the viewpoint of the player. However, in Sea of Thieves, the players can climb onboard, and walk around the ship below decks (with multiple decks). Another use case was the addition of caves on islands, if a cave was going under the ocean level we would need to hide parts of the ocean mesh that crosses the cave. Note that this could possibly still be done using a stencil buffer with increment/decrement, but I think I remember trying and it wasn&rsquo;t suited because our water didn&rsquo;t write depth, and would have been quite expensive to re-render into the stencil to try and change the count. All in all, this meant that a more advanced solution was necessary.</p>
+<h3 id="render-mask-meshes">Render mask meshes</h3>
+<p>We first need to create the mask meshes, these are the meshes whose shape is going to be holes in the water mesh. In our case, we want to create one that is the inside of the hull of the ship for example. This is created manually as we want to have something that sits right in between the 2 walls of the hull so we don&rsquo;t see the edge of the hole.</p>
+<p>Now for a bit of setup, we&rsquo;re going to use the <code>SV_IsFrontFace</code> (DirectX) or <code>@builtin(front_facing)</code> (WebGPU) semantic in the pixel shader, so we need to disable face culling. Then, we&rsquo;re going to store depth values, so ideally we should use a format that stays precise enough, for ease in this demo I used <code>float32</code>. The size of the render target for this is 1:4 scale from the main buffer, this is to allow for 16 (4x4) values per pixel, so the actual size in bytes will be the same of the main buffer (and matches exactly if it&rsquo;s 32 bits too) but the viewport is 1:4.</p>
+<p><strong>The key insight here is that we can write a positive depth value for front faces, and a negative depth value for back faces.</strong> Using an atomic counter per pixel, we can accumulate these values per pixel (up to 16 values).</p>
+<p>At the end of this graphics pass, we have a bunch of unordered positive and negative depth values, multiple ones per pixel.</p>
+<h3 id="sort-pass">Sort pass</h3>
+<p>This is an easy one. Because the values from the mask are unordered (it is the nature of fragment generation on GPUs), we need to sort them. We want them in depth order, closest to the camera first. So we need to sort by <code>abs(depth)</code> so we sort even the negative values interleaved with positive values from the previous pass. This demo uses a bitonic sort with a fixed loop count.</p>
+<p>Here is an example of what it might look like for each pixel, with up to 16 values, and 5 mask objects (1 and 2 overlap):</p>
+<div style="text-align:center"><svg viewBox="0 0 750 320" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,sans-serif">
+
+  <text x="375" y="26" text-anchor="middle" font-size="14" font-weight="700" fill="#444">Before (unordered)</text>
+
+  <g transform="translate(20,50)">
+      <g transform="translate(0,0)">
+        <rect width="40" height="40" rx="4" fill="#ffb3b3" stroke="#d16d6d"/>
+        <path d="M20 2l-6 10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">0.75</text>
+      </g>
+      <g transform="translate(44,0)">
+        <rect width="40" height="40" rx="4" fill="#b3ffd9" stroke="#6dd1a1"/>
+        <path d="M20 38l-6-10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">-0.61</text>
+      </g>
+      <g transform="translate(88,0)">
+        <rect width="40" height="40" rx="4" fill="#ffb3b3" stroke="#d16d6d"/>
+        <path d="M20 38l-6-10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">-0.88</text>
+      </g>
+      <g transform="translate(132,0)">
+        <rect width="40" height="40" rx="4" fill="#d9b3ff" stroke="#a16dd1"/>
+        <path d="M20 2l-6 10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">0.33</text>
+      </g>
+      <g transform="translate(176,0)">
+        <rect width="40" height="40" rx="4" fill="#b3ffd9" stroke="#6dd1a1"/>
+        <path d="M20 2l-6 10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">0.55</text>
+      </g>
+      <g transform="translate(220,0)">
+        <rect width="40" height="40" rx="4" fill="#b3d9ff" stroke="#6d9fd1"/>
+        <path d="M20 38l-6-10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">-0.18</text>
+      </g>
+      <g transform="translate(264,0)">
+        <rect width="40" height="40" rx="4" fill="#d9b3ff" stroke="#a16dd1"/>
+        <path d="M20 38l-6-10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">-0.42</text>
+      </g>
+      <g transform="translate(308,0)">
+        <rect width="40" height="40" rx="4" fill="#ffd9b3" stroke="#d1a16d"/>
+        <path d="M20 2l-6 10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">0.27</text>
+      </g>
+      <g transform="translate(352,0)">
+        <rect width="40" height="40" rx="4" fill="#b3d9ff" stroke="#6d9fd1"/>
+        <path d="M20 2l-6 10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">0.12</text>
+      </g>
+      <g transform="translate(396,0)">
+        <rect width="40" height="40" rx="4" fill="#ffd9b3" stroke="#d1a16d"/>
+        <path d="M20 38l-6-10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">-0.40</text>
+      </g>
+      <g transform="translate(440,0)">
+        <rect width="40" height="40" rx="4" fill="#eee" stroke="#ddd"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#999">-</text>
+      </g>
+      <g transform="translate(484,0)">
+        <rect width="40" height="40" rx="4" fill="#eee" stroke="#ddd"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#999">-</text>
+      </g>
+      <g transform="translate(528,0)">
+        <rect width="40" height="40" rx="4" fill="#eee" stroke="#ddd"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#999">-</text>
+      </g>
+      <g transform="translate(572,0)">
+        <rect width="40" height="40" rx="4" fill="#eee" stroke="#ddd"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#999">-</text>
+      </g>
+      <g transform="translate(616,0)">
+        <rect width="40" height="40" rx="4" fill="#eee" stroke="#ddd"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#999">-</text>
+      </g>
+      <g transform="translate(660,0)">
+        <rect width="40" height="40" rx="4" fill="#eee" stroke="#ddd"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#999">-</text>
+      </g>
+  </g>
+
+      <path d="M38 90 C38 140, 390 140, 390 190" fill="none" stroke="#d16d6d" stroke-width="1.5" opacity="0.4"/>
+      <path d="M82 90 C82 140, 346 140, 346 190" fill="none" stroke="#6dd1a1" stroke-width="1.5" opacity="0.4"/>
+      <path d="M126 90 C126 140, 434 140, 434 190" fill="none" stroke="#d16d6d" stroke-width="1.5" opacity="0.4"/>
+      <path d="M170 90 C170 140, 170 140, 170 190" fill="none" stroke="#a16dd1" stroke-width="1.5" opacity="0.4"/>
+      <path d="M214 90 C214 140, 302 140, 302 190" fill="none" stroke="#6dd1a1" stroke-width="1.5" opacity="0.4"/>
+      <path d="M258 90 C258 140, 82 140, 82 190" fill="none" stroke="#6d9fd1" stroke-width="1.5" opacity="0.4"/>
+      <path d="M302 90 C302 140, 258 140, 258 190" fill="none" stroke="#a16dd1" stroke-width="1.5" opacity="0.4"/>
+      <path d="M346 90 C346 140, 126 140, 126 190" fill="none" stroke="#d1a16d" stroke-width="1.5" opacity="0.4"/>
+      <path d="M390 90 C390 140, 38 140, 38 190" fill="none" stroke="#6d9fd1" stroke-width="1.5" opacity="0.4"/>
+      <path d="M434 90 C434 140, 214 140, 214 190" fill="none" stroke="#d1a16d" stroke-width="1.5" opacity="0.4"/>
+
+  <text x="375" y="165" text-anchor="middle" font-size="14" font-weight="700" fill="#444">After (sorted by |depth|)</text>
+
+  <g transform="translate(20,190)">
+      <g transform="translate(0,0)">
+        <rect width="40" height="40" rx="4" fill="#b3d9ff" stroke="#6d9fd1"/>
+        <path d="M20 2l-6 10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">0.12</text>
+      </g>
+      <g transform="translate(44,0)">
+        <rect width="40" height="40" rx="4" fill="#b3d9ff" stroke="#6d9fd1"/>
+        <path d="M20 38l-6-10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">-0.18</text>
+      </g>
+      <g transform="translate(88,0)">
+        <rect width="40" height="40" rx="4" fill="#ffd9b3" stroke="#d1a16d"/>
+        <path d="M20 2l-6 10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">0.27</text>
+      </g>
+      <g transform="translate(132,0)">
+        <rect width="40" height="40" rx="4" fill="#d9b3ff" stroke="#a16dd1"/>
+        <path d="M20 2l-6 10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">0.33</text>
+      </g>
+      <g transform="translate(176,0)">
+        <rect width="40" height="40" rx="4" fill="#ffd9b3" stroke="#d1a16d"/>
+        <path d="M20 38l-6-10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">-0.40</text>
+      </g>
+      <g transform="translate(220,0)">
+        <rect width="40" height="40" rx="4" fill="#d9b3ff" stroke="#a16dd1"/>
+        <path d="M20 38l-6-10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">-0.42</text>
+      </g>
+      <g transform="translate(264,0)">
+        <rect width="40" height="40" rx="4" fill="#b3ffd9" stroke="#6dd1a1"/>
+        <path d="M20 2l-6 10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">0.55</text>
+      </g>
+      <g transform="translate(308,0)">
+        <rect width="40" height="40" rx="4" fill="#b3ffd9" stroke="#6dd1a1"/>
+        <path d="M20 38l-6-10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">-0.61</text>
+      </g>
+      <g transform="translate(352,0)">
+        <rect width="40" height="40" rx="4" fill="#ffb3b3" stroke="#d16d6d"/>
+        <path d="M20 2l-6 10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">0.75</text>
+      </g>
+      <g transform="translate(396,0)">
+        <rect width="40" height="40" rx="4" fill="#ffb3b3" stroke="#d16d6d"/>
+        <path d="M20 38l-6-10h12z" fill="#333" opacity=".4"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#222">-0.88</text>
+      </g>
+      <g transform="translate(440,0)">
+        <rect width="40" height="40" rx="4" fill="#eee" stroke="#ddd"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#999">-</text>
+      </g>
+      <g transform="translate(484,0)">
+        <rect width="40" height="40" rx="4" fill="#eee" stroke="#ddd"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#999">-</text>
+      </g>
+      <g transform="translate(528,0)">
+        <rect width="40" height="40" rx="4" fill="#eee" stroke="#ddd"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#999">-</text>
+      </g>
+      <g transform="translate(572,0)">
+        <rect width="40" height="40" rx="4" fill="#eee" stroke="#ddd"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#999">-</text>
+      </g>
+      <g transform="translate(616,0)">
+        <rect width="40" height="40" rx="4" fill="#eee" stroke="#ddd"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#999">-</text>
+      </g>
+      <g transform="translate(660,0)">
+        <rect width="40" height="40" rx="4" fill="#eee" stroke="#ddd"/>
+        <text x="20" y="23" text-anchor="middle" font-size="10" fill="#999">-</text>
+      </g>
+  </g>
+
+  <g transform="translate(20,270)">
+    <rect x="0" y="0" width="14" height="14" rx="2" fill="#b3d9ff" stroke="#6d9fd1"/>
+    <text x="18" y="11" font-size="10" fill="#555">mask 0</text>
+    <rect x="68" y="0" width="14" height="14" rx="2" fill="#ffd9b3" stroke="#d1a16d"/>
+    <text x="86" y="11" font-size="10" fill="#555">mask 1</text>
+    <rect x="136" y="0" width="14" height="14" rx="2" fill="#d9b3ff" stroke="#a16dd1"/>
+    <text x="154" y="11" font-size="10" fill="#555">mask 2</text>
+    <rect x="204" y="0" width="14" height="14" rx="2" fill="#b3ffd9" stroke="#6dd1a1"/>
+    <text x="222" y="11" font-size="10" fill="#555">mask 3</text>
+    <rect x="272" y="0" width="14" height="14" rx="2" fill="#ffb3b3" stroke="#d16d6d"/>
+    <text x="290" y="11" font-size="10" fill="#555">mask 4</text>
+    <rect x="350" y="0" width="14" height="14" rx="2" fill="#eee" stroke="#ddd"/>
+    <text x="368" y="11" font-size="10" fill="#555">empty</text>
+    <path d="M417 2l-4 7h8z" fill="#333" opacity=".4"/>
+    <text x="430" y="11" font-size="10" fill="#555">front face</text>
+    <path d="M507 12l-4-7h8z" fill="#333" opacity=".4"/>
+    <text x="520" y="11" font-size="10" fill="#555">back face</text>
+  </g>
+</svg></div>
+<h3 id="usage">Usage</h3>
+<p>The mask is ready to be used. There are two cases we need to handle:</p>
+<ul>
+<li>Camera outside a mask shape (first entry is positive)</li>
+<li>Camera inside a mask shape (first entry is negative)</li>
+</ul>
+<p>Here is the algorithm which can be done in a function in your shader and reused for all materials that need it:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-plaintext" data-lang="plaintext"><span class="line"><span class="cl">if any mask surfaces stored at this pixel:
+</span></span><span class="line"><span class="cl">    let firstSurface = closest surface&#39;s signed depth
+</span></span><span class="line"><span class="cl">    if firstSurface &lt; 0 (back face → camera is inside a volume):
+</span></span><span class="line"><span class="cl">        if fragment depth &gt; abs(firstSurface) (fragment is behind this wall):
+</span></span><span class="line"><span class="cl">            discard
+</span></span><span class="line"><span class="cl">    depth = 0
+</span></span><span class="line"><span class="cl">    for each surface in order of absolute depth:
+</span></span><span class="line"><span class="cl">        if surface is at depth beyond fragment → break
+</span></span><span class="line"><span class="cl">        if front face → depth++
+</span></span><span class="line"><span class="cl">        if back face → depth--
+</span></span><span class="line"><span class="cl">    if depth &gt; 0 (fragment is inside more volumes than camera started in):
+</span></span><span class="line"><span class="cl">        discard
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="extensions">Extensions</h3>
+<ul>
+<li>The &ldquo;inside volume&rdquo; case could also be handled by adding a value at near clip depth during sort, so the cost of sampling the first value is gone during the sampling.</li>
+</ul>
+
+	</div>
+</div>
+            <div id="footer"><p>2026-07-09 17:06:35 UTC - I speak for myself, I am not affiliated with any company - All rights reserved</p></div>
+        </div>
+    </div>
+</body>
+</html>

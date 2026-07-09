@@ -10,9 +10,16 @@
 		
 		
 		
-			<lastBuildDate>Thu, 21 Jan 2021 13:31:42 +0000</lastBuildDate>
+			<lastBuildDate>Wed, 08 Jul 2026 00:00:00 +0000</lastBuildDate>
 		
 			<atom:link href="http://speps.fr/articles/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Water Masking in Sea of Thieves</title>
+				<link>http://speps.fr/articles/water-masking-sea-of-thieves/</link>
+				<pubDate>Wed, 08 Jul 2026 00:00:00 +0000</pubDate>
+				<guid>http://speps.fr/articles/water-masking-sea-of-thieves/</guid>
+				<description>&lt;p&gt;While working on the Rendering Team at Rare Ltd between 2015 and 2019 on Sea of Thieves, I was tasked with finding a solution to carve holes in our infinite water mesh used for the ocean.&lt;/p&gt;&#xA;&lt;p&gt;This was a very interesting task that ended up some uncommon GPU features in a creative way.&lt;/p&gt;&#xA;&lt;h2 id=&#34;demo&#34;&gt;Demo&lt;/h2&gt;&#xA;&lt;div style=&#34;text-align:center&#34;&gt;&lt;iframe src=&#34;http://speps.fr/masking-demo/&#34; width=&#34;800&#34; height=&#34;600&#34; frameborder=&#34;0&#34;&gt;&lt;/iframe&gt;&lt;/div&gt;&#xA;&#xA;&lt;p&gt;Rowboat model: &lt;a href=&#34;https://opengameart.org/content/low-poly-boat&#34;&gt;https://opengameart.org/content/low-poly-boat&lt;/a&gt;, mask mesh made manually in Blender&lt;/p&gt;&#xA;&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;&#xA;&lt;p&gt;The goal was to mask out parts of the ocean that were crossing the inside of the boats. This can be achieved using a stencil buffer depending on the viewpoint of the player. However, in Sea of Thieves, the players can climb onboard, and walk around the ship below decks (with multiple decks). Another use case was the addition of caves on islands, if a cave was going under the ocean level we would need to hide parts of the ocean mesh that crosses the cave. Note that this could possibly still be done using a stencil buffer with increment/decrement, but I think I remember trying and it wasn&amp;rsquo;t suited because our water didn&amp;rsquo;t write depth, and would have been quite expensive to re-render into the stencil to try and change the count. All in all, this meant that a more advanced solution was necessary.&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>Trespasser - C&#43;&#43; archeology and oxidization - Part 1 Loading Scene Data</title>
 				<link>http://speps.fr/articles/trespasser-part1/</link>
