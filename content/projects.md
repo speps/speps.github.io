@@ -5,7 +5,7 @@ title = "Projects"
 
 # Active Projects
 
-* [Torus Trooper](https://tt.speps.fr), a reboot of an old game I liked and found the source code of
+* [Torus Trooper](https://torustrooper.xyz), a reboot of an old game I liked and found the source code of
 	* [Part 1 - Compiling a new executable](/articles/torus-trooper-part1)
 	* [Part 2 - Running the game for the first time](/articles/torus-trooper-part2)
 	* [Part 3 - Porting to WebAssembly](/articles/torus-trooper-part3)
